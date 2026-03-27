@@ -1,14 +1,12 @@
-import AuthPage from "./auth/AuthPage.tsx";
-import { useState } from "react";
+"use client";
+import { useEffect } from "react";
 
-import React, { useEffect } from "react";
+import Hero from "../components/Hero";
+import HowITWorks from "../components/HowItWorks";
+import Features from "../components/Features";
+import Cta from "../components/Cta";
 
-import Hero from "./components/Hero.tsx";
-import Features from "./components/Features.tsx";
-import HowItWorks from "./components/HowItWorks.tsx";
-import Cta from "./components/CTA.tsx";
-
-function App() {
+export default function Home() {
   useEffect(() => {
     const sections = document.querySelectorAll(".section");
     const observer = new IntersectionObserver(
@@ -19,7 +17,7 @@ function App() {
           }
         });
       },
-      { threshold: 0.1 },
+      { threshold: 0.7 },
     );
     sections.forEach((section) => observer.observe(section));
 
@@ -29,11 +27,9 @@ function App() {
   return (
     <>
       <Hero />
-      <HowItWorks />
+      <HowITWorks />
       <Features />
       <Cta />
     </>
   );
 }
-
-export default App;
