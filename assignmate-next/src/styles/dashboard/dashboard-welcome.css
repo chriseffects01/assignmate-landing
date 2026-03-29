@@ -1,0 +1,17 @@
+.dashboard-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-welcome h1 {
+  margin: 00.125rem;
+  margin-bottom: 0.4rem;
+}
+
+.dashboard-welcome-actions {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}

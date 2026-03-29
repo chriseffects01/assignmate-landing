@@ -1,0 +1,69 @@
+.dashboard-sidebar {
+  width: 17.34rem;
+  min-height: calc(100vh - 4rem);
+  border-radius: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.6rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.7rem;
+}
+
+.dashboard-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.dashboard-sidebar-link {
+  text-align: left;
+  background: rgb(15, 57, 148);
+  color: #d1d5db;
+  padding: 0.89rem 0.95rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.dashboard-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+}
+.dashboard-sidebar-link.active {
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-weight: 600;
+}
+
+.dashboard-upgrade-card {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.dashboard-upgrade-card h3 {
+  margin-top: 0;
+}
+
+.dashboard-upgrade-card * {
+  margin-bottom: 0.8rem;
+}
+
+.dashboard-upgrade-card p {
+  color: #d1d5db;
+  font-size: 0.95rem;
+}
+
+.dashboard-upgrade-button {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  background: #7c3aed;
+  color: white;
+  padding: 0.7rem 1rem;
+  border-radius: 0.69rem;
+}

@@ -10,8 +10,8 @@ html {
 }
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8fafc;
-  color: #0f172a;
+  /* background-color: #f8fafc; */
+  color: #f1f1f1;
 }
 
 .hero {
@@ -70,6 +70,7 @@ body {
   font-weight: 800;
   letter-spacing: -2px;
   line-height: 1;
+  color: #1e40af;
 }
 
 .hero-subtitle {

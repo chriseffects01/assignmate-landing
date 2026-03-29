@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
 
-import Hero from "../components/Hero";
-import HowITWorks from "../components/HowItWorks";
-import Features from "../components/Features";
-import Cta from "../components/Cta";
+import Hero from "../components/landingPage/Hero";
+import HowITWorks from "../components/landingPage/HowItWorks";
+import Features from "../components/landingPage/Features";
+import Cta from "../components/landingPage/Cta";
 
 export default function Home() {
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Home() {
           }
         });
       },
-      { threshold: 0.7 },
+      { threshold: 0.1 },
     );
     sections.forEach((section) => observer.observe(section));
 

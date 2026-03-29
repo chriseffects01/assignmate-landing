@@ -1,0 +1,10 @@
+.dashboard-list-placeholder {
+  min-height: 11.25rem;
+  border-radius: 14px;
+  background: #0f172a;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3ba;
+}

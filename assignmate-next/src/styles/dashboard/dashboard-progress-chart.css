@@ -1,0 +1,61 @@
+:root {
+  --border-color: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b9;
+  --surface-hover: #1e293b;
+  --accent-color: #3b82f6;
+  --button-text: #fff;
+}
+
+.dashboard-chart-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* .dashboard-chart-filters button {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  background: #1f2937;
+  color: white;
+  padding: 0.5rem 0.8rem;
+} */
+
+.dashboard-chart-filter-btn {
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dashboard-chart-filter-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.dashboard-chart-filter-btn.active {
+  background-color: var(--accent-color);
+  color: var(--button-text);
+  border-color: var(--accent-color);
+}
+
+.dashboard-chart-placeholder {
+  min-height: 180px;
+  border-radius: 0.9rem;
+  background: #0f172a;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.95rem;
+  flex-direction: column;
+  color: #94a3ba;
+}

@@ -1,0 +1,23 @@
+.dashboard-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.dashboard-stat-card {
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 1.2rem;
+}
+
+.dashboard-stat-label {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.dashboard-stat-value {
+  margin: 10px 0 0;
+  font-size: 1.2rem;
+}
