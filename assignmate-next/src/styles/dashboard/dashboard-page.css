@@ -1,3 +1,11 @@
+:root {
+  --surface-secondary: #0f172a;
+  --surface-hover: #1e293b;
+  --text-primary: #f8fafc;
+  --border-color: #334155;
+  --accent-color: #3b82f6;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -55,14 +63,40 @@ body {
   font: inherit;
   border-radius: 10px;
   padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
 }
 
 .dashboard-primary-btn {
   background: #7c3aed;
   color: white;
+  font-weight: bold;
 }
+
 .dashboard-secondary-btn {
   background: transparent;
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: bold;
+}
+
+.dashboard-primary-btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--surface-hover);
+  border-color: var(--accent-color);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.dashboard-primary-btn:active {
+  transform: translateY(0);
+}
+
+.dashboard-secondary-btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--surface-hover);
+  border-color: var(--accent-color);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.dashboard-secondary-btn:active {
+  transform: translateY(0);
 }

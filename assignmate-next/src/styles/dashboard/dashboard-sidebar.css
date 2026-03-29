@@ -1,3 +1,11 @@
+:root {
+  --surface-secondary: #0f172a;
+  --surface-hover: #1e293b;
+  --text-primary: #f8fafc;
+  --border-color: #334155;
+  --accent-color: #3b82f6;
+}
+
 .dashboard-sidebar {
   width: 17.34rem;
   min-height: calc(100vh - 4rem);
@@ -55,7 +63,7 @@
 
 .dashboard-upgrade-card p {
   color: #d1d5db;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
 }
 
 .dashboard-upgrade-button {
@@ -66,4 +74,22 @@
   color: white;
   padding: 0.7rem 1rem;
   border-radius: 0.69rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.dashboard-upgrade-button:hover {
+  transform: translateY(-2px);
+  background-color: var(--surface-hover);
+  border-color: var(--accent-color);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.dashboard-upgrade-button:active {
+  transform: translateY(0);
+}
+
+.dashboard-button-button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
