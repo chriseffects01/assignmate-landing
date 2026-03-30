@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import "../../styles/authPage.css";
+import { useRouter } from "next/navigation";
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
 
   return (
     <section className="auth-page">
@@ -44,7 +46,11 @@ function AuthPage() {
             placeholder="Password"
             className="auth-input"
           />
-          <button type="submit" className="auth-submit">
+          <button
+            type="submit"
+            onClick={() => router.push("/dashboard")}
+            className="auth-submit"
+          >
             {isLogin ? "Login" : "Create Account"}
           </button>
         </form>

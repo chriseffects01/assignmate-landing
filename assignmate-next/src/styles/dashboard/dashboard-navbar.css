@@ -26,6 +26,24 @@
   z-index: 20;
 }
 
+.dashboard-profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #b5b4b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dashboard-profile-pic-inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #2563eb;
+}
+
 .dashboard-user-name {
   margin: 0;
   font-size: 1rem;
@@ -41,12 +59,14 @@
 .dashboard-navbar-right {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
 }
 
 .dashboard-navbar-left {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .dashboard-logo {

@@ -8,6 +8,8 @@ import "../styles/dashboard/dashboard-progress-chart.css";
 import "../styles/dashboard/dashboard-recent-assignments.css";
 import "../styles/dashboard/dashboard-templates-promo.css";
 
+import "../styles/shared/loading-screen.css";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";

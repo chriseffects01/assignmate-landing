@@ -1,6 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 function Hero() {
   const router = useRouter();

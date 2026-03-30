@@ -12,8 +12,8 @@ export default function DashboardWelcome() {
       </div>
 
       <div className="dashboard-welcome-actions">
-        <button className="dashboard-primary-btn">Continue Draft</button>
-        <button className="dashboard-secondary-btn">New Assignment</button>
+        <button className="dashboard-primary-btn">New Assignment</button>
+        <button className="dashboard-secondary-btn">Continue Draft</button>
       </div>
     </section>
   );

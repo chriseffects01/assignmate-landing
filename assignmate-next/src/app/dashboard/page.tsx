@@ -8,6 +8,7 @@ import DashboardStats from "@/src/components/dashboard/DashboardStats";
 import DashboardQuickActions from "@/src/components/dashboard/DashboardQuickActions";
 import DashboardProgressChart from "@/src/components/dashboard/DashboardProgressChart";
 import DashboardRecentAssignments from "@/src/components/dashboard/DashboardRecentAssignments";
+import LoadingScreen from "@/src/components/shared/LoadiingScreen";
 
 function DashboardPage() {
   return (
@@ -26,6 +27,8 @@ function DashboardPage() {
           <DashboardTemplatesPromo />
         </main>
       </div>
+
+      <LoadingScreen />
     </div>
   );
 }

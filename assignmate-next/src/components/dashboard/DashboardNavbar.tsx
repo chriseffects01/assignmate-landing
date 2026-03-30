@@ -2,6 +2,9 @@ export default function DashboardNavbar() {
   return (
     <header className="dashboard-navbar">
       <div className="dashboard-navbar-left">
+        <div className="dashboard-profile-picture">
+          <div className="dashboard-profile-pic-inner"></div>
+        </div>
         <p className="dashboard-user-name">Chris</p>
       </div>
 
