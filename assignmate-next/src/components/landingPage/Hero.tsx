@@ -1,25 +1,44 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import LoadingScreen from "../shared/LoadingScreen";
 
 function Hero() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  // const navigate = useNavigate();
+
+  function handleGetStarted() {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      window.location.href = "/auth";
+    }, 1200);
+  }
+
   return (
-    <section className="hero">
-      <p className="hero-tagline">Smarter assignments, zero stress</p>
-      <h1 className="hero-title"> AssignMate</h1>
-      <p className="hero-subtitle">Your Assignment Studio</p>
-      <p className="hero-text">
-        Create assignments faster, cleaner, and easier.
-      </p>
-      <button onClick={() => router.push("/auth")} className="hero-button">
-        Get started &rarr;
-      </button>
-      <a href="#features" className="hero-link">
-        See how it works
-      </a>
-    </section>
+    <>
+      {isLoading && <LoadingScreen message="Prepaing user authentication" />}
+      <section className="hero">
+        <p className="hero-tagline">Smarter assignments, zero stress</p>
+        <h1 className="hero-title"> AssignMate</h1>
+        <p className="hero-subtitle">Your Assignment Studio</p>
+        <p className="hero-text">
+          Create assignments faster, cleaner, and easier.
+        </p>
+        <button
+          type="button"
+          onClick={handleGetStarted}
+          className="hero-button"
+        >
+          Get started &rarr;
+        </button>
+        <a href="#features" className="hero-link">
+          See how it works
+        </a>
+      </section>
+    </>
   );
 }
 

@@ -1,4 +1,10 @@
+"use client";
+
+import { useState } from "react";
+
 export default function DashboardNavbar() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   return (
     <header className="dashboard-navbar">
       <div className="dashboard-navbar-left">
@@ -6,14 +12,41 @@ export default function DashboardNavbar() {
           <div className="dashboard-profile-pic-inner"></div>
         </div>
         <p className="dashboard-user-name">Chris</p>
+        <p className="dashboard-nav-logo"> | AssignMate</p>
       </div>
 
       <div className="dashboard-navbar-center">
-        <input
-          type="text"
-          placeholder="Search assignments..."
-          className="dashboard-search"
-        />
+        <div className="dashboard-search-wrapper">
+          <input
+            type="text"
+            placeholder="Search assignments..."
+            name="nav-input"
+            className="dashboard-search"
+            onFocus={() => {
+              setIsSearchOpen(true);
+            }}
+            onBlur={() => {
+              setTimeout(() => {
+                setIsSearchOpen(false);
+              }, 150);
+            }}
+          />
+
+          {isSearchOpen && (
+            <div className="dashboard-search-dropdown">
+              <p className="dashboard-search-empty-text">
+                No recent assignments
+              </p>
+              <p className="dashboard-search-empty-text">
+                Want to get started?
+              </p>
+
+              <button type="button" className="dashboard-search-start-button">
+                Start New
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="dashboard-navbar-right">

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 
-type TimeFilter = "7D" | "30D" | "semester";
+type TimeFilter = "7D" | "30D" | "Semester";
 
-const filters: TimeFilter[] = ["7D", "30D", "semester"];
+const filters: TimeFilter[] = ["7D", "30D", "Semester"];
 
 export default function DashboardProgressChart() {
   const [activeFilter, setActiveFilter] = useState<TimeFilter>("7D");
