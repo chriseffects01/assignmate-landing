@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
 
-import Hero from "../components/landingPage/Hero";
-import HowITWorks from "../components/landingPage/HowItWorks";
-import Features from "../components/landingPage/Features";
-import Cta from "../components/landingPage/Cta";
+import Hero from "@/src/components/landingPage/Hero";
+import HowITWorks from "@/src/components/landingPage/HowItWorks";
+import Features from "@/src/components/landingPage/Features";
+import Cta from "@/src/components/landingPage/Cta";
 
 export default function Home() {
   useEffect(() => {

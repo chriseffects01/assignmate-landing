@@ -47,18 +47,21 @@ export default function AuthPage() {
             {!isLogin && (
               <input
                 type="text"
+                name="input-form-name"
                 placeholder="Full name"
                 className="auth-input"
               />
             )}
             <input
               type="email"
+              name="input-form-email"
               placeholder="student@gmail.com"
               className="auth-input"
             />
             <input
               type="password"
               placeholder="Password"
+              name="input-form-password"
               className="auth-input"
             />
             <button
