@@ -1,6 +1,6 @@
 import "../styles/dashboard/dashboard-page.css";
-import "../styles/dashboard/dashboard-navbar.css";
-import "../styles/dashboard/dashboard-sidebar.css";
+import "../styles/layout/navbar.css";
+import "../styles/layout/sidebar.css";
 import "../styles/dashboard/dashboard-welcome.css";
 import "../styles/dashboard/dashboard-stats.css";
 import "../styles/dashboard/dashboard-quick-actions.css";
@@ -8,7 +8,7 @@ import "../styles/dashboard/dashboard-progress-chart.css";
 import "../styles/dashboard/dashboard-recent-assignments.css";
 import "../styles/dashboard/dashboard-templates-promo.css";
 
-import "../styles/shared/loading-screen.css";
+import "../styles/loading-screen/loading-screen.css";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";

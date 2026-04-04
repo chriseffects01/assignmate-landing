@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import "../../styles/authPage.css";
+import "../../styles/auth/authPage.css";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "@/src/components/shared/LoadingScreen";
 

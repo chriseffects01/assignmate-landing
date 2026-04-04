@@ -1,14 +1,14 @@
 // import "../../styles/dashboard.css";
 
-import DashboardNavbar from "@/src/components/dashboard/DashboardNavbar";
-import DashboardSidebar from "@/src/components/dashboard/DashboardSidebar";
+import DashboardNavbar from "@/src/components/layout/Navbar";
+import DashboardSidebar from "@/src/components/layout/Sidebar";
 import DashboardWelcome from "@/src/components/dashboard/DashboardWelcome";
 import DashboardTemplatesPromo from "@/src/components/dashboard/DashboardTemplatesPromo";
 import DashboardStats from "@/src/components/dashboard/DashboardStats";
 import DashboardQuickActions from "@/src/components/dashboard/DashboardQuickActions";
 import DashboardProgressChart from "@/src/components/dashboard/DashboardProgressChart";
 import DashboardRecentAssignments from "@/src/components/dashboard/DashboardRecentAssignments";
-import LoadingScreen from "@/src/components/shared/LoadingScreen";
+// import LoadingScreen from "@/src/components/shared/LoadingScreen";
 
 function DashboardPage() {
   return (

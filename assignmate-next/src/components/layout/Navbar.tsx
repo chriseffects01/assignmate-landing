@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function DashboardNavbar() {
+export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (

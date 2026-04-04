@@ -6,11 +6,18 @@ import LoadingScreen from "../shared/LoadingScreen";
 
 function Hero() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [showloader, setShowLoader] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   // const navigate = useNavigate();
 
   function handleGetStarted() {
-    setIsLoading(true);
+    setShowLoader(true);
+    setIsClosing(false);
+
+    setTimeout(() => {
+      setIsClosing(true);
+    }, 900);
 
     setTimeout(() => {
       window.location.href = "/auth";
@@ -19,7 +26,9 @@ function Hero() {
 
   return (
     <>
-      {isLoading && <LoadingScreen message="Prepaing user authentication" />}
+      {showloader && (
+        <LoadingScreen message="Prepaing user authentication..." />
+      )}
       <section className="hero">
         <p className="hero-tagline">Smarter assignments, zero stress</p>
         <h1 className="hero-title"> AssignMate</h1>

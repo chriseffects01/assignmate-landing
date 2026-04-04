@@ -6,6 +6,15 @@
   place-items: center;
   background: rgba(2, 8, 23, 0.88);
   backdrop-filter: blur(0.5rem);
+
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease visibility 0.5s ease;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .loading-screen-content {

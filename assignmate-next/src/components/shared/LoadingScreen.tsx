@@ -1,12 +1,17 @@
 type LoadingScreenProps = {
   message?: string;
+  isClosing?: boolean;
 };
 
 export default function LoadingScreen(props: LoadingScreenProps) {
   const message = props.message ?? "Loading your worspace...";
 
   return (
-    <div className="loading-screen" role="status" aria-live="polite">
+    <div
+      className={`loading-screen ${props.isClosing ? "fade-out" : ""}`}
+      role="status"
+      aria-live="polite"
+    >
       <div className="loading-screen-content">
         <div className="loading-orbit">
           <span className="loading-dot loading-dot-1"></span>
