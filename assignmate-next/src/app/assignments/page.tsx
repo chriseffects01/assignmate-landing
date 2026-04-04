@@ -7,15 +7,17 @@ import AssignmentsMain from "@/src/components/assignments/AssignmentsMain";
 import "@/src/styles/layout/sidebar.css";
 import "@/src/styles/layout/navbar.css";
 import "@/src/styles/assignments/assignments-main.css";
+import "@/src/styles/layout/dashboard-shell.css";
 
 export default function AssignmentsPage() {
   return (
-    <div className="assignments-shell">
+    <div className="dashboard-shell" data-theme="dark">
       <Navbar />
-
-      <div className="assignments-content">
+      <div className="dashboard-body">
         <Sidebar />
-        <AssignmentsMain />
+        <div className="dashboard-content">
+          <AssignmentsMain />
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,247 @@
+:root {
+  /* Backgrounds */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f1f5f9;
+  --bg-overlay: rgba(255, 255, 255, 0.9);
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Borders */
+  --border-soft: rgba(148, 163, 184, 0.2);
+  --border-strong: rgba(100, 116, 139, 0.3);
+
+  /* Brand */
+  --brand-primary: #6366f1;
+  --brand-secondary: #8b5cf6;
+  --brand-soft: rgba(99, 102, 241, 0.12);
+  --brand-soft-strong: rgba(99, 102, 241, 0.18);
+
+  /* States */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Shadows */
+  --shadow-soft: 0 0.75rem 2rem rgba(15, 23, 42, 0.08);
+  --shadow-medium: 0 1rem 2.5rem rgba(15, 23, 42, 0.12);
+  --shadow-strong: 0 1.25rem 3rem rgba(15, 23, 42, 0.16);
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #0f172a;
+}
+
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-app: #0b1020;
+  --bg-surface: rgba(15, 23, 42, 0.92);
+  --bg-surface-alt: rgba(30, 41, 59, 0.85);
+  --bg-overlay: rgba(10, 10, 20, 0.96);
+
+  /* Text */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Borders */
+  --border-soft: rgba(148, 163, 184, 0.15);
+  --border-strong: rgba(148, 163, 184, 0.25);
+
+  /* Brand */
+  --brand-primary: #6366f1;
+  --brand-secondary: #8b5cf6;
+  --brand-soft: rgba(99, 102, 241, 0.12);
+  --brand-soft-strong: rgba(99, 102, 241, 0.18);
+
+  /* States */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Shadows */
+  --shadow-soft: 0 0.75rem 2rem rgba(2, 6, 23, 0.25);
+  --shadow-medium: 0 1rem 2.5rem rgba(2, 6, 23, 0.3);
+  --shadow-strong: 0 1.25rem 3rem rgba(2, 6, 23, 0.35);
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: rgba(30, 41, 59, 0.85);
+  --btn-secondary-text: #e2e8f0;
+}
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+.assignments-main {
+  flex: 1;
+  min-height: 100vh;
+  padding: 2rem;
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+.assignments-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.assignments-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.assignments-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.assignments-subtitle {
+  margin: 0.5rem 0 0;
+  max-width: 38rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.assignments-header-actions,
+.assignments-empty-actions,
+.assignments-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.assignments-primary-btn,
+.assignments-secondary-btn,
+.assignments-filter-btn {
+  border: none;
+  border-radius: 0.875rem;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.assignments-primary-btn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-soft);
+}
+
+.assignments-primary-btn:hover {
+  transform: translateY(-0.125rem);
+}
+
+.assignments-secondary-btn,
+.assignments-filter-btn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 0.0625rem solid var(--border-soft);
+}
+
+.assignments-secondary-btn:hover,
+.assignments-filter-btn:hover {
+  transform: translateY(-0.125rem);
+  background: var(--bg-surface-alt);
+}
+
+.assignments-filter-btn.active {
+  background: var(--brand-soft-strong);
+  color: var(--brand-secondary);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+.assignments-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.assignments-search-wrap {
+  flex: 1;
+  min-width: 16rem;
+}
+
+.assignments-search {
+  width: 100%;
+  border: 0.0625rem solid var(--border-soft);
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.assignments-search::placeholder {
+  color: var(--text-muted);
+}
+
+.assignments-search:focus {
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 0 0 0.1875rem var(--brand-soft);
+}
+
+.assignments-empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.assignments-empty-card {
+  width: 100%;
+  max-width: 44rem;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border-soft);
+  box-shadow: var(--shadow-strong);
+  text-align: center;
+}
+
+.assignments-empty-label {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  color: var(--brand-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.assignments-empty-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.assignments-empty-text {
+  margin: 1rem auto 0;
+  max-width: 32rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}

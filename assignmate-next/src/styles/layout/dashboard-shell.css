@@ -1,0 +1,101 @@
+:root {
+  /* Backgrounds */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f1f5f9;
+  --bg-overlay: rgba(255, 255, 255, 0.9);
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Borders */
+  --border-soft: rgba(148, 163, 184, 0.2);
+  --border-strong: rgba(100, 116, 139, 0.3);
+
+  /* Brand */
+  --brand-primary: #6366f1;
+  --brand-secondary: #8b5cf6;
+  --brand-soft: rgba(99, 102, 241, 0.12);
+  --brand-soft-strong: rgba(99, 102, 241, 0.18);
+
+  /* States */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Shadows */
+  --shadow-soft: 0 0.75rem 2rem rgba(15, 23, 42, 0.08);
+  --shadow-medium: 0 1rem 2.5rem rgba(15, 23, 42, 0.12);
+  --shadow-strong: 0 1.25rem 3rem rgba(15, 23, 42, 0.16);
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #0f172a;
+}
+
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-app: #0b1020;
+  --bg-surface: rgba(15, 23, 42, 0.92);
+  --bg-surface-alt: rgba(30, 41, 59, 0.85);
+  --bg-overlay: rgba(10, 10, 20, 0.96);
+
+  /* Text */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Borders */
+  --border-soft: rgba(148, 163, 184, 0.15);
+  --border-strong: rgba(148, 163, 184, 0.25);
+
+  /* Brand */
+  --brand-primary: #6366f1;
+  --brand-secondary: #8b5cf6;
+  --brand-soft: rgba(99, 102, 241, 0.12);
+  --brand-soft-strong: rgba(99, 102, 241, 0.18);
+
+  /* States */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Shadows */
+  --shadow-soft: 0 0.75rem 2rem rgba(2, 6, 23, 0.25);
+  --shadow-medium: 0 1rem 2.5rem rgba(2, 6, 23, 0.3);
+  --shadow-strong: 0 1.25rem 3rem rgba(2, 6, 23, 0.35);
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: rgba(30, 41, 59, 0.85);
+  --btn-secondary-text: #e2e8f0;
+}
+
+.dashboard-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+.dashboard-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.dashboard-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

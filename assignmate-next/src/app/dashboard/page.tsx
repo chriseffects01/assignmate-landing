@@ -12,7 +12,7 @@ import DashboardRecentAssignments from "@/src/components/dashboard/DashboardRece
 
 function DashboardPage() {
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page " data-theme="dark">
       <DashboardNavbar />
 
       <div className="dashboard-layout">

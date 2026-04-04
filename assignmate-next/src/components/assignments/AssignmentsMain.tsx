@@ -15,7 +15,7 @@ export default function AssignmentsMain() {
             Use Templates
           </button>
 
-          <button className="assignments-primary-button" type="button">
+          <button className="assignments-primary-btn" type="button">
             + New Assignments
           </button>
         </div>
