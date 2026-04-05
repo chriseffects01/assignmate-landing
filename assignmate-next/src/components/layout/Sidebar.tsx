@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LoadingScreen from "../shared/LoadingScreen";
+import { useState } from "react";
 
 type NavItem = {
   label: string;
@@ -18,31 +20,47 @@ const navItems: NavItem[] = [
 ];
 
 export default function Sidebar() {
+  const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
 
+  function handleSpinner(path: string, time: number = 1000) {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      window.location.href = path;
+    }, time);
+  }
+
   return (
-    <aside className="dashboard-sidebar">
-      <nav className="dashboard-sidebar-nav">
-        {navItems.map((item) => {
-          const isActive = pathname === item.path;
+    <>
+      {isLoading && <LoadingScreen />}
+      <aside className="dashboard-sidebar">
+        <nav className="dashboard-sidebar-nav">
+          {navItems.map((item) => {
+            const isActive = pathname === item.path;
 
-          return (
-            <Link
-              key={item.label}
-              href={item.path}
-              className={`dashboard-sidebar-link ${isActive ? "active" : ""}`}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+            return (
+              <Link
+                key={item.label}
+                href={item.path}
+                className={`dashboard-sidebar-link ${isActive ? "active" : ""}`}
+                onClick={() => {
+                  if (isActive) return;
+                  handleSpinner(item.path, 1400);
+                }}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-      <div className="dashboard-upgrade-card">
-        <h3>Upgrade to pro</h3>
-        <p>Unlock premium templates and smarter writing tools.</p>
-        <button className="dashboard-upgrade-button"> Upgrade</button>
-      </div>
-    </aside>
+        <div className="dashboard-upgrade-card">
+          <h3>Upgrade to pro</h3>
+          <p>Unlock premium templates and smarter writing tools.</p>
+          <button className="dashboard-upgrade-button"> Upgrade</button>
+        </div>
+      </aside>
+    </>
   );
 }

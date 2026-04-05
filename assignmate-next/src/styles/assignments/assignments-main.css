@@ -124,6 +124,11 @@
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  /* margin-bottom: 2rem; */
+}
+
+.assignments-empty-actions {
+  margin-bottom: 2rem;
 }
 
 .assignments-primary-btn,
@@ -202,7 +207,7 @@
 }
 
 .assignments-search:focus {
-  border-color: rgba(139, 92, 246, 0.45);
+  border-color: rgba(20, 11, 41, 0.45);
   box-shadow: 0 0 0 0.1875rem var(--brand-soft);
 }
 
@@ -216,6 +221,7 @@
 .assignments-empty-card {
   width: 100%;
   max-width: 44rem;
+  margin-bottom: 2rem;
   padding: 2rem;
   border-radius: 1.5rem;
   background: var(--bg-surface);
@@ -244,4 +250,107 @@
   font-size: 1rem;
   line-height: 1.7;
   color: var(--text-secondary);
+}
+
+/* ********************CARDS******************** */
+
+.assignments-filter-btn {
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 9px;
+  padding: 0.75rem 1rem;
+  background: rgba(30, 41, 59, 0.85);
+}
+
+.assignments-filter-btn:hover {
+  border-color: rgba(148, 163, 184, 0.25);
+  box-shadow: 0 0.75rem 1.5rem rgba(2, 6, 23, 0.18);
+}
+
+.assignments-filter-btn.active {
+  box-shadow: 0 0.75rem 1.5rem rgba(99, 102, 241, 0.12);
+}
+
+.assignments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.assignment-card {
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: 0 1rem 2.5rem rgba(2, 6, 23, 0.24);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.assignment-card:hover {
+  transform: translateY(-0.2rem);
+  border-color: rgba(139, 92, 246, 0.22);
+  box-shadow: 0 1.25rem 3rem rgba(2, 6, 23, 0.32);
+}
+
+.assignment-status.is-draft {
+  background: rgba(245, 158, 11, 0.14);
+  color: #fbbf24;
+}
+
+.assignment-status.is-completed {
+  color: #4ade80;
+}
+
+.assignment-card-title {
+  margin: 0.9rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.assignment-card-course {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #a5b4fc;
+}
+
+.assignment-card-time {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.assignment-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.assignment-card-btn {
+  border: none;
+  border-radius: 0.875rem;
+
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+
+.assignment-card-btn:hover {
+  transform: translateY(-0.125rem);
+}
+
+.assignment-card-btn.primary {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.assignment-card-btn.secondary {
+  background: rgba(30, 41, 59, 0.2);
+  color: #e2e8f0;
+  border: 0.0625rem solid rgba(148, 163, 184, 0.15);
+}
+
+.hidden {
+  display: none;
 }
