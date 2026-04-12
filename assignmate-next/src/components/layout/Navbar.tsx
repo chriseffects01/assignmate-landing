@@ -13,14 +13,7 @@ export default function Navbar({
 
   return (
     <header className="dashboard-navbar">
-      <div className="navbar-container">
-        <div className="dashboard-navbar-left">
-          <div className="dashboard-profile-picture">
-            <div className="dashboard-profile-pic-inner"></div>
-          </div>
-          <p className="dashboard-user-name">Chris</p>
-          <p className="dashboard-nav-logo"> | AssignMate</p>
-        </div>
+      <div className="dashboard-navbar-left">
         <button
           className={`sidebar-toggle-btn ${isSidebarOpen ? "" : "sidebar-open"}`}
           onClick={() => {
@@ -28,8 +21,13 @@ export default function Navbar({
           }}
           type="button"
         >
-          {isSidebarOpen ? "<" : ">"}
+          &#9776;
         </button>
+        <div className="dashboard-profile-picture">
+          <div className="dashboard-profile-pic-inner"></div>
+        </div>
+        <p className="dashboard-user-name">Chris</p>
+        <p className="dashboard-nav-logo"> | AssignMate</p>
       </div>
 
       <div className="dashboard-navbar-center">

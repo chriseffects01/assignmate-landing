@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
   { label: "Templates", path: "/templates" },
   { label: "Workspace", path: "/workspace" },
   { label: "Saved Drafts", path: "/drafts" },
-  { label: "Settings", path: "/setting" },
+  { label: "Settings", path: "/settings" },
 ];
 
 export default function Sidebar({ isOpen }: { isOpen: boolean }) {
