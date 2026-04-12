@@ -2,17 +2,34 @@
 
 import { useState } from "react";
 
-export default function Navbar() {
+export default function Navbar({
+  isSidebarOpen,
+  toggleSidebar,
+}: {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+}) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <header className="dashboard-navbar">
-      <div className="dashboard-navbar-left">
-        <div className="dashboard-profile-picture">
-          <div className="dashboard-profile-pic-inner"></div>
+      <div className="navbar-container">
+        <div className="dashboard-navbar-left">
+          <div className="dashboard-profile-picture">
+            <div className="dashboard-profile-pic-inner"></div>
+          </div>
+          <p className="dashboard-user-name">Chris</p>
+          <p className="dashboard-nav-logo"> | AssignMate</p>
         </div>
-        <p className="dashboard-user-name">Chris</p>
-        <p className="dashboard-nav-logo"> | AssignMate</p>
+        <button
+          className={`sidebar-toggle-btn ${isSidebarOpen ? "" : "sidebar-open"}`}
+          onClick={() => {
+            toggleSidebar();
+          }}
+          type="button"
+        >
+          {isSidebarOpen ? "<" : ">"}
+        </button>
       </div>
 
       <div className="dashboard-navbar-center">
@@ -28,7 +45,7 @@ export default function Navbar() {
             onBlur={() => {
               setTimeout(() => {
                 setIsSearchOpen(false);
-              }, 150);
+              }, 330);
             }}
           />
 

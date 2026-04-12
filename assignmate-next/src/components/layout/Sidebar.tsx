@@ -19,9 +19,11 @@ const navItems: NavItem[] = [
   { label: "Settings", path: "/setting" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen }: { isOpen: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
+
+  const [isSidebarOpen, setIsSideBarOpen] = useState(true);
 
   function handleSpinner(path: string, time: number = 1000) {
     setIsLoading(true);
@@ -34,7 +36,8 @@ export default function Sidebar() {
   return (
     <>
       {isLoading && <LoadingScreen />}
-      <aside className="dashboard-sidebar">
+
+      <aside className={`dashboard-sidebar ${isOpen ? "open" : "collapsed"}`}>
         <nav className="dashboard-sidebar-nav">
           {navItems.map((item) => {
             const isActive = pathname === item.path;

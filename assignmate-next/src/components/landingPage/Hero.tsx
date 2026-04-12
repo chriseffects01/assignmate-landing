@@ -27,7 +27,10 @@ function Hero() {
   return (
     <>
       {showloader && (
-        <LoadingScreen message="Prepaing user authentication..." />
+        <LoadingScreen
+          message="Prepaing user authentication..."
+          isClosing={isClosing}
+        />
       )}
       <section className="hero">
         <p className="hero-tagline">Smarter assignments, zero stress</p>

@@ -51,6 +51,13 @@
   --text-muted: #94a3b8;
   --text-inverse: #ffffff;
 
+  /* For now */
+  --surface-secondary: #0f172a;
+  --surface-hover: #1e293b;
+  --text-primary: #f8fafc;
+  --border-color: #334155;
+  --accent-color: #3b82f6;
+
   /* Borders */
   --border-soft: rgba(148, 163, 184, 0.15);
   --border-strong: rgba(148, 163, 184, 0.25);
@@ -151,11 +158,29 @@
 .assignments-primary-btn {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-text);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 0.75rem 2rem rgba(2, 6, 23, 0.25);
 }
 
 .assignments-primary-btn:hover {
-  transform: translateY(-0.125rem);
+  transform: translateY(-2px);
+  background: var(--surface-hover);
+  border-color: var(--accent-color);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.assignments-primary-btn:active {
+  transform: translateY(0);
+}
+
+.assignments-secondary-btn:hover {
+  transform: translateY(-2px);
+  background: var(--surface-hover);
+  border-color: var(--accent-color);
+}
+
+.assignments-secondary-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
 .assignments-secondary-btn,
@@ -220,7 +245,7 @@
 
 .assignments-empty-card {
   width: 100%;
-  max-width: 44rem;
+  max-width: 46rem;
   margin-bottom: 2rem;
   padding: 2rem;
   border-radius: 1.5rem;
@@ -259,15 +284,27 @@
   border-radius: 9px;
   padding: 0.75rem 1rem;
   background: rgba(30, 41, 59, 0.85);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .assignments-filter-btn:hover {
-  border-color: rgba(148, 163, 184, 0.25);
+  border-color: rgba(196, 200, 206, 0.25);
   box-shadow: 0 0.75rem 1.5rem rgba(2, 6, 23, 0.18);
 }
 
 .assignments-filter-btn.active {
   box-shadow: 0 0.75rem 1.5rem rgba(99, 102, 241, 0.12);
+  /* inset 0 0 0 0.0625rem rgba(255, 255, 255, 0.02); */
+  color: #ddd6fe;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.22),
+    rgba(99, 102, 241, 0.12)
+  );
+
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .assignments-grid {

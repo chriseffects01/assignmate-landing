@@ -7,7 +7,7 @@
 }
 
 .dashboard-sidebar {
-  width: 17.34rem;
+  width: 16rem;
   min-height: calc(100vh - 4rem);
   border-radius: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1.6rem 1rem;
@@ -15,6 +15,12 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 1.7rem;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.dashboard-sidebar.collapsed {
+  display: none;
 }
 
 .dashboard-sidebar-nav {

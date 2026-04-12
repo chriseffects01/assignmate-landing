@@ -12,6 +12,7 @@ type Assignment = {
   updatedAt: string;
   status: AssignmentStatus;
 };
+const id: number = 0;
 
 const assignments: Assignment[] = [
   {
@@ -43,7 +44,7 @@ const assignments: Assignment[] = [
     title: "Merging A Pull Request",
     course: "COS",
     courseCode: 341,
-    updatedAt: "Edited Yesterday",
+    updatedAt: "Completed Yesterday",
     status: "completed",
   },
   {
@@ -53,6 +54,22 @@ const assignments: Assignment[] = [
     courseCode: 110,
     updatedAt: "Completed Last Week",
     status: "completed",
+  },
+  {
+    id: 6,
+    title: "Medical Report Database",
+    course: "PCH",
+    courseCode: 253,
+    updatedAt: "Edited yesterday",
+    status: "draft",
+  },
+  {
+    id: 7,
+    title: "Biological Processes",
+    course: "BIO",
+    courseCode: 354,
+    updatedAt: "Edited last week",
+    status: "draft",
   },
 ];
 
