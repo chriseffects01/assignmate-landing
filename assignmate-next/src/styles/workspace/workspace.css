@@ -1,0 +1,69 @@
+.workspace-home {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workspace-overlay {
+  background: var(--color-surface);
+  padding: 2rem;
+  border-radius: 9px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  border: 1px solid var(--color-border);
+}
+
+.workspace-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--color-surface);
+  padding: 1.5rem;
+  border-radius: 9px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workspace-status {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.offline {
+  color: red;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--color-surface);
+  padding: 0.6rem;
+  box-shadow: var(--shadow-md);
+  border-radius: 9px;
+  border: 1px solid var(--color-border);
+}

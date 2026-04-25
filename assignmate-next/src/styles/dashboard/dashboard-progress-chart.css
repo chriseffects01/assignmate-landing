@@ -13,15 +13,6 @@
   gap: 8px;
 }
 
-/* .dashboard-chart-filters button {
-  border: none;
-  cursor: pointer;
-  font: inherit;
-  background: #1f2937;
-  color: white;
-  padding: 0.5rem 0.8rem;
-} */
-
 .dashboard-chart-filter-btn {
   border: 1px solid var(--border-color);
   background-color: transparent;
@@ -58,4 +49,24 @@
   gap: 0.95rem;
   flex-direction: column;
   color: #94a3ba;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 150px;
+}
+
+.bar {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar-fill {
+  width: 100%;
+  background: yellow;
+  border-radius: 4px;
+  transition: height 0.4s ease;
 }

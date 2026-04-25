@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LoadingScreen from "../shared/LoadingScreen";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type NavItem = {
   label: string;
@@ -16,20 +17,20 @@ const navItems: NavItem[] = [
   { label: "Templates", path: "/templates" },
   { label: "Workspace", path: "/workspace" },
   { label: "Saved Drafts", path: "/drafts" },
+  // { label: "Create", path: "/create" },
   { label: "Settings", path: "/settings" },
 ];
 
 export default function Sidebar({ isOpen }: { isOpen: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
-
-  const [isSidebarOpen, setIsSideBarOpen] = useState(true);
+  const router = useRouter();
 
   function handleSpinner(path: string, time: number = 1000) {
     setIsLoading(true);
 
     setTimeout(() => {
-      window.location.href = path;
+      router.push(path);
     }, time);
   }
 

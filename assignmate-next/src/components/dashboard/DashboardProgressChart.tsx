@@ -1,12 +1,34 @@
 "use client";
-import { useState } from "react";
 
-type TimeFilter = "7D" | "30D" | "Semester";
+import { useState, useEffect } from "react";
+import ChartMain from "./chart/ChartMain";
+import ChartBar from "./chart/ChartBar";
+import { getChartDats } from "@/src/lib/chartData";
 
-const filters: TimeFilter[] = ["7D", "30D", "Semester"];
+const filters: Filter[] = ["7D", "30D", "Semester"];
+type Filter = "7D" | "30D" | "Semester";
 
 export default function DashboardProgressChart() {
-  const [activeFilter, setActiveFilter] = useState<TimeFilter>("7D");
+  const [activeFilter, setActiveFilter] = useState<Filter>("7D");
+
+  const [data, setData] = useState<number[]>([]);
+
+  // persist filter
+
+  useEffect(() => {
+    const saved = localStorage.getItem("chart-filter");
+    if (saved) {
+      setActiveFilter(saved as any);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("chart-filter", activeFilter);
+  }, [activeFilter]);
+
+  useEffect(() => {
+    setData(getChartDats(activeFilter));
+  }, [activeFilter]);
 
   return (
     <section className="dashboard-section">
@@ -28,7 +50,16 @@ export default function DashboardProgressChart() {
 
       <div className="dashboard-chart-placeholder">
         <p>Currently showing: {activeFilter}</p>
-        <p>Bar chart will go here</p>
+        {/* <ChartMain
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+        /> */}
+
+        <div className="chart">
+          {data.map((value, i) => (
+            <ChartBar key={i} value={value} />
+          ))}
+        </div>
       </div>
     </section>
   );

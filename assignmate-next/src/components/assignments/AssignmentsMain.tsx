@@ -125,6 +125,7 @@ export default function AssignmentsMain() {
         <div className="assignments-search-wrap">
           <input
             type="text"
+            name="search-assignments"
             className="assignments-search"
             placeholder="Search assignments..."
           />

@@ -1,11 +1,12 @@
 "use client";
-import WorkspaceHome from "@/src/components/workspace/WorkspaceHome";
+
 import DashboardLayout from "@/src/components/layout/DashboardLayout";
+import WorkspaceMain from "@/src/components/workspace/WorkspaceMain";
 
 export default function WorkspacePage() {
   return (
     <DashboardLayout>
-      <WorkspaceHome />
+      <WorkspaceMain />
     </DashboardLayout>
   );
 }
