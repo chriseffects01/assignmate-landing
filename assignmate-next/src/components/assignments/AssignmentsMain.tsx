@@ -11,7 +11,10 @@ export default function AssignmentsMain() {
   const [assignments, setAssignments] = useState<AssignmentType[]>([]);
 
   useEffect(() => {
-    setAssignments(getAssignments());
+    async function load() {
+      const data = await getAssignments();
+      setAssignments(data);
+    }
   }, []);
 
   // const filteredAssignments = useMemo(() => {

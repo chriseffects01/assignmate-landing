@@ -5,6 +5,9 @@ import "@/src/styles/workspace/workspace.css";
 import { KEY } from "@/src/var/var";
 import { AssignmentType } from "@/src/types/assignment";
 import { getAssignments, saveAssignments } from "@/src/lib/assignmentStorage";
+import { createAssignmentAPI } from "@/src/lib/api";
+import { addAssignment } from "@/src/lib/assignmentStorage";
+import { CreateAssignmentFromForm } from "@/src/lib/createAssignmentFromForm";
 
 export default function CreateAssignmentModal({ onClose }: any) {
   const assignmentStatus = {
@@ -21,7 +24,7 @@ export default function CreateAssignmentModal({ onClose }: any) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const newAssignment: AssignmentType = {
       id: crypto.randomUUID(),
       ...form,
@@ -31,8 +34,19 @@ export default function CreateAssignmentModal({ onClose }: any) {
 
       category: "",
     };
+    // const newAssignment: AssignmentType = CreateAssignmentFromForm(form);
+    const saved = await createAssignmentAPI(newAssignment);
 
-    const existing = getAssignments();
+    if (saved) {
+      router.push(`/workspace/${saved.id}`);
+    } else {
+      //fallback
+
+      addAssignment(newAssignment);
+      router.push(`/workspace/${newAssignment.id}`);
+    }
+
+    const existing = await getAssignments();
 
     // localStorage.setItem(
     //   "assignment",

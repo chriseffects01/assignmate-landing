@@ -1,7 +1,12 @@
 import { AssignmentType, TemplateType } from "@/src/types/assignment";
 import { KEY } from "@/src/var/var";
+import { fetchAssignments } from "./api";
 
-export function getAssignments(): AssignmentType[] {
+export async function getAssignments(): Promise<AssignmentType[]> {
+  const apiData = await fetchAssignments();
+  if (apiData) return apiData;
+
+  //Falback
   const data = localStorage.getItem(KEY);
   return data ? JSON.parse(data) : [];
 }

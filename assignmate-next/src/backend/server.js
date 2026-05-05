@@ -19,6 +19,9 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("MongoDb connected");
-    app.listeh(PORT, () => console.log(`server running on ${PORT}`));
+    app.listen(PORT, () => console.log(`server running on ${PORT}`));
   })
   .catch((err) => console.log(err));
+
+const assignmetRoutes = require("./routes/assignmentsRoutes");
+app.use("/api/assignments", assignmetRoutes);
