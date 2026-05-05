@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import MyChart from "./ChartMain";
 
 export default function ChartBar({ value }: { value: number }) {
   const [height, setHeight] = useState(2);
@@ -13,9 +14,5 @@ export default function ChartBar({ value }: { value: number }) {
     return () => clearTimeout(timeout);
   }, [value]);
 
-  return (
-    <div className="bar">
-      <div className="bar-fill" style={{ height: `${height}px` }}></div>
-    </div>
-  );
+  return <MyChart />;
 }

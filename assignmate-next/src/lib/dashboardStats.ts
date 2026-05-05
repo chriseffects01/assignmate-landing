@@ -17,7 +17,7 @@ export function getDashboardStats() {
     reports,
     essays,
   };
-  console.log(dashboardStat);
+  // console.log(dashboardStat);
 
   return dashboardStat;
 }

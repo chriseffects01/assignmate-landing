@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { getAssignments, saveAssignments } from "@/src/lib/assignmentStorage";
 import { useOnlineStatus } from "@/src/hooks/useOnlineStatus";
 import "@/src/styles/workspace/workspace.css";
-import { Span } from "next/dist/trace";
 
 export default function WorkspaceHeader({ assignment, saveStatus }: any) {
   const isOnline = useOnlineStatus();

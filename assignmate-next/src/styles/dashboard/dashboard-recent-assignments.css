@@ -4,7 +4,47 @@
   background: #0f172a;
   border: 1px dashed rgba(255, 255, 255, 0.12);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   color: #94a3ba;
+}
+
+.continue-card {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 9px;
+  /* border: 1px solid; */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.continue-card:hover {
+  background: rgb(2, 2, 41);
+}
+
+.continue-card h3 {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  margin-bottom: 1rem;
+}
+
+.continue-card p {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.continue-card h4 {
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.continue-card h5 {
+  font-size: 0.5rem;
+}
+
+.continue-card button {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
 }

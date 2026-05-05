@@ -2,27 +2,25 @@
 import StatCard from "@/src/components/dashboard/StatCard";
 import { getDashboardStats } from "@/src/lib/dashboardStats";
 import React, { useEffect, useState } from "react";
-
-type StatCard = {
-  label: string;
-  value: number;
-};
+import { AssignmentStats } from "@/src/types/stat";
 
 export default function DashboardStats() {
-  const [stat, setStat] = useState<StatCard[]>([]);
+  const [stat, setStat] = useState<AssignmentStats[]>([]);
 
   useEffect(() => {
     const realStats = getDashboardStats();
     if (realStats) {
-      const mappedStatsArr: StatCard[] = Object.entries(realStats).map(
+      const mappedStatsArr: AssignmentStats[] = Object.entries(realStats).map(
         ([key, value]) => ({
           label: key.charAt(0).toUpperCase() + key.slice(1),
           value,
         }),
       );
       setStat(mappedStatsArr);
+      // console.log(mappedStatsArr);
     }
   }, []);
+  // console.log(stat);
 
   return (
     <section className="dasboard-stats-grid">

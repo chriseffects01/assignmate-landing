@@ -1,9 +1,10 @@
 import { getAssignments } from "./assignmentStorage";
 import { START_END, DAY30, DAY7, DAY_SEMESTER } from "../var/var";
+// import { getDashboardStats } from "./dashboardStats";
 
 export function getChartDats(range: "7D" | "30D" | "Semester") {
   const assignments = getAssignments();
-  console.log(assignments);
+  // console.log(assignments);
 
   const now = Date.now();
   let days = DAY7;
@@ -17,12 +18,15 @@ export function getChartDats(range: "7D" | "30D" | "Semester") {
     const count = assignments.filter(
       (a) => a.createdAt >= start && a.createdAt < end,
     ).length;
-
-    console.log(count);
+    // console.log("start:", start);
+    // console.log("end", end);
+    // console.log("count:", count);
+    // console.log("i:", i);
 
     return count;
   }).reverse();
 
-  console.log(data);
+  // console.log("data:", data);
+
   return data;
 }

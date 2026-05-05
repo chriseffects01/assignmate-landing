@@ -12,9 +12,10 @@ export function CreateAssignmentFromForm(data: FormData): AssignmentType {
   return {
     courseCode: data.courseCode,
     title: data.title,
-    lecturerName: data.lecturer,
+    lecturer: data.lecturer,
     course: data.course,
     id: crypto.randomUUID(),
+    updatedAt: "",
     content: "",
     category: data.category,
     createdAt: Date.now(),

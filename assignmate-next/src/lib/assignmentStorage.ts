@@ -21,6 +21,11 @@ export function saveAssignmentsFromTemplates(assignment: TemplateType[]) {
 
 export function addAssignment(newAssignment: AssignmentType) {
   const existing = getAssignments();
+  const alreadyExists = existing.find((a) => {
+    a.id === newAssignment.id;
+  });
+
+  if (alreadyExists) return;
 
   saveAssignments([newAssignment, ...existing]);
 }
@@ -29,4 +34,14 @@ export function addAssignmentFromTemplate(newAssignment: TemplateType) {
   const existing = getAssignmentsFromTemplateData();
 
   saveAssignmentsFromTemplates([newAssignment, ...existing]);
+}
+
+export function updateAssignment(updatedAssignment: AssignmentType) {
+  const existing = getAssignments();
+
+  const updatedList = existing.map((a) =>
+    a.id === updatedAssignment.id ? updatedAssignment : a,
+  );
+
+  saveAssignments(updatedList);
 }

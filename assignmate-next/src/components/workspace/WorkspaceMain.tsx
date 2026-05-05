@@ -8,6 +8,9 @@ import WorkspaceHeader from "./WorkspaceHeader";
 import Notification from "../shared/Notification";
 
 export default function WorkspaceMain() {
+  const params = useParams();
+  const id = params?.id as string;
+
   const [notification, setNotification] = useState("");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle",
@@ -23,19 +26,22 @@ export default function WorkspaceMain() {
     }
   }, [saveStatus]);
 
-  const params = useParams();
-  const id = params?.id as string;
-
   const [assignment, setAssignments] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (!id) return;
 
     const all = getAssignments();
     const found = all.find((a) => a.id === id);
-    setAssignments(found);
+    setAssignments(found || null);
+    setIsLoading(false);
   }, [id]);
+  if (isLoading) {
+    <div className="workspace-loading">Loading...</div>;
+  }
+
   if (!assignment) {
-    return <div style={{ padding: "2rem" }}>Loading...</div>;
+    return <div className="workspace-loading">Assignment not found</div>;
   }
 
   return (

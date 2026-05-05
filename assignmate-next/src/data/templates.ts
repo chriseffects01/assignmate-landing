@@ -14,29 +14,27 @@ export type Template = {
 // **************************************** REAL DATA WOULD BE HANDLED LATER ********************************//
 export const templates: Template[] = [
   {
-    id: "essay-basic",
+    id: crypto.randomUUID(),
     title: "Essay Template",
     description: "Introducion",
     category: "essay",
-    premium: false,
   },
   {
-    id: "report-standard",
+    id: crypto.randomUUID(),
     title: "Report Template",
     description: "Well-structured academic report format",
     category: "report",
-    premium: false,
   },
   {
-    id: "lab-science",
+    id: crypto.randomUUID(),
     title: "Lab Report",
     description: "Hypothesis, methid, results",
     category: "report",
     premium: true,
   },
   {
-    id: "presentation-outline",
-    title: "Lab report",
+    id: crypto.randomUUID(),
+    title: "Lab Report",
     description: "Slide-by-slide structured breakdown",
     category: "presentation",
     premium: true,

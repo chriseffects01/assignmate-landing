@@ -28,6 +28,7 @@ export default function DashboardProgressChart() {
 
   useEffect(() => {
     setData(getChartDats(activeFilter));
+    // console.log(data);
   }, [activeFilter]);
 
   return (
@@ -54,11 +55,10 @@ export default function DashboardProgressChart() {
           activeFilter={activeFilter}
           setActiveFilter={setActiveFilter}
         /> */}
-
         <div className="chart">
-          {data.map((value, i) => (
+          {/* {data.map((value, i) => (
             <ChartBar key={i} value={value} />
-          ))}
+          ))} */}
         </div>
       </div>
     </section>

@@ -1,82 +1,18 @@
 "use client";
-
-import { useMemo, useState } from "react";
-
-type AssignmentStatus = "draft" | "completed";
-
-type Assignment = {
-  id: number;
-  title: string;
-  course: string;
-  courseCode?: number;
-  updatedAt: string;
-  status: AssignmentStatus;
-};
-const id: number = 0;
-
-const assignments: Assignment[] = [
-  {
-    id: 1,
-    title: "Comparative Literature Essay",
-    course: "ENG",
-    courseCode: 204,
-    updatedAt: "Edited 2 hours ago",
-    status: "draft",
-  },
-  {
-    id: 2,
-    title: "Church Media Training Report",
-    course: "COM",
-    courseCode: 301,
-    updatedAt: "Edited Yesterday",
-    status: "draft",
-  },
-  {
-    id: 3,
-    title: "Niger Delta Poetry Analysis",
-    course: "LIT",
-    courseCode: 220,
-    updatedAt: "Completed 3 days ago",
-    status: "completed",
-  },
-  {
-    id: 4,
-    title: "Merging A Pull Request",
-    course: "COS",
-    courseCode: 341,
-    updatedAt: "Completed Yesterday",
-    status: "completed",
-  },
-  {
-    id: 5,
-    title: "Questionnaire Design Assignment",
-    course: "RES",
-    courseCode: 110,
-    updatedAt: "Completed Last Week",
-    status: "completed",
-  },
-  {
-    id: 6,
-    title: "Medical Report Database",
-    course: "PCH",
-    courseCode: 253,
-    updatedAt: "Edited yesterday",
-    status: "draft",
-  },
-  {
-    id: 7,
-    title: "Biological Processes",
-    course: "BIO",
-    courseCode: 354,
-    updatedAt: "Edited last week",
-    status: "draft",
-  },
-];
+import { getAssignments } from "@/src/lib/assignmentStorage";
+import { AssignmentType } from "@/src/types/assignment";
+import SearchBar from "../dashboard/SearchBar";
+import { useEffect, useState } from "react";
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
     "all" | "drafts" | "completed"
   >("all");
+  const [assignments, setAssignments] = useState<AssignmentType[]>([]);
+
+  useEffect(() => {
+    setAssignments(getAssignments());
+  }, []);
 
   // const filteredAssignments = useMemo(() => {
   //   if (activeFilter === "all") {
@@ -122,14 +58,7 @@ export default function AssignmentsMain() {
       </section>
 
       <section className="assignments-toolbar">
-        <div className="assignments-search-wrap">
-          <input
-            type="text"
-            name="search-assignments"
-            className="assignments-search"
-            placeholder="Search assignments..."
-          />
-        </div>
+        <SearchBar />
 
         <div className="assignments-filter-group">
           <button
@@ -197,7 +126,7 @@ export default function AssignmentsMain() {
             </div>
 
             <h2 className="assignment-card-title">{assignment.title} </h2>
-            <p className="asssignment-card-course">
+            <p className="assignment-card-course">
               {assignment.course} {assignment.courseCode}
             </p>
             <p className="assignment-card-time">{assignment.updatedAt}</p>

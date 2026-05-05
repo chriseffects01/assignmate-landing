@@ -28,7 +28,7 @@ export default function CreateAssignmentModal({ onClose }: any) {
       content: "",
       createdAt: Date.now(),
       status: "draft",
-      lecturerName: "",
+
       category: "",
     };
 
@@ -75,14 +75,20 @@ export default function CreateAssignmentModal({ onClose }: any) {
           onChange={handleChange}
         />
 
-        <label htmlFor="title"></label>
+        <label htmlFor="title">Title:</label>
         <input
           type="text"
           name="title"
-          placeholder="Assignmemt -title"
+          placeholder="Assignment title"
           onChange={handleChange}
           required
         />
+
+        <select name="category" onChange={handleChange}>
+          <option value="Category">Category</option>
+          <option value="essay">Essay</option>
+          <option value="report">Report</option>
+        </select>
 
         <div className="modal-actions">
           <button type="button" onClick={handleCreate}>
