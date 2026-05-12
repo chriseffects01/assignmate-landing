@@ -1,21 +1,32 @@
-import { getLastDraft } from "@/src/lib/getLastDraft";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getRecentAssignment } from "@/src/lib/getRecentAssignment";
 
 export default function DashboardRecentAssignments() {
-  const [lastDraft, setLastDraft] = useState<any>(null);
   const [recent, setRecent] = useState<any[]>([]);
   const router = useRouter();
-  const emptyArr: any[] = [];
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // const drafts = getLastDraft();
-    // setLastDraft(drafts);
-    setRecent(getRecentAssignment(3));
+    async function load() {
+      const recentArr = await getRecentAssignment(3);
+      if (!recentArr)
+        return (
+          <div>
+            <p>Your recent assignments will go hear</p>
+          </div>
+        );
+      setRecent(recentArr || []);
+      setLoading(false);
+    }
+    load();
   }, []);
 
-  if (recent === emptyArr) {
+  if (loading) {
+    return <div>loading...</div>;
+  }
+
+  if (!recent) {
     return <p>Your recent assignments will go hear</p>;
   }
 
@@ -31,13 +42,13 @@ export default function DashboardRecentAssignments() {
           <div>
             <h3>Continue where you left off</h3>
           </div>
-          {recent.map((item: any) => (
-            <div key={item.id} className="continue-card">
+          {recent?.map((item: any) => (
+            <div key={item._id} className="continue-card">
               <h4>{item.title || "untitled"}</h4>
               <h5> by {item.lecturer}</h5>
               <p>{item.courseCode}</p>
 
-              <button onClick={() => router.push(`/workspace/${item.id}`)}>
+              <button onClick={() => router.push(`/workspace/${item._id}`)}>
                 Continue
               </button>
             </div>

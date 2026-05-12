@@ -1,10 +1,11 @@
-import { getAssignments } from "./assignmentStorage";
-
-export function getRecentAssignment(limit: number = 3) {
-  const assignments = getAssignments();
+// import { getAssignments } from "./assignmentStorage";
+import { getAssignments } from "../services/assignmentService";
+export async function getRecentAssignment(limit: number = 3) {
+  const assignments = await getAssignments();
 
   return assignments
     .filter((a) => a.status === "draft")
     .sort((a, b) => b.createdAt - a.createdAt)
     .slice(0, limit);
 }
+ 

@@ -1,9 +1,10 @@
-import { getAssignments } from "./assignmentStorage";
+// import { getAssignments } from "./assignmentStorage";
+import { getAssignments } from "../services/assignmentService";
 import { START_END, DAY30, DAY7, DAY_SEMESTER } from "../var/var";
 // import { getDashboardStats } from "./dashboardStats";
 
-export function getChartDats(range: "7D" | "30D" | "Semester") {
-  const assignments = getAssignments();
+export async function getChartDats(range: "7D" | "30D" | "Semester") {
+  const assignments = await getAssignments();
   // console.log(assignments);
 
   const now = Date.now();

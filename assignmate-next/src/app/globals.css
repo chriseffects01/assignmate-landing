@@ -4,14 +4,11 @@
   box-sizing: border-box;
 }
 
-html {
-  /* font-size: 15px; */
-  scroll-behavior: smooth;
-}
 body {
   font-family: Arial, sans-serif;
   /* background-color: #f8fafc; */
   color: #f1f1f1;
+  scroll-behavior: smooth;
 }
 
 .hero {

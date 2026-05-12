@@ -1,18 +1,16 @@
-const BASE_URL = "http://localhost:5000/api/assignments";
-
+import { BASE_URL } from "../var/var";
 //GEt all
 
 export async function fetchAssignments() {
   try {
     const res = await fetch(BASE_URL);
     return await res.json();
-  } catch (err) {
+  } catch (err: any) {
     return null;
   }
 }
 
 //CREATE
-
 export async function createAssignmentAPI(data: any) {
   try {
     const res = await fetch(BASE_URL, {
@@ -23,7 +21,7 @@ export async function createAssignmentAPI(data: any) {
       body: JSON.stringify(data),
     });
     return await res.json();
-  } catch {
+  } catch (err: any) {
     return null;
   }
 }
@@ -35,12 +33,12 @@ export async function updateAssignmentAPI(id: string, data: any) {
     const res = await fetch(`${BASE_URL}/${id}`, {
       method: "PUT",
       headers: {
-        "Cntent-Type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
     return await res.json();
-  } catch {
+  } catch (err: any) {
     return null;
   }
 }

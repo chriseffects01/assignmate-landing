@@ -27,6 +27,7 @@ export default function CreateAssignmentModal({ onClose }: any) {
   const handleCreate = async () => {
     const newAssignment: AssignmentType = {
       id: crypto.randomUUID(),
+
       ...form,
       content: "",
       createdAt: Date.now(),
@@ -38,24 +39,24 @@ export default function CreateAssignmentModal({ onClose }: any) {
     const saved = await createAssignmentAPI(newAssignment);
 
     if (saved) {
-      router.push(`/workspace/${saved.id}`);
+      router.push(`/workspace/${saved.id || saved._id}`);
     } else {
       //fallback
 
       addAssignment(newAssignment);
-      router.push(`/workspace/${newAssignment.id}`);
+      router.push(`/workspace/${newAssignment.id || newAssignment._id}`);
     }
 
-    const existing = await getAssignments();
+    // const existing = await getAssignments();
 
-    // localStorage.setItem(
-    //   "assignment",
-    //   JSON.stringify([newAssignment, ...existing]),
-    // );
+    // // localStorage.setItem(
+    // //   "assignment",
+    // //   JSON.stringify([newAssignment, ...existing]),
+    // // );
 
-    saveAssignments([newAssignment, ...existing]);
+    // saveAssignments([newAssignment, ...existing]);
 
-    router.push(`/workspace/${newAssignment.id}`);
+    // router.push(`/workspace/${newAssignment.id || newAssignment._id}`);
   };
 
   return (

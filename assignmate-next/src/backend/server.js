@@ -23,5 +23,5 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-const assignmetRoutes = require("./routes/assignmentsRoutes");
-app.use("/api/assignments", assignmetRoutes);
+const assignmentRoutes = require("./routes/assignmentsRoutes");
+app.use("/api/assignments", assignmentRoutes);

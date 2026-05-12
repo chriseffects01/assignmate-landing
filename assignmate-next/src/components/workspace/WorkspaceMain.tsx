@@ -6,6 +6,7 @@ import { getAssignments } from "@/src/lib/assignmentStorage";
 import WorkspaceEditor from "./WorkspaceEditor";
 import WorkspaceHeader from "./WorkspaceHeader";
 import Notification from "../shared/Notification";
+import WorkspaceMeta from "./WorkspaceMeta";
 
 export default function WorkspaceMain() {
   const params = useParams();
@@ -29,12 +30,14 @@ export default function WorkspaceMain() {
   const [assignment, setAssignments] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    if (!id) return;
-
-    const all = getAssignments();
-    const found = all.find((a) => a.id === id);
-    setAssignments(found || null);
-    setIsLoading(false);
+    async function load() {
+      if (!id) return;
+      const all = await getAssignments();
+      const found = all.find((a) => a._id);
+      setAssignments(found || null);
+      setIsLoading(false);
+    }
+    load();
   }, [id]);
   if (isLoading) {
     <div className="workspace-loading">Loading...</div>;
@@ -49,6 +52,8 @@ export default function WorkspaceMain() {
       {notification && <Notification message={notification} />}
       <div className="workspace-container">
         <WorkspaceHeader assignment={assignment} saveStatus={saveStatus} />
+        <WorkspaceMeta assignment={assignment} />
+
         <WorkspaceEditor
           assignment={assignment}
           setSaveStatus={setSaveStatus}

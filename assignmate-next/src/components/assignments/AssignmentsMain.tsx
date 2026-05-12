@@ -1,35 +1,25 @@
 "use client";
-import { getAssignments } from "@/src/lib/assignmentStorage";
+import { getAssignments } from "@/src/services/assignmentService";
 import { AssignmentType } from "@/src/types/assignment";
 import SearchBar from "../dashboard/SearchBar";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
     "all" | "drafts" | "completed"
   >("all");
   const [assignments, setAssignments] = useState<AssignmentType[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function load() {
       const data = await getAssignments();
-      setAssignments(data);
+      setAssignments(data || []);
     }
+    load();
   }, []);
-
-  // const filteredAssignments = useMemo(() => {
-  //   if (activeFilter === "all") {
-  //     return assignments;
-  //   }
-  //   if (activeFilter === "drafts") {
-  //     return assignments.filter((assignment) => {
-  //       assignment.status === "draft";
-  //     });
-  //   }
-  //   return assignments.filter((assignment) => {
-  //     assignment.status === "completed";
-  //   });
-  // }, [activeFilter]);
 
   const filteredAssignments =
     activeFilter === "all"
@@ -115,7 +105,10 @@ export default function AssignmentsMain() {
 
       <section className="assignments-grid">
         {filteredAssignments.map((assignment) => (
-          <article className="assignment-card" key={assignment.id}>
+          <article
+            className="assignment-card"
+            key={getAssignmentId(assignment)}
+          >
             <div className="assignment-card-top">
               <span
                 className={`assignment-status ${
@@ -139,10 +132,19 @@ export default function AssignmentsMain() {
                   assignment.status === "completed" ? "hidden" : ""
                 }`}
                 type="button"
+                onClick={() =>
+                  router.push(`/workspace/${getAssignmentId(assignment)}`)
+                }
               >
                 Continue
               </button>
-              <button className="assignment-card-btn secondary" type="button">
+              <button
+                className="assignment-card-btn secondary"
+                type="button"
+                onClick={() =>
+                  router.push(`/workspace/${getAssignmentId(assignment)}`)
+                }
+              >
                 Details
               </button>
             </div>

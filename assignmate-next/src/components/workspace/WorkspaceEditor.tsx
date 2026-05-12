@@ -7,17 +7,22 @@ import {
   updateAssignment,
 } from "@/src/lib/assignmentStorage";
 
+import { saveAssignment } from "@/src/services/assignmentService";
+import { updateAssignmentAPI } from "@/src/lib/api";
+
 export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
   const [content, setContent] = useState(assignment.content);
   useEffect(() => {
     if (!assignment) return;
 
-    const timeout = setTimeout(() => {
+    const timeout = setTimeout(async () => {
       setSaveStatus("saving");
-      updateAssignment({
-        ...assignment,
-        content,
-      });
+      const updated = { ...assignment, content };
+      const id = assignment._id || assignment.id;
+
+      const res = await updateAssignmentAPI(id, updated);
+
+      if (!res) updateAssignment(updated);
     }, 600);
 
     return () => clearTimeout(timeout);

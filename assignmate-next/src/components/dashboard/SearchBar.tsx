@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { searchAssignments } from "@/src/lib/searchAssignments";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
 import { useRouter } from "next/navigation";
 import "@/src/styles/layout/searchbar.css";
@@ -16,14 +17,17 @@ export default function SearchBar() {
   const router = useRouter();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const res = searchAssignments(query);
-      setResults(res);
-    }, 300);
+    async function load() {
+      const res = await searchAssignments(query);
+      const timeout = setTimeout(() => {
+        setResults(res);
+      }, 300);
 
-    return () => clearTimeout(timeout);
+      return () => clearTimeout(timeout);
+    }
+    load();
   }, [query]);
-  console.log(results.length);
+  console.log(results, results.length);
 
   return (
     <div className="assignments-search-wrap">
@@ -40,23 +44,25 @@ export default function SearchBar() {
         }}
         onBlur={() => setTimeout(() => setShow(false), 200)}
       />
-      <div className="search-container"></div>
-
-      {show && results.length > 0 && (
-        <div className="search-dropdown">
-          {results.slice(0, 5).map((item) => (
-            <div
-              className="search-item"
-              key={item.id}
-              onClick={() => router.push(`/workspace/${item.id}`)}
-            >
-              <span>{item.title}</span>
-              <small>{item.course}</small>
-              <small>{item.courseCode}</small>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="search-container">
+        {show && results.length > 0 && (
+          <div className="search-dropdown">
+            {results.slice(0, 5).map((item) => (
+              <div
+                className="search-item"
+                key={getAssignmentId(item)}
+                onClick={() =>
+                  router.push(`/workspace/${getAssignmentId(item)}`)
+                }
+              >
+                <span>{item.title}</span>
+                <small>{item.course}</small>
+                <small>{item.courseCode}</small>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

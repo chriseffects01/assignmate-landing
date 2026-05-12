@@ -10,7 +10,7 @@ const {
 
 router.post("/", createAssignment);
 router.get("/", getAssignments);
-router.get("/", getAssignment);
-router.put("/", updateAssignment);
+router.get("/:id", getAssignment);
+router.put("/:id", updateAssignment);
 
 module.exports = router;

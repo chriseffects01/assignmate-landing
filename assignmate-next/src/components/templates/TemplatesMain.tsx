@@ -4,12 +4,11 @@ import { templates } from "@/src/data/templates";
 import "@/src/styles/templates/templates.css";
 import "@/src/styles/assignments/assignments-main.css";
 import { useRouter } from "next/navigation";
-import { createAssignmentFromTemplate } from "@/src/lib/createAssignment";
-import { addAssignment } from "@/src/lib/assignmentStorage";
-import { addAssignmentFromTemplate } from "@/src/lib/assignmentStorage";
 import LoadingScreen from "@/src/components/shared/LoadingScreen";
-
 import { useState } from "react";
+import { TemplateType } from "@/src/types/assignment";
+import { createAssignment } from "@/src/services/assignmentService";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
 type FilterType = "all" | "essay" | "report" | "premium";
 
@@ -20,25 +19,37 @@ export default function TemplatesMain() {
 
   const router = useRouter();
 
-  const handleUseTemplate = (template: any) => {
+  const handleUseTemplate = async (template: TemplateType) => {
     setIsLoading(true);
 
-    const newAssignment = createAssignmentFromTemplate(template);
-    addAssignmentFromTemplate(newAssignment);
+    // Destructive to remove the IDS and timestamps from the template
 
-    setTimeout(() => {
-      router.push(`/workspace/${newAssignment.id}`);
-    }, 1300);
+    //This keeps all the "content" but throws away the database metadata.
+
+    // const { _id, createdAt, ...templateData } = template;
+
+    try {
+      // Passing the "clean" data to creation function
+
+      const newAssignment = await createAssignment(template);
+
+      console.log("New Assignment created:", newAssignment);
+
+      // Redirecting to the new assignments's id
+
+      if (newAssignment && getAssignmentId(newAssignment)) {
+        setTimeout(() => {
+          //USing the id returned from the server for the new document
+
+          router.push(`/workspace/${getAssignmentId(newAssignment)}`);
+        }, 1300);
+      }
+    } catch (err) {
+      console.error("Failed to use template:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
-
-  // const filteredTemplates =
-  //   activeFilter === "all"
-  //     ? templates
-  //     : activeFilter === "essay"
-  //       ? templates.filter((template) => template.category === "essay")
-  //       : templates.filter((template) => template.category === "lab")
-  //         ? templates.filter((template) => template.premium === true)
-  //         : templates;
 
   const filteredTemplates = templates.filter((template) => {
     if (activeFilter === "all") return true;
@@ -81,16 +92,6 @@ export default function TemplatesMain() {
 
           {/* Filters */}
           <div className="templates-filters">
-            {/* {templateFilter.map((filter) => (
-            <button
-            key={filter}
-            className={`filter ${activeFilter === filter ? "active" : ""}`}
-            onClick={() => setActiveFilter(filter as FilterType)}
-            >
-            {filter}
-            </button>
-            ))} */}
-
             <button
               className={`filter ${activeFilter === "all" ? "active" : ""}`}
               type="button"
@@ -125,11 +126,6 @@ export default function TemplatesMain() {
             >
               Premium
             </button>
-
-            {/* <button className="filter active">All</button>
-          <button className="filter">Essay</button>
-          <button className="filter">Report</button>
-          <button className="filter premium">Premium</button> */}
           </div>
         </div>
 
@@ -143,7 +139,7 @@ export default function TemplatesMain() {
         <div className="templates-grid">
           {filteredTemplates.map((template) => (
             <div
-              key={template.id}
+              key={template._id}
               className="assignment-card"
               onClick={() => handleUseTemplate(template)}
               id={`${template.premium && "template-premium-space"}`}

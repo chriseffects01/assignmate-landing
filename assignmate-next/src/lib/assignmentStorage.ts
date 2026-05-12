@@ -16,7 +16,25 @@ export function getAssignmentsFromTemplateData(): TemplateType[] {
   return data ? JSON.parse(data) : [];
 }
 
-export function saveAssignments(assignments: AssignmentType[]) {
+export async function saveAssignments(assignments: AssignmentType) {
+  const existing = await getAssignments();
+  const assignmentId = assignments._id || assignments.id;
+  const alreadyExists = existing.some((item) => {
+    const itemId = item.id || item._id;
+    return String(itemId) === String(assignmentId);
+  });
+
+  let updatedAssignments;
+
+  if (alreadyExists) {
+    updatedAssignments = existing.map((item) => {
+      const itemId = item.id || item._id;
+      return String(itemId) === String(assignmentId) ? assignments : item;
+    });
+  } else {
+    updatedAssignments = [assignments, ...existing];
+  }
+
   localStorage.setItem(KEY, JSON.stringify(assignments));
 }
 
@@ -24,8 +42,8 @@ export function saveAssignmentsFromTemplates(assignment: TemplateType[]) {
   localStorage.setItem(KEY, JSON.stringify(assignment));
 }
 
-export function addAssignment(newAssignment: AssignmentType) {
-  const existing = getAssignments();
+export async function addAssignment(newAssignment: AssignmentType) {
+  const existing = await getAssignments();
   const alreadyExists = existing.find((a) => {
     a.id === newAssignment.id;
   });
@@ -41,8 +59,8 @@ export function addAssignmentFromTemplate(newAssignment: TemplateType) {
   saveAssignmentsFromTemplates([newAssignment, ...existing]);
 }
 
-export function updateAssignment(updatedAssignment: AssignmentType) {
-  const existing = getAssignments();
+export async function updateAssignment(updatedAssignment: AssignmentType) {
+  const existing = await getAssignments();
 
   const updatedList = existing.map((a) =>
     a.id === updatedAssignment.id ? updatedAssignment : a,

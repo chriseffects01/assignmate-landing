@@ -27,7 +27,10 @@ export default function DashboardProgressChart() {
   }, [activeFilter]);
 
   useEffect(() => {
-    setData(getChartDats(activeFilter));
+    async function load() {
+      const chartData = await getChartDats(activeFilter);
+      setData(chartData);
+    }
     // console.log(data);
   }, [activeFilter]);
 
