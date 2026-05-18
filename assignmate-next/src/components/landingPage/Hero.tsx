@@ -1,15 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { useNavigate } from "react-router-dom";
 import LoadingScreen from "../shared/LoadingScreen";
 
 function Hero() {
   const router = useRouter();
-  // const [isLoading, setIsLoading] = useState(false);
   const [showloader, setShowLoader] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  // const navigate = useNavigate();
 
   function handleGetStarted() {
     setShowLoader(true);
@@ -20,7 +17,7 @@ function Hero() {
     }, 900);
 
     setTimeout(() => {
-      window.location.href = "/auth";
+      router.push("/auth/login");
     }, 1200);
   }
 

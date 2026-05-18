@@ -3,7 +3,6 @@ import StatCard from "@/src/components/dashboard/StatCard";
 import { getDashboardStats } from "@/src/lib/dashboardStats";
 import { useEffect, useState } from "react";
 import { AssignmentStats } from "@/src/types/stat";
-import { LoadingBoundaryProvider } from "next/dist/client/components/layout-router";
 
 export default function DashboardStats() {
   const [stat, setStat] = useState<AssignmentStats[]>([]);

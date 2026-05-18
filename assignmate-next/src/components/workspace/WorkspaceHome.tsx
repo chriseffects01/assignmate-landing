@@ -2,8 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CreateAssignmentFromForm } from "@/src/lib/createAssignmentFromForm";
-// import { addAssignment } from "@/src/lib/assignmentStorage";
 import CreateAssignmentModal from "./WorkspaceCreateAssignment";
 import "@/src/styles/workspace/workspace.css";
 

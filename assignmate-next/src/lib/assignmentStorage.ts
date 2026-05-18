@@ -16,11 +16,11 @@ export function getAssignmentsFromTemplateData(): TemplateType[] {
   return data ? JSON.parse(data) : [];
 }
 
-export async function saveAssignments(assignments: AssignmentType) {
+export async function saveAssignments(assignments: any) {
   const existing = await getAssignments();
-  const assignmentId = assignments._id || assignments.id;
+  const assignmentId = assignments._id;
   const alreadyExists = existing.some((item) => {
-    const itemId = item.id || item._id;
+    const itemId = item._id;
     return String(itemId) === String(assignmentId);
   });
 
@@ -28,14 +28,14 @@ export async function saveAssignments(assignments: AssignmentType) {
 
   if (alreadyExists) {
     updatedAssignments = existing.map((item) => {
-      const itemId = item.id || item._id;
+      const itemId = item._id;
       return String(itemId) === String(assignmentId) ? assignments : item;
     });
   } else {
     updatedAssignments = [assignments, ...existing];
   }
 
-  localStorage.setItem(KEY, JSON.stringify(assignments));
+  localStorage.setItem(KEY, JSON.stringify(updatedAssignments));
 }
 
 export function saveAssignmentsFromTemplates(assignment: TemplateType[]) {
@@ -45,7 +45,7 @@ export function saveAssignmentsFromTemplates(assignment: TemplateType[]) {
 export async function addAssignment(newAssignment: AssignmentType) {
   const existing = await getAssignments();
   const alreadyExists = existing.find((a) => {
-    a.id === newAssignment.id;
+    a._id === newAssignment._id;
   });
 
   if (alreadyExists) return;
@@ -59,11 +59,11 @@ export function addAssignmentFromTemplate(newAssignment: TemplateType) {
   saveAssignmentsFromTemplates([newAssignment, ...existing]);
 }
 
-export async function updateAssignment(updatedAssignment: AssignmentType) {
+export async function updateAssignment(updatedAssignment: any) {
   const existing = await getAssignments();
 
   const updatedList = existing.map((a) =>
-    a.id === updatedAssignment.id ? updatedAssignment : a,
+    a._id === updatedAssignment._id ? updatedAssignment : a,
   );
 
   saveAssignments(updatedList);

@@ -1,6 +1,5 @@
 export type AssignmentType = {
-  id: string;
-  _id?: string;
+  _id: string;
   title: string;
   content: string;
   category: string;
@@ -17,8 +16,7 @@ export type AssignmentType = {
 };
 
 export type TemplateType = {
-  id: string;
-  _id?: string;
+  _id: string;
   title: string;
   content: string;
   category: "essay" | "report" | "presentation";

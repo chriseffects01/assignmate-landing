@@ -7,6 +7,7 @@ import WorkspaceEditor from "./WorkspaceEditor";
 import WorkspaceHeader from "./WorkspaceHeader";
 import Notification from "../shared/Notification";
 import WorkspaceMeta from "./WorkspaceMeta";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
 export default function WorkspaceMain() {
   const params = useParams();
@@ -33,7 +34,7 @@ export default function WorkspaceMain() {
     async function load() {
       if (!id) return;
       const all = await getAssignments();
-      const found = all.find((a) => a._id);
+      const found = all.find((a) => getAssignmentId(a));
       setAssignments(found || null);
       setIsLoading(false);
     }

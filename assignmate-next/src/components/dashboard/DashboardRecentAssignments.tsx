@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getRecentAssignment } from "@/src/lib/getRecentAssignment";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
 export default function DashboardRecentAssignments() {
   const [recent, setRecent] = useState<any[]>([]);
@@ -43,12 +44,16 @@ export default function DashboardRecentAssignments() {
             <h3>Continue where you left off</h3>
           </div>
           {recent?.map((item: any) => (
-            <div key={item._id} className="continue-card">
+            <div key={getAssignmentId(item)} className="continue-card">
               <h4>{item.title || "untitled"}</h4>
               <h5> by {item.lecturer}</h5>
               <p>{item.courseCode}</p>
 
-              <button onClick={() => router.push(`/workspace/${item._id}`)}>
+              <button
+                onClick={() =>
+                  router.push(`/workspace/${getAssignmentId(item)}`)
+                }
+              >
                 Continue
               </button>
             </div>

@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
-// import { useNavigate } from "react-router-dom";
 import LoadingScreen from "../shared/LoadingScreen";
 
 function Cta() {
@@ -15,7 +14,7 @@ function Cta() {
     setIsLoading(true);
 
     setTimeout(() => {
-      window.location.href = "/auth";
+      router.push("/auth/login");
     }, 1250);
   }
   return (

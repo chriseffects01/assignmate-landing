@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import {
   getAssignments,
   saveAssignments,
-  updateAssignment,
+  // updateAssignment,
 } from "@/src/lib/assignmentStorage";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
-import { saveAssignment } from "@/src/services/assignmentService";
 import { updateAssignmentAPI } from "@/src/lib/api";
 
 export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
@@ -18,12 +18,12 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
     const timeout = setTimeout(async () => {
       setSaveStatus("saving");
       const updated = { ...assignment, content };
-      const id = assignment._id || assignment.id;
+      const id = getAssignmentId(assignment);
 
       const res = await updateAssignmentAPI(id, updated);
 
-      if (!res) updateAssignment(updated);
-    }, 600);
+      if (!res) saveAssignments(updated);
+    }, 900);
 
     return () => clearTimeout(timeout);
   }, [content]);

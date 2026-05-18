@@ -2,12 +2,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "@/src/styles/workspace/workspace.css";
-import { KEY } from "@/src/var/var";
 import { AssignmentType } from "@/src/types/assignment";
 import { getAssignments, saveAssignments } from "@/src/lib/assignmentStorage";
 import { createAssignmentAPI } from "@/src/lib/api";
-import { addAssignment } from "@/src/lib/assignmentStorage";
-import { CreateAssignmentFromForm } from "@/src/lib/createAssignmentFromForm";
+import getAssignmentId from "@/src/lib/getAssignmentId";
 
 export default function CreateAssignmentModal({ onClose }: any) {
   const assignmentStatus = {
@@ -26,7 +24,7 @@ export default function CreateAssignmentModal({ onClose }: any) {
 
   const handleCreate = async () => {
     const newAssignment: AssignmentType = {
-      id: crypto.randomUUID(),
+      _id: crypto.randomUUID(),
 
       ...form,
       content: "",
@@ -35,28 +33,16 @@ export default function CreateAssignmentModal({ onClose }: any) {
 
       category: "",
     };
-    // const newAssignment: AssignmentType = CreateAssignmentFromForm(form);
     const saved = await createAssignmentAPI(newAssignment);
 
     if (saved) {
-      router.push(`/workspace/${saved.id || saved._id}`);
+      router.push(`/workspace/${getAssignmentId(saved)}`);
     } else {
       //fallback
 
-      addAssignment(newAssignment);
-      router.push(`/workspace/${newAssignment.id || newAssignment._id}`);
+      saveAssignments(newAssignment);
+      router.push(`/workspace/${getAssignmentId(newAssignment)}`);
     }
-
-    // const existing = await getAssignments();
-
-    // // localStorage.setItem(
-    // //   "assignment",
-    // //   JSON.stringify([newAssignment, ...existing]),
-    // // );
-
-    // saveAssignments([newAssignment, ...existing]);
-
-    // router.push(`/workspace/${newAssignment.id || newAssignment._id}`);
   };
 
   return (

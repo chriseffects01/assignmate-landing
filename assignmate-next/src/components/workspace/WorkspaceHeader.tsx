@@ -8,7 +8,6 @@ import {
 } from "@/src/services/assignmentService";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspace.css";
-import { time } from "console";
 
 export default function WorkspaceHeader({ assignment, saveStatus }: any) {
   const isOnline = useOnlineStatus();

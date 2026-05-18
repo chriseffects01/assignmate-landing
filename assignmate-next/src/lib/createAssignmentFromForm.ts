@@ -14,7 +14,8 @@ export function CreateAssignmentFromForm(data: FormData): AssignmentType {
     title: data.title,
     lecturer: data.lecturer,
     course: data.course,
-    id: crypto.randomUUID(),
+    _id: crypto.randomUUID(),
+
     updatedAt: "",
     content: "",
     category: data.category,

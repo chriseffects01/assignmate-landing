@@ -5,8 +5,7 @@ export function createAssignmentFromTemplate(
   template: TemplateType,
 ): AssignmentType {
   return {
-    id: template.id,
-    _id: template.id,
+    _id: template._id,
     title: template.title,
     content: "",
     description: template.category,

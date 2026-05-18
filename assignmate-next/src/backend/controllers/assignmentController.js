@@ -1,7 +1,7 @@
-const Assignment = require("../model/Assignment");
+import Assignment from "../model/Assignment.js";
 
 //Create
-exports.createAssignment = async (req, res) => {
+export const createAssignment = async (req, res) => {
   try {
     const data = req.body;
     if (data._id) delete data._id;
@@ -15,19 +15,19 @@ exports.createAssignment = async (req, res) => {
 };
 
 //Get all
-exports.getAssignments = async (req, res) => {
+export const getAssignments = async (req, res) => {
   const data = await Assignment.find().sort({ createdAt: -1 });
   res.json(data);
 };
 
 //Get one assignment
 
-exports.getAssignment = async (req, res) => {
+export const getAssignment = async (req, res) => {
   const item = await Assignment.findById(req.params.id);
   res.json(item);
 };
 
-exports.updateAssignment = async (req, res) => {
+export const updateAssignment = async (req, res) => {
   try {
     console.log("ID received", req.params.id);
 
@@ -55,9 +55,4 @@ exports.updateAssignment = async (req, res) => {
     console.error("My Detailed Error:", err.message);
     res.status(500).json({ error: err.message });
   }
-
-  // const updated = await Assignment.findByIdAndUpdate(req.params.id, req.body, {
-  //   new: true,
-  // });
-  // res.json(updated);
 };

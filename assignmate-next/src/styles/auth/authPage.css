@@ -66,8 +66,12 @@ html {
   background: linear-gradient(135deg, #8b5cf6, #2563eb);
   color: white;
   box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+  cursor: pointer;
 }
 
+.auth-tab:disabled {
+  pointer-events: none;
+}
 .auth-form {
   display: flex;
   flex-direction: column;

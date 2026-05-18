@@ -1,8 +1,11 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import authRoutes from "./routes/auth.routes.js";
 
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
+import assignmentRoutes from "./routes/assignmentsRoutes.js";
 
 const app = express();
 
@@ -23,5 +26,6 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-const assignmentRoutes = require("./routes/assignmentsRoutes");
 app.use("/api/assignments", assignmentRoutes);
+
+app.use("/api/auth", authRoutes);

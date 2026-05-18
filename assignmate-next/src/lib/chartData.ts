@@ -17,7 +17,7 @@ export async function getChartDats(range: "7D" | "30D" | "Semester") {
     const end = start + START_END;
 
     const count = assignments.filter(
-      (a) => a.createdAt >= start && a.createdAt < end,
+      (a: any) => a.createdAt >= start && a.createdAt < end,
     ).length;
     // console.log("start:", start);
     // console.log("end", end);
