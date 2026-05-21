@@ -12,7 +12,7 @@ function Cta() {
 
   function handleCTA() {
     setIsLoading(true);
-
+    ``;
     setTimeout(() => {
       router.push("/auth/login");
     }, 1250);

@@ -1,5 +1,4 @@
 "use client";
-// import { handleDisplayDashboard } from "./AuthCardWrapper";
 import "@/src/styles/auth/authPage.css";
 import { registerUser } from "@/src/services/authServices";
 import { useState } from "react";

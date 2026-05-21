@@ -1,11 +1,11 @@
 "use client";
 import Settings from "@/src/components/settings/Settings";
-import DashboardLayout from "@/src/components/layout/DashboardLayout";
+import ProtectedRoute from "@/src/guards/ProtectedRoutes";
 
 export default function SettingsPage() {
   return (
-    <DashboardLayout>
+    <ProtectedRoute>
       <Settings />
-    </DashboardLayout>
+    </ProtectedRoute>
   );
 }

@@ -3,6 +3,7 @@ import StatCard from "@/src/components/dashboard/StatCard";
 import { getDashboardStats } from "@/src/lib/dashboardStats";
 import { useEffect, useState } from "react";
 import { AssignmentStats } from "@/src/types/stat";
+import LoadingScreen from "@/src/components/shared/LoadingScreen";
 
 export default function DashboardStats() {
   const [stat, setStat] = useState<AssignmentStats[]>([]);

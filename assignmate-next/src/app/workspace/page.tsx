@@ -1,11 +1,11 @@
 "use client";
 import WorkspaceHome from "@/src/components/workspace/WorkspaceHome";
-import DashboardLayout from "@/src/components/layout/DashboardLayout";
+import ProtectedRoute from "@/src/guards/ProtectedRoutes";
 
 export default function WorkspacePage() {
   return (
-    <DashboardLayout>
+    <ProtectedRoute>
       <WorkspaceHome />
-    </DashboardLayout>
+    </ProtectedRoute>
   );
 }

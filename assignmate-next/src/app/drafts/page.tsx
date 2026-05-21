@@ -1,12 +1,12 @@
 "use client";
 
-import DashboardLayout from "@/src/components/layout/DashboardLayout";
 import Drafts from "@/src/components/savedDrafts/SavedDrafts";
+import ProtectedRoute from "@/src/guards/ProtectedRoutes";
 
 export default function DraftsPage() {
   return (
-    <DashboardLayout>
+    <ProtectedRoute>
       <Drafts />
-    </DashboardLayout>
+    </ProtectedRoute>
   );
 }

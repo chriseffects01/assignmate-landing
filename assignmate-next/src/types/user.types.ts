@@ -6,4 +6,5 @@ export interface IUser {
   email: string;
   subscription: string;
   verified: boolean;
+  phoneNumber?: string;
 }

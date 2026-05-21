@@ -36,7 +36,7 @@ export async function registerUser(req, res) {
 
     // Create token
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
@@ -44,7 +44,7 @@ export async function registerUser(req, res) {
     res.status(201).json({
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         username: user.username,
@@ -86,7 +86,7 @@ export async function loginUser(req, res) {
 
     const token = jwt.sign(
       {
-        id: user._id,
+        _id: user._id,
       },
       process.env.JWT_SECRET,
       {
@@ -98,7 +98,7 @@ export async function loginUser(req, res) {
     res.status(200).json({
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         username: user.username,

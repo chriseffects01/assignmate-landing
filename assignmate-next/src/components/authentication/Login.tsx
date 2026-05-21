@@ -5,10 +5,7 @@ import { loginUser } from "@/src/services/authServices";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "../shared/LoadingScreen";
 
-// import { handleDisplayDashboard } from "./AuthCardWrapper";
 export default function Login() {
-  //   const displayDashboard = handleDisplayDashboard();
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +22,13 @@ export default function Login() {
         password,
       });
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
       setTimeout(() => {
         setIsLoading(true);
-        router.push("/dashboard");
+        router.replace("/dashboard");
       }, 1200);
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       console.log(data);
     } catch (error: any) {
       console.log(error.message);
@@ -38,7 +36,7 @@ export default function Login() {
   };
   return (
     <>
-      {isLoading && <LoadingScreen message={`Loading Your dashboard...`} />}
+      {isLoading && <LoadingScreen message="Loading Your dashboard..." />}
       <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="text"
@@ -73,11 +71,7 @@ export default function Login() {
           className="auth-input"
         />
 
-        <button
-          type="submit"
-          // onClick={() => displayDashboard}
-          className="auth-submit"
-        >
+        <button type="submit" className="auth-submit" onClick={handleSubmit}>
           Login
         </button>
       </form>

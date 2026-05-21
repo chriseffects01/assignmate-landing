@@ -4,8 +4,18 @@ import Assignment from "../model/Assignment.js";
 export const createAssignment = async (req, res) => {
   try {
     const data = req.body;
+    const userId = req.user?.id || req.user?._id;
+    console.log(userId);
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorised: No user found on request",
+      });
+    }
     if (data._id) delete data._id;
-    const assignment = await Assignment.create(data);
+    const assignment = await Assignment.create({
+      ...data,
+      user: userId,
+    });
 
     res.status(201).json(assignment);
   } catch (err) {
@@ -16,7 +26,9 @@ export const createAssignment = async (req, res) => {
 
 //Get all
 export const getAssignments = async (req, res) => {
-  const data = await Assignment.find().sort({ createdAt: -1 });
+  const data = await Assignment.find({
+    user: req.user._id,
+  }).sort({ createdAt: -1 });
   res.json(data);
 };
 
@@ -50,6 +62,7 @@ export const updateAssignment = async (req, res) => {
         message: "No assignment found with that ID",
       });
     }
+
     res.json(updated);
   } catch (err) {
     console.error("My Detailed Error:", err.message);

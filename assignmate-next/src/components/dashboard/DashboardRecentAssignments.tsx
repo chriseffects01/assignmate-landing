@@ -6,7 +6,6 @@ import getAssignmentId from "@/src/lib/getAssignmentId";
 export default function DashboardRecentAssignments() {
   const [recent, setRecent] = useState<any[]>([]);
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -18,20 +17,14 @@ export default function DashboardRecentAssignments() {
           </div>
         );
       setRecent(recentArr || []);
-      setLoading(false);
     }
     load();
   }, []);
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
 
   if (!recent) {
     return <p>Your recent assignments will go hear</p>;
   }
 
-  console.log(recent);
   return (
     <>
       <section className="dashboard-section">

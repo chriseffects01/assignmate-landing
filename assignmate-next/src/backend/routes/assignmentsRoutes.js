@@ -8,14 +8,9 @@ import {
   getAssignments,
 } from "../controllers/assignmentController.js";
 
-// const {
-//   createAssignment,
-//   getAssignments,
-//   getAssignment,
-//   updateAssignment,
-// } = require("../controllers/assignmentController");
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
-router.post("/", createAssignment);
+router.post("/", authMiddleware, createAssignment);
 router.get("/", getAssignments);
 router.get("/:id", getAssignment);
 router.put("/:id", updateAssignment);
