@@ -1,11 +1,8 @@
-// import { getAssignments } from "./assignmentStorage";
 import { getAssignments } from "../services/assignmentService";
 import { START_END, DAY30, DAY7, DAY_SEMESTER } from "../var/var";
-// import { getDashboardStats } from "./dashboardStats";
 
 export async function getChartDats(range: "7D" | "30D" | "Semester") {
   const assignments = await getAssignments();
-  // console.log(assignments);
 
   const now = Date.now();
   let days = DAY7;
@@ -19,15 +16,11 @@ export async function getChartDats(range: "7D" | "30D" | "Semester") {
     const count = assignments.filter(
       (a: any) => a.createdAt >= start && a.createdAt < end,
     ).length;
-    // console.log("start:", start);
-    // console.log("end", end);
-    // console.log("count:", count);
-    // console.log("i:", i);
+    
 
     return count;
   }).reverse();
 
-  // console.log("data:", data);
 
   return data;
 }

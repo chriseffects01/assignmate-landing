@@ -9,7 +9,6 @@ import LoadingScreen from "@/src/components/shared/LoadingScreen";
 import { authService } from "@/src/services/auth.load.services";
 
 import { storage } from "@/src/lib/storage";
-import { isNullOrUndef } from "chart.js/helpers";
 
 interface AuthContextType {
   user: IUser | null;

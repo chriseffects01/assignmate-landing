@@ -66,6 +66,8 @@ export async function loginUser(req, res) {
     // find user
     const user = await User.findOne({
       email,
+      username,
+      password,
     });
 
     if (!user) {
@@ -79,7 +81,7 @@ export async function loginUser(req, res) {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status($00).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Create token
@@ -98,7 +100,7 @@ export async function loginUser(req, res) {
     res.status(200).json({
       token,
       user: {
-        _id: user._id,
+        _id: user._id || user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         username: user.username,
@@ -106,8 +108,8 @@ export async function loginUser(req, res) {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
 
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error and moreee" });
   }
 }

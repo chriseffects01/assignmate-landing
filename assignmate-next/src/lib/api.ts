@@ -14,14 +14,6 @@ export async function fetchAssignments() {
 //CREATE
 export async function createAssignmentAPI(data: any) {
   try {
-    // const res = await fetch(BASE_URL, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-
     const res = await api.post(BASE_URL, data);
     return res.data;
   } catch (err: any) {
@@ -33,14 +25,6 @@ export async function createAssignmentAPI(data: any) {
 
 export async function updateAssignmentAPI(id: string, data: any) {
   try {
-    // const res = await fetch(`${BASE_URL}/${id}`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-
     const res = await api.put(`${BASE_URL}/${id}`, data);
     return res.data;
   } catch (err: any) {

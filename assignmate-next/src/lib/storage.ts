@@ -1,7 +1,4 @@
-import { KEY } from "../var/var";
-
-const TOKEN_KEY = "token";
-const USER_KEY = "user";
+import { KEY, TOKEN_KEY, USER_KEY } from "../var/var";
 
 export const storage = {
   getToken: () => localStorage.getItem(TOKEN_KEY),

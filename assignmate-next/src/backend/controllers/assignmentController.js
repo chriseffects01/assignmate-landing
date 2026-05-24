@@ -26,10 +26,23 @@ export const createAssignment = async (req, res) => {
 
 //Get all
 export const getAssignments = async (req, res) => {
-  const data = await Assignment.find({
-    user: req.user._id,
-  }).sort({ createdAt: -1 });
-  res.json(data);
+  try {
+    const userId = req.user?.id || req.user?._id;
+
+    if (!userId) {
+      res.status(402).json({
+        message: "Unauthorised access: thief ole",
+      });
+      console.log(userId);
+    }
+    const data = await Assignment.find({
+      user: userId,
+    }).sort({ createdAt: -1 });
+    res.json(data);
+  } catch (err) {
+    console.error(err.message);
+    res.json(err);
+  }
 };
 
 //Get one assignment
