@@ -75,11 +75,6 @@ export default function WorkspaceMeta({ assignment }: Props) {
         </div>
       </div>
 
-      {/* <div className="meta-field-wrapper">
-        <span className="meta-level">Status</span>
-        <h4 className="meta-inline-input">{assignment.status}</h4>
-      </div> */}
-
       <div className="meta-field-wrapper">
         <label className="meta-label">Level </label>
         <div className="input-action-row">
