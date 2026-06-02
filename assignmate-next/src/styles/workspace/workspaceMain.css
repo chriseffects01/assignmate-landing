@@ -1,0 +1,371 @@
+:root {
+  /* --- Brand / Accent Colors --- */
+  --primary-brand: #2563eb; /* Electric Blue for main buttons/actions */
+  --primary-hover: #1d4ed8; /* Deeper blue for hover states */
+  --accent-glow: rgba(37, 99, 235, 0.15); /* Soft blue aura for active tabs */
+  --premium-gold: #f59e0b; /* Gold/Orange badge for premium features */
+
+  /* --- Cinematic Dark Theme Backgrounds --- */
+  --bg-main: #070a13; /* Deep space midnight blue-black background */
+  --bg-sidebar: #0b1120; /* Slightly lighter dark for structural contrast */
+  --bg-card: rgba(15, 23, 42, 0.65); /* Translucent glass card base */
+  --bg-input: #1e293b; /* Solid dark grey-blue for clean input fields */
+
+  /* --- Borders & Glassmorphism --- */
+  --border-subtle: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Clean, ultra-thin divider lines */
+  --border-focus: rgba(37, 99, 235, 0.5); /* Sharp focus ring color */
+  --glass-blur: blur(12px); /* Standard backdrop filter strength */
+
+  /* --- Typography --- */
+  --text-main: #f8fafc; /* Crisp, high-contrast white for headings */
+  --text-muted: #94a3b8; /* Soft slate gray for secondary labels/descriptions */
+  --text-dim: #64748b; /* Darker slate for placeholders/timestamps */
+
+  /* --- Status Indicators --- */
+  --status-draft: #38bdf8; /* Sky blue for drafts */
+  --status-success: #10b981; /* Emerald for completed work */
+  --status-error: #ef4444; /* Crimson for warnings/errors */
+
+  /* --- Layout & Animation --- */
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Future-Proofing: Easy Dark/Light Toggle Structure --- */
+[data-theme="light"] {
+  --bg-main: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: rgba(241, 245, 249, 0.8);
+  --bg-input: #ffffff;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  --accent-glow: rgba(37, 99, 235, 0.08);
+}
+
+/* ==========================================
+   SPLIT-PANE WORKSPACE CORE LAYOUT
+   ========================================== */
+
+.workspace-layout {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: var(--bg-main);
+  min-height: 90vh;
+  box-sizing: border-box;
+}
+
+/* --- Left Column Metadata Settings Panel --- */
+.workspace-meta-panel {
+  flex: 1;
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* --- Right Column Document Canvas --- */
+.workspace-editor-canvas {
+  flex: 2;
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+/* ==========================================
+   METADATA FIELDS & INLINE INPUTS
+   ========================================== */
+
+.meta-form-group {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.meta-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meta-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-action-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.meta-inline-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+
+.meta-inline-input:not(:disabled) {
+  background: var(--bg-input);
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.meta-edit-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  width: 2.75rem;
+  height: 2.75rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.meta-edit-btn:hover {
+  background: var(--accent-glow);
+  border-color: var(--primary-brand);
+}
+
+/* ==========================================
+   GET STARTED WITH AI MODULE
+   ========================================== */
+
+.ai-assistant-card {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.8),
+    rgba(30, 41, 59, 0.4)
+  );
+  border: 1px solid rgba(37, 99, 235, 0.2); /* Highlighted subtle primary blue boundary */
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ai-card-title {
+  color: var(--text-main);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.ai-card-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.ai-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.25rem;
+}
+
+.ai-prompt-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.ai-send-btn {
+  background: var(--primary-brand);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition-smooth);
+}
+
+.ai-send-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+}
+
+/* AI Thinking Area & Outputs */
+.ai-thinking-space {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px dashed var(--border-subtle);
+  min-height: 6rem;
+}
+
+.ai-thinking-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--status-draft);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.status-text {
+  color: var(--status-draft);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ai-response-placeholder {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* ==========================================
+   RICH TEXT TOOLBAR & CANVAS TEXTAREA
+   ========================================== */
+
+.editor-toolbar {
+  background: rgba(11, 17, 32, 0.8);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  min-width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.5rem;
+  transition: var(--transition-smooth);
+}
+
+.toolbar-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+}
+
+.font-bold {
+  font-weight: 800;
+}
+.font-italic {
+  font-style: italic;
+}
+.font-underline {
+  text-decoration: underline;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 1.25rem;
+  background-color: var(--border-subtle);
+  margin: 0 0.25rem;
+}
+
+.btn-save {
+  margin-left: auto; /* Pushes the save button to the absolute right side */
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--status-success);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  padding: 0 1rem;
+  height: 2rem;
+}
+
+.btn-save:hover {
+  background: var(--status-success);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Massive Editor Body Workspace Container */
+.editor-body-wrapper {
+  flex: 1;
+  display: flex;
+}
+
+.main-editor-textarea {
+  flex: 1;
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  padding: 2rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  resize: none; /* Disables standard text area resizing bars */
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.main-editor-textarea::placeholder {
+  color: var(--text-dim);
+}

@@ -63,10 +63,14 @@
   align-items: flex-end; */
   gap: 6px;
   height: 350px;
+  text-transform: capitalize;
   width: auto;
   transition: all 0.3s ease;
   cursor: pointer;
   /* border: 2px solid red; */
+}
+.chart-text-header {
+  text-align: center;
 }
 
 .bar {

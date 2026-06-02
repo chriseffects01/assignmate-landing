@@ -1,0 +1,214 @@
+:root {
+  /* --- Brand / Accent Colors --- */
+  --primary-brand: #2563eb; /* Electric Blue for main buttons/actions */
+  --primary-hover: #1d4ed8; /* Deeper blue for hover states */
+  --accent-glow: rgba(37, 99, 235, 0.15); /* Soft blue aura for active tabs */
+  --premium-gold: #f59e0b; /* Gold/Orange badge for premium features */
+
+  /* --- Cinematic Dark Theme Backgrounds --- */
+  --bg-main: #070a13; /* Deep space midnight blue-black background */
+  --bg-sidebar: #0b1120; /* Slightly lighter dark for structural contrast */
+  --bg-card: rgba(15, 23, 42, 0.65); /* Translucent glass card base */
+  --bg-input: #1e293b; /* Solid dark grey-blue for clean input fields */
+
+  /* --- Borders & Glassmorphism --- */
+  --border-subtle: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Clean, ultra-thin divider lines */
+  --border-focus: rgba(37, 99, 235, 0.5); /* Sharp focus ring color */
+  --glass-blur: blur(12px); /* Standard backdrop filter strength */
+
+  /* --- Typography --- */
+  --text-main: #f8fafc; /* Crisp, high-contrast white for headings */
+  --text-muted: #94a3b8; /* Soft slate gray for secondary labels/descriptions */
+  --text-dim: #64748b; /* Darker slate for placeholders/timestamps */
+
+  /* --- Status Indicators --- */
+  --status-draft: #38bdf8; /* Sky blue for drafts */
+  --status-success: #10b981; /* Emerald for completed work */
+  --status-error: #ef4444; /* Crimson for warnings/errors */
+
+  /* --- Layout & Animation --- */
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Future-Proofing: Easy Dark/Light Toggle Structure --- */
+[data-theme="light"] {
+  --bg-main: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: rgba(241, 245, 249, 0.8);
+  --bg-input: #ffffff;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  --accent-glow: rgba(37, 99, 235, 0.08);
+}
+
+/* ==========================================
+   MODAL ISOLATION & OVERLAY LAYER
+   ========================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(
+    4,
+    6,
+    12,
+    0.8
+  ); /* Dark tint to completely mask background text */
+  backdrop-filter: blur(
+    8px
+  ); /* Smoothly blurs out the underlying landing page */
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensures it sits on top of all other page elements */
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.modal-window {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 32rem; /* Clean, centralized standard width */
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
+}
+
+.modal-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.modal-title {
+  color: var(--text-main);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.modal-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ==========================================
+   FORM INPUT FIELD STYLING
+   ========================================== */
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* Balanced spatial gap between rows */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.form-label {
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form-input,
+.form-select {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-smooth);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Smooth Focus Glow States */
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.form-input::placeholder {
+  color: var(--text-dim);
+}
+
+/* Custom styling for the raw select arrow indicator */
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* ==========================================
+   FOOTER ACTIONS BUTTONS
+   ========================================== */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-secondary,
+.btn-primary-action {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+}
+
+.btn-primary-action {
+  background: var(--primary-brand);
+  border: 1px solid transparent;
+  color: #ffffff;
+}
+
+.btn-primary-action:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 0 15px var(--accent-glow);
+}

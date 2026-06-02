@@ -62,7 +62,7 @@ export default function DashboardProgressChart() {
       </div>
 
       <div className="dashboard-chart-placeholder">
-        <p>Currently showing: {activeFilter}</p>
+        <p className="chart-text-header">Currently showing: {activeFilter}</p>
         {/* <ChartMain
           activeFilter={activeFilter}
           setActiveFilter={setActiveFilter}

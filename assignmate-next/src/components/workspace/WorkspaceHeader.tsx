@@ -39,12 +39,29 @@ export default function WorkspaceHeader({ assignment, saveStatus }: any) {
 
   return (
     <div className="workspace-header">
-      <input
+      <div className="meta-field-wrapper">
+        <label className="meta-label">Assignment Title</label>
+        <div className="input-action-row">
+          <input
+            type="text"
+            className="meta-inline-input"
+            value={title}
+            name="workspace-title"
+            onChange={(e) => setTitle(e.target.value)}
+            disabled
+          />
+          <button type="button" className="meta-edit-btn" title="Edit Field">
+            ✏️
+          </button>
+        </div>
+      </div>
+
+      {/* <input
         className="Workspace-title"
         value={title}
         name="workspace-title"
         onChange={(e) => setTitle(e.target.value)}
-      />
+      /> */}
 
       <div className="workspace-status">
         {saveStatus === "saving" && <span>Saving...</span>}

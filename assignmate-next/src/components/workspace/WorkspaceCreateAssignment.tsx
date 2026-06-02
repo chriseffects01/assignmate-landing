@@ -6,6 +6,7 @@ import { AssignmentType } from "@/src/types/assignment";
 import { getAssignments, saveAssignments } from "@/src/lib/assignmentStorage";
 import { createAssignmentAPI } from "@/src/lib/api";
 import getAssignmentId from "@/src/lib/getAssignmentId";
+import "@/src/styles/workspace/workspaceModal.css";
 
 export default function CreateAssignmentModal({ onClose }: any) {
   const assignmentStatus = {
@@ -46,59 +47,97 @@ export default function CreateAssignmentModal({ onClose }: any) {
   };
 
   return (
+    //  Modal Backdrop Overlay
     <div className="modal-overlay">
-      <div className="modal">
-        <h2>Create Assignment</h2>
+      {/* //   <!-- Actual Glassmorphic Modal Window --> */}
 
-        <label htmlFor="courseCode">Course Code:</label>
-        <input
-          name="courseCode"
-          type="text"
-          placeholder="Course Code"
-          onChange={handleChange}
-          required
-        />
+      <div className="modal-window">
+        <header className="modal-header">
+          <h2 className="modal-title">Create Assignment</h2>
+          <p className="modal-subtitle">
+            Fill in the fields below to initialize a new assignment draft.
+          </p>
+        </header>
 
-        <label htmlFor="course">Course Name:</label>
-        <input
-          type="text"
-          placeholder="Course name"
-          name="course"
-          onChange={handleChange}
-          required
-        />
+        <form className="modal-form" action={handleCreate}>
+          <div className="form-group">
+            <label className="form-label">Course Code:</label>
+            <input
+              name="courseCode"
+              className="form-input"
+              type="text"
+              placeholder="e.g., COS 323"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <label htmlFor="lecturer">Lecturer:</label>
-        <input
-          type="text"
-          placeholder="Lecturer"
-          name="lecturer"
-          onChange={handleChange}
-        />
+          <div className="form-group">
+            <label className="form-label">Course Name:</label>
+            <input
+              className="form-input"
+              type="text"
+              placeholder="e.g., Advanced Computing"
+              name="course"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          name="title"
-          placeholder="Assignment title"
-          onChange={handleChange}
-          required
-        />
+          <div className="form-group">
+            <label className="form-label">Lecturer:</label>
+            <input
+              className="form-input"
+              type="text"
+              placeholder="e.g., Dr. Smith"
+              name="lecturer"
+              onChange={handleChange}
+            />
+          </div>
 
-        <select name="category" onChange={handleChange}>
-          <option value="Category">Category</option>
-          <option value="essay">Essay</option>
-          <option value="report">Report</option>
-        </select>
+          <div className="form-group">
+            <label className="form-label">Title:</label>
+            <input
+              className="form-input"
+              type="text"
+              name="title"
+              placeholder="A biography on Lionel Messi"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="modal-actions">
-          <button type="button" onClick={handleCreate}>
-            Create
-          </button>
-          <button type="button" onClick={onClose}>
-            Cancel
-          </button>
-        </div>
+          <div className="form-group">
+            <label className="form-label">Category</label>
+            <select
+              className="form-select"
+              name="category"
+              onSelect={handleChange}
+            >
+              <option value="" disabled>
+                Select a category
+              </option>
+              <option value="essay">Essay</option>
+              <option value="report">Report</option>
+              <option value="presentation">Presentation</option>
+              <option value="lab">Lab</option>
+              <option value="letter">Letter</option>
+            </select>
+          </div>
+
+          <div className="modal-actions">
+            <button
+              type="button"
+              className="btn-primary-action"
+              onClick={handleCreate}
+            >
+              Create
+            </button>
+            <button type="button" className="btn-secondary" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -69,7 +69,7 @@ export async function loginUser(req, res) {
       // username,
       // password,
     });
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       return res.status(400).json({
@@ -84,7 +84,7 @@ export async function loginUser(req, res) {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    console.log(isMatch);
+    // console.log(isMatch);
 
     // Create token
 

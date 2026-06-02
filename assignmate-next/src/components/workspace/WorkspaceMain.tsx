@@ -8,6 +8,7 @@ import WorkspaceHeader from "./WorkspaceHeader";
 import Notification from "../shared/Notification";
 import WorkspaceMeta from "./WorkspaceMeta";
 import getAssignmentId from "@/src/lib/getAssignmentId";
+import "@/src/styles/workspace/workspaceMain.css";
 
 export default function WorkspaceMain() {
   const params = useParams();
@@ -51,14 +52,21 @@ export default function WorkspaceMain() {
   return (
     <>
       {notification && <Notification message={notification} />}
-      <div className="workspace-container">
-        <WorkspaceHeader assignment={assignment} saveStatus={saveStatus} />
-        <WorkspaceMeta assignment={assignment} />
+      <div className="workspace-layout">
+        <aside className="workspace-meta-panel">
+          <div className="panel-header">
+            <h2 className="panel-title">Assignment Settings</h2>
+          </div>
+          <WorkspaceHeader assignment={assignment} saveStatus={saveStatus} />
+          <WorkspaceMeta assignment={assignment} />
+        </aside>
 
-        <WorkspaceEditor
-          assignment={assignment}
-          setSaveStatus={setSaveStatus}
-        />
+        <main className="workspace-editor-canvas">
+          <WorkspaceEditor
+            assignment={assignment}
+            setSaveStatus={setSaveStatus}
+          />
+        </main>
       </div>
     </>
   );

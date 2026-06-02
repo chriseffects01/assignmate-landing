@@ -1,37 +1,14 @@
-.workspace-home {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.workspace-overlay {
-  background: var(--color-surface);
-  padding: 2rem;
-  border-radius: 9px;
-  box-shadow: var(--shadow-md);
-  text-align: center;
-  border: 1px solid var(--color-border);
-}
-
-.workspace-actions {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.modal-overlay {
+/* .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .modal {
-  background: var(--color-surface);
+  background: transparent;
   padding: 1.5rem;
   border-radius: 9px;
   width: 320px;
@@ -66,4 +43,194 @@
   box-shadow: var(--shadow-md);
   border-radius: 9px;
   border: 1px solid var(--color-border);
+}
+
+:root {
+  /* --- Brand / Accent Colors --- */
+  --primary-brand: #2563eb; /* Electric Blue for main buttons/actions */
+  --primary-hover: #1d4ed8; /* Deeper blue for hover states */
+  --accent-glow: rgba(37, 99, 235, 0.15); /* Soft blue aura for active tabs */
+  --premium-gold: #f59e0b; /* Gold/Orange badge for premium features */
+
+  /* --- Cinematic Dark Theme Backgrounds --- */
+  --bg-main: #070a13; /* Deep space midnight blue-black background */
+  --bg-sidebar: #0b1120; /* Slightly lighter dark for structural contrast */
+  --bg-card: rgba(15, 23, 42, 0.65); /* Translucent glass card base */
+  --bg-input: #1e293b; /* Solid dark grey-blue for clean input fields */
+
+  /* --- Borders & Glassmorphism --- */
+  --border-subtle: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Clean, ultra-thin divider lines */
+  --border-focus: rgba(37, 99, 235, 0.5); /* Sharp focus ring color */
+  --glass-blur: blur(12px); /* Standard backdrop filter strength */
+
+  /* --- Typography --- */
+  --text-main: #f8fafc; /* Crisp, high-contrast white for headings */
+  --text-muted: #94a3b8; /* Soft slate gray for secondary labels/descriptions */
+  --text-dim: #64748b; /* Darker slate for placeholders/timestamps */
+
+  /* --- Status Indicators --- */
+  --status-draft: #38bdf8; /* Sky blue for drafts */
+  --status-success: #10b981; /* Emerald for completed work */
+  --status-error: #ef4444; /* Crimson for warnings/errors */
+
+  /* --- Layout & Animation --- */
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Future-Proofing: Easy Dark/Light Toggle Structure --- */
+[data-theme="light"] {
+  --bg-main: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: rgba(241, 245, 249, 0.8);
+  --bg-input: #ffffff;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  --accent-glow: rgba(37, 99, 235, 0.08);
+}
+
+/* ==========================================
+   WORKSPACE HERO LAYOUT (Centering & Canvas)
+   ========================================== */
+
+.workspace-hero-container {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  min-height: 80vh; /* Keeps it perfectly centered vertically in the viewport */
+  padding: 2rem;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.workspace-hero-content {
+  max-width: 56rem;
+  width: 100%;
+  text-align: center;
+}
+
+.workspace-hero-header {
+  margin-bottom: 4rem;
+}
+
+.workspace-hero-title {
+  color: var(--text-main);
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.03rem;
+  margin-bottom: 1rem;
+}
+
+.workspace-hero-subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+/* ==========================================
+   ACTIONS GRID & CARDS
+   ========================================== */
+
+.workspace-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 2.5rem;
+  justify-content: center;
+}
+
+.workspace-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: var(--transition-smooth);
+}
+
+.workspace-action-card:hover {
+  transform: translateY(-0.25rem);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================
+   CIRCULAR BUTTONS & GLOW STATES
+   ========================================== */
+
+.workspace-circle-btn {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%; /* Perfect circle */
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.workspace-btn-icon {
+  font-size: 2rem;
+  transition: var(--transition-smooth);
+}
+
+/* Color & Glow Variances */
+.btn-blue:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.btn-gold:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: var(--premium-gold);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
+}
+
+.btn-purple:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: #8b5cf6;
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+}
+
+/* Subtle micro-interaction on icon */
+.workspace-circle-btn:hover .workspace-btn-icon {
+  transform: scale(1.15);
+}
+
+/* ==========================================
+   TYPOGRAPHY UNDER BUTTONS
+   ========================================== */
+
+.workspace-action-title {
+  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.workspace-action-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
 }
