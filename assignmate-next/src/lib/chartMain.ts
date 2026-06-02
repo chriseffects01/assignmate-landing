@@ -14,6 +14,14 @@ export const productivityData = {
       essays: 2,
       completed: 5,
     },
+
+    {
+      name: "Wed",
+      drafts: 4,
+      reports: 3,
+      essays: 2,
+      completed: 4,
+    },
   ],
 
   "30D": [
@@ -24,6 +32,13 @@ export const productivityData = {
       essays: 3,
       completed: 10,
     },
+    {
+      name: "Week 2",
+      drafts: 7,
+      reports: 3,
+      essays: 6,
+      completed: 8,
+    },
   ],
 
   Semester: [
@@ -33,6 +48,13 @@ export const productivityData = {
       reports: 9,
       essays: 14,
       completed: 20,
+    },
+    {
+      name: "Feb",
+      drafts: 19,
+      reports: 8,
+      essays: 12,
+      completed: 23,
     },
   ],
 };

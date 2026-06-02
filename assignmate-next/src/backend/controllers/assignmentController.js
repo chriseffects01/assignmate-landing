@@ -30,18 +30,22 @@ export const getAssignments = async (req, res) => {
     const userId = req.user?.id || req.user?._id;
 
     if (!userId) {
-      res.status(402).json({
+      return res.status(402).json({
         message: "Unauthorised access: thief ole",
       });
-      console.log(userId);
+      // console.log(userId);
     }
     const data = await Assignment.find({
       user: userId,
     }).sort({ createdAt: -1 });
-    res.json(data);
+    return res.json(data).status(200);
   } catch (err) {
-    console.error(err.message);
-    res.json(err);
+    console.error("Backend error from get assignments:", err);
+    return res
+      .json({
+        error: err.message,
+      })
+      .status(500);
   }
 };
 

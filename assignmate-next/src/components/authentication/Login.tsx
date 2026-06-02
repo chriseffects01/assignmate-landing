@@ -1,4 +1,4 @@
-"use client";
+"use clent";
 import "@/src/styles/auth/authPage.css";
 import { useState } from "react";
 import { loginUser } from "@/src/services/authServices";

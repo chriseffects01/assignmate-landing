@@ -66,9 +66,10 @@ export async function loginUser(req, res) {
     // find user
     const user = await User.findOne({
       email,
-      username,
-      password,
+      // username,
+      // password,
     });
+    console.log(user);
 
     if (!user) {
       return res.status(400).json({
@@ -83,6 +84,7 @@ export async function loginUser(req, res) {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+    console.log(isMatch);
 
     // Create token
 
@@ -97,6 +99,7 @@ export async function loginUser(req, res) {
     );
 
     //send response
+
     res.status(200).json({
       token,
       user: {
@@ -110,6 +113,8 @@ export async function loginUser(req, res) {
   } catch (err) {
     console.log(err.message);
 
-    res.status(500).json({ message: "Server error and moreee" });
+    res.status(500).json({
+      message: "Server error and moreee",
+    });
   }
 }

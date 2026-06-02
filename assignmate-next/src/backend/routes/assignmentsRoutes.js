@@ -11,7 +11,7 @@ import {
 import { authMiddleware } from "../middleware/auth.middleware.js";
 
 router.post("/", authMiddleware, createAssignment);
-router.get("/", getAssignments);
+router.get("/", authMiddleware, getAssignments);
 router.get("/:id", getAssignment);
 router.put("/:id", updateAssignment);
 
