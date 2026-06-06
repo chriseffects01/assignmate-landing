@@ -69,7 +69,7 @@ export const updateAssignment = async (req, res) => {
     console.log("Final data being sent to database:", data);
 
     const updated = await Assignment.findByIdAndUpdate(req.params.id, data, {
-      new: true,
+      returnDocument: "after",
       runValidators: true, // Bad
     });
     console.log("updated logging", updated);

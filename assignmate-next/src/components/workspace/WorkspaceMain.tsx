@@ -9,16 +9,44 @@ import Notification from "../shared/Notification";
 import WorkspaceMeta from "./WorkspaceMeta";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspaceMain.css";
+import { updateAssignmentAPI } from "@/src/lib/api";
+export type WorkspaceField =
+  | "course"
+  | "lecturer"
+  | "title"
+  | "courseCode"
+  | "level"
+  | "dueDate";
 
 export default function WorkspaceMain() {
-  const params = useParams();
-  const id = params?.id as string;
+  ///////////////////////
 
+  const [isEditable, setIsEditable] = useState<Record<WorkspaceField, boolean>>(
+    {
+      course: false,
+      lecturer: false,
+      title: false,
+      dueDate: false,
+      courseCode: false,
+      level: false,
+    },
+  );
   const [notification, setNotification] = useState("");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle",
   );
+  const [values, setValues] = useState<Record<WorkspaceField, string>>({
+    course: "",
+    lecturer: "",
+    title: "",
+    dueDate: "",
+    courseCode: "",
+    level: "",
+    //
+  });
 
+  const params = useParams();
+  const id = params?.id as string;
   useEffect(() => {
     if (saveStatus === "saved") {
       setNotification("All changes saved");
@@ -45,9 +73,62 @@ export default function WorkspaceMain() {
     <div className="workspace-loading">Loading...</div>;
   }
 
+  useEffect(() => {
+    if (assignment) {
+      setValues({
+        course: assignment.course || "",
+        lecturer: assignment.lecturer || "",
+        title: assignment.title || "",
+        dueDate: assignment.dueDate || "",
+        courseCode: assignment.courseCode || "",
+        level: assignment.level || "",
+      });
+    }
+  }, [assignment]);
+
   if (!assignment) {
     return <div className="workspace-loading">Assignment not found</div>;
   }
+  //////////////////////////////////////////////***************************8 */
+
+  // Initially blank state for edits
+
+  const handleToggleEdit = async (field: WorkspaceField): Promise<void> => {
+    console.log(`Edit button Clicked for field: ${field}`);
+    const turningOff = isEditable[field];
+    // console.log(turningOff);
+
+    if (turningOff) {
+      console.log(
+        `Detected save mode for [${field}]. Value to send: `,
+        values[field],
+      );
+      try {
+        const cleanValue = Array.isArray(values[field])
+          ? values[field][0]
+          : values[field];
+        console.log(`Awaiting DB Updatesequence for ${field}...`);
+
+        await updateAssignmentAPI(getAssignmentId(assignment), {
+          [field]: cleanValue,
+        });
+
+        console.log(`Database updated successfully for ${field}`);
+      } catch (err: any) {
+        console.error(`My error: Failed to update ${field} in DB:`, err);
+        console.log(err.message);
+        return;
+      }
+    } else {
+      console.log(`Field [${field}] unlocked for typing`);
+    }
+    setIsEditable((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+  const handleChange = (field: WorkspaceField, text: string): void => {
+    // setIsEditable((prev) => ({ ...prev, [field]: !prev[field] }));
+    console.log(`User typing in [${field}]:`, text);
+    setValues((prev) => ({ ...prev, [field]: [text] }));
+  };
 
   return (
     <>
@@ -57,8 +138,21 @@ export default function WorkspaceMain() {
           <div className="panel-header">
             <h2 className="panel-title">Assignment Settings</h2>
           </div>
-          <WorkspaceHeader assignment={assignment} saveStatus={saveStatus} />
-          <WorkspaceMeta assignment={assignment} />
+          <WorkspaceHeader
+            titleValue={values.title}
+            isTitleEditable={isEditable.title}
+            onTitleChange={(text) => handleChange("title", text)}
+            onToggleTitleEdit={() => handleToggleEdit("title")}
+            assignment={assignment}
+            saveStatus={saveStatus}
+          />
+          <WorkspaceMeta
+            values={values}
+            isEditable={isEditable}
+            onchange={handleChange}
+            onToggleEdit={handleToggleEdit}
+            assignment={assignment}
+          />
         </aside>
 
         <main className="workspace-editor-canvas">

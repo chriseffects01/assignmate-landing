@@ -1,10 +1,14 @@
-export default function DashboardWelcome() {
-  const user: string = "Chris";
+import { useAuth } from "@/src/context/AuthContext";
 
+export default function DashboardWelcome() {
+  // const user: string = "Chris";
+  const { user } = useAuth();
   return (
     <section className="dashboard-section dashboard-welcome">
       <div>
-        <p className="dashboard-eyebrow">Welcome back {user}</p>
+        <p className="dashboard-eyebrow">
+          Welcome back {user?.username || "Student"}
+        </p>
         <h1>Your assignments, In one place.</h1>
         <p className="dashboard-muted">
           Continue your latest drafts or start a new assignment in seconds.

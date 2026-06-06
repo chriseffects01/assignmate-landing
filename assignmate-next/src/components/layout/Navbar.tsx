@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useEffectEvent } from "react";
+// import user
+import { useAuth } from "@/src/context/AuthContext";
 
 export default function Navbar({
   isSidebarOpen,
@@ -10,6 +12,8 @@ export default function Navbar({
   toggleSidebar: () => void;
 }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { user } = useAuth();
+  // console.log(user);
 
   return (
     <header className="dashboard-navbar">
@@ -26,7 +30,7 @@ export default function Navbar({
         <div className="dashboard-profile-picture">
           <div className="dashboard-profile-pic-inner"></div>
         </div>
-        <p className="dashboard-user-name">Chris</p>
+        <p className="dashboard-user-name">{user?.username || "Student"}</p>
         <p className="dashboard-nav-logo"> | AssignMate</p>
       </div>
 

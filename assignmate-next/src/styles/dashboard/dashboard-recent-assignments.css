@@ -3,9 +3,10 @@
   border-radius: 14px;
   background: #0f172a;
   border: 1px dashed rgba(255, 255, 255, 0.12);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  /* display: flex; */
+  /* align-items: flex-start; */
+  /* justify-content: center; */
+
   color: #94a3ba;
 }
 
@@ -47,4 +48,187 @@
 .continue-card button {
   margin-top: 0.5rem;
   font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   RECENT ASSIGNMENTS GRID WRAPPER ARCHITECTURE
+   ========================================================================== */
+.dashboard-recent-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem;
+}
+
+.section-main-title {
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* Grid layout matching dashboard proportions */
+.assignments-glass-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* ==========================================================================
+   THE GLASSMOPHIC CONTENT CARD PANEL
+   ========================================================================== */
+.assignment-dashboard-card {
+  background: linear-gradient(
+    145deg,
+    rgba(30, 41, 59, 0.45),
+    rgba(15, 23, 42, 0.2)
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.section-header-block {
+  margin: 0.2rem;
+}
+/* Micro glow elevation highlight on hover tracking */
+.assignment-dashboard-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(
+    56,
+    189,
+    248,
+    0.25
+  ); /* Subtle cyber neon teal edge flare */
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.35),
+    0 0 15px rgba(56, 189, 248, 0.05);
+}
+
+/* --- TOP RUNNING METADATA TAGS --- */
+.card-top-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.course-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+}
+
+.badge-course-name {
+  color: #38bdf8; /* Sharp neon sky accent text color */
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.badge-course-code {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.card-lecturer-text {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* --- CORE CONTENT BLOCKS AND GRADIENT FAIDING --- */
+.card-body-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.card-assignment-title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+}
+
+/* 🚀 The Smooth Text Brush-Off Fade Mechanism */
+.card-content-preview-fade {
+  color: #cbd5e1;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin: 0;
+  max-height: 2.6rem; /* Restricts sizing down to exactly two rows max */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Truncates structure with native trailing dots (...) */
+  -webkit-box-orient: vertical;
+
+  /* Gradual vertical masking alpha sweep to blend bottom text fragments out smoothly */
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+/* --- THE HIGH-GLOW ACTION FOOTER TRIGGER --- */
+.card-action-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-continue-action-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-arrow-icon {
+  font-size: 0.9rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Kinetic launch response when targeting action loops */
+.card-continue-action-btn:hover {
+  background: #2563eb; /* Snaps instantly to deep brand identity solid blue */
+  border-color: #3b82f6;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+}
+
+.card-continue-action-btn:hover .btn-arrow-icon {
+  transform: translateX(
+    3px
+  ); /* Snappy micro-slide forward on hover engagement */
+}
+
+.card-continue-action-btn:active {
+  transform: scale(0.97);
 }

@@ -1,15 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useOnlineStatus } from "@/src/hooks/useOnlineStatus";
 import {
   saveAssignment,
   getAssignments,
 } from "@/src/services/assignmentService";
 import getAssignmentId from "@/src/lib/getAssignmentId";
+
 import "@/src/styles/workspace/workspace.css";
 
-export default function WorkspaceHeader({ assignment, saveStatus }: any) {
+interface WorkspaceHeaderProps {
+  titleValue: string;
+  isTitleEditable: boolean;
+  onTitleChange: (text: string) => void;
+  onToggleTitleEdit: () => Promise<void>;
+  assignment: any;
+  saveStatus: string;
+}
+export default function WorkspaceHeader({
+  assignment,
+  saveStatus,
+  titleValue,
+  isTitleEditable,
+  onTitleChange,
+  onToggleTitleEdit,
+}: WorkspaceHeaderProps) {
   const isOnline = useOnlineStatus();
 
   const [title, setTitle] = useState(assignment.title);
@@ -42,16 +58,32 @@ export default function WorkspaceHeader({ assignment, saveStatus }: any) {
       <div className="meta-field-wrapper">
         <label className="meta-label">Assignment Title</label>
         <div className="input-action-row">
-          <input
+          {/* <input
             type="text"
             className="meta-inline-input"
             value={title}
             name="workspace-title"
             onChange={(e) => setTitle(e.target.value)}
             disabled
+          /> */}
+          <input
+            type="text"
+            className="meta-inline-input"
+            value={titleValue}
+            disabled={!isTitleEditable}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onTitleChange(e.target.value)
+            }
+            name="assignment-coursecode"
           />
-          <button type="button" className="meta-edit-btn" title="Edit Field">
-            ✏️
+
+          <button
+            type="button"
+            className={`meta-edit-btn ${isTitleEditable ? "active-save" : ""}`}
+            title="Edit Field"
+            onClick={onToggleTitleEdit}
+          >
+            {isTitleEditable ? "✅" : "✏️"}
           </button>
         </div>
       </div>

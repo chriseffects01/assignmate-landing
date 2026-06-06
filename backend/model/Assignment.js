@@ -16,6 +16,7 @@ const assignmentSchema = new mongoose.Schema(
       default: "report",
     },
     dueDate: String,
+    // level: String,
 
     type: {
       type: String,

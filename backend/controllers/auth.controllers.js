@@ -41,7 +41,7 @@ export async function registerUser(req, res) {
     });
 
     //return response
-    res.status(201).json({
+    return res.status(201).json({
       token,
       user: {
         _id: user._id,
@@ -100,7 +100,7 @@ export async function loginUser(req, res) {
 
     //send response
 
-    res.status(200).json({
+    return res.status(200).json({
       token,
       user: {
         _id: user._id || user.id,

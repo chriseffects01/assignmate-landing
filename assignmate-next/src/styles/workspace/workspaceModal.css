@@ -147,6 +147,7 @@
   transition: var(--transition-smooth);
   width: 100%;
   box-sizing: border-box;
+  text-transform: capitalize;
 }
 
 /* Smooth Focus Glow States */

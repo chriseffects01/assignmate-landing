@@ -1,0 +1,188 @@
+/* ==========================================================================
+   1. TOOLBAR CONTAINER TRACK
+   ========================================================================== */
+.editor-rich-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.55); /* Deep translucent panel */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Sleek dividing lines between tool groups */
+.toolbar-divider {
+  width: 1px;
+  height: 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 0.25rem;
+}
+
+/* ==========================================================================
+   2. TOGGLE BUTTONS (THE STATES THAT STAY CLICKED)
+   ========================================================================== */
+.toolbar-action-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.tool-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8; /* Calmed down slate gray */
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tool-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+/* 🚀 Active State: When clicked/toggled true, it glows using your brand blue */
+.tool-btn.active-clicked {
+  background: rgba(37, 99, 235, 0.18) !important;
+  border-color: rgba(37, 99, 235, 0.4) !important;
+  color: #38bdf8 !important; /* Radiant neon sky blue */
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.25);
+}
+
+/* ==========================================================================
+   3. DROPDOWN ARCHITECTURE (HEADINGS, LISTS, FONTS)
+   ========================================================================== */
+.toolbar-dropdown-wrapper {
+  position: relative;
+}
+
+/* The clickable selector button */
+.toolbar-dropdown-trigger {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 100px;
+  transition: all 0.2s ease;
+}
+
+.toolbar-dropdown-trigger:hover,
+.toolbar-dropdown-trigger.open {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-arrow {
+  font-size: 0.6rem;
+  color: #64748b;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+/* Flips the arrow upside down cleanly when open */
+.toolbar-dropdown-trigger.open .dropdown-arrow {
+  transform: rotate(180deg);
+  color: #38bdf8;
+}
+
+/* Floating Glassmorphic Dropdown Overlay Panels */
+.toolbar-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #0b0f19; /* Solid deep void backdrop to guarantee zero readability text bleeding */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  z-index: 250;
+  min-width: 170px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Compact sizing adjustments for specific dropdown modules */
+.toolbar-dropdown-menu.micro-menu {
+  min-width: 90px;
+}
+
+/* Dropdown Internal Option Buttons */
+.toolbar-dropdown-menu button {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.toolbar-dropdown-menu button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+/* Heading hierarchy previews inside menu lists */
+.toolbar-dropdown-menu button.h1-style {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+.toolbar-dropdown-menu button.h2-style {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+.toolbar-dropdown-menu button.h3-style {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+/* ==========================================================================
+   4. EDITOR SHEET BASE LAYER
+   ========================================================================== */
+.editor-canvas-sheet {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.canvas-textarea {
+  width: 100%;
+  min-height: 400px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: vertical;
+  color: #f1f5f9;
+  line-height: 1.6;
+  transition:
+    font-size 0.2s ease,
+    font-family 0.2s ease;
+}
