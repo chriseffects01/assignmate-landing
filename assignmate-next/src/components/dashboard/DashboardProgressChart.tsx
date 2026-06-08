@@ -3,16 +3,8 @@
 import { useState, useEffect } from "react";
 import { productivityData } from "@/src/lib/chartMain";
 import { getChartDats } from "@/src/lib/chartData";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-} from "recharts";
+
+import ChartBar from "./chart/ChartMain";
 
 const filters: Filter[] = ["7D", "30D", "Semester"];
 type Filter = "7D" | "30D" | "Semester";
@@ -63,63 +55,8 @@ export default function DashboardProgressChart() {
 
       <div className="dashboard-chart-placeholder">
         <p className="chart-text-header">Currently showing: {activeFilter}</p>
-        {/* <ChartMain
-          activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter}
-        /> */}
-        <div className="chart">
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={currentData}>
-              {/* <CartesianGrid vertical={false} stroke="#051636" /> */}
 
-              <XAxis dataKey="name" />
-              {/* <YAxis /> */}
-              <Tooltip
-                contentStyle={{
-                  border: "none",
-                  backgroundColor: "#0f172a",
-
-                  transition: "all 0.3s ease",
-                  borderRadius: "4px",
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-                }}
-              />
-              <Legend />
-
-              <Bar
-                dataKey="drafts"
-                stackId="a"
-                // fill="#93c5fd"
-                fill="#dbeafe"
-                radius={[4, 4, 0, 0]}
-              />
-
-              <Bar
-                dataKey="reports"
-                stackId="a"
-                // fill="#60a5fa"
-                fill="#93c5fd"
-                radius={[4, 4, 0, 0]}
-              />
-
-              <Bar
-                dataKey="essays"
-                stackId="a"
-                // fill="#3b82f6"
-                fill="#60a5fa"
-                radius={[4, 4, 0, 0]}
-              />
-
-              <Bar
-                dataKey="completed"
-                stackId="a"
-                // fill="#1d4ed8"
-                fill="#2563eb"
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <ChartBar currentData={currentData} />
       </div>
     </section>
   );

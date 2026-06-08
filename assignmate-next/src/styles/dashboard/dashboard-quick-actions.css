@@ -6,49 +6,66 @@
   --accent-color: #3b82f6;
 }
 
-.dashboard-quick-actions-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-
-.dashboard-action-card {
-  border: 1px solid var(--border-color);
-  background-color: var(--surface-secondary);
-  color: var(--text-primary);
-  padding: 1rem;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
-}
-
-.dashboard-action-card:hover {
-  transform: translateY(-2px);
-  background-color: var(--surface-hover);
-  border-color: var(--accent-color);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-}
-
-.dashboard-action-card:active {
-  transform: translateY(0);
-}
-
-.dashboard-action-card:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-}
-
-@media (max-width: 1100px) {
-  .dashboard-quick-actions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 700px) {
   .dashboard-quick-actions-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr;
   }
+}
+
+/* Quick Actions Structural Layout */
+.dashboard-quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+/* 🌆 Interactive Glass Card Base */
+.dashboard-action-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  text-align: center;
+}
+
+/* Hover State: Neon Border Glow and Elevation */
+.dashboard-action-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 195, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 195, 255, 0.1);
+}
+
+/* Icon / Emoji Sizing Frame */
+.action-card-icon {
+  font-size: 1.6rem;
+  transition: transform 0.3s ease;
+}
+
+.dashboard-action-card:hover .action-card-icon {
+  transform: scale(1.15) rotate(5deg); /* Playful micro-movement on hover */
+}
+
+/* Text Formatting */
+.action-card-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.01em;
+}
+
+.dashboard-action-card:hover .action-card-label {
+  color: #00c3ff; /* Text highlights to cyan accent color */
 }

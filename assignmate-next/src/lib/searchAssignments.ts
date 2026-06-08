@@ -1,4 +1,4 @@
-import { getAssignments } from "../services/assignmentService";
+import { fetchAssignments as getAssignments } from "./api";
 export async function searchAssignments(query: string) {
   const assignments = await getAssignments();
 

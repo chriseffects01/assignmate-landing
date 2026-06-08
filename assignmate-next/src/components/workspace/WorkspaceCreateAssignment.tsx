@@ -3,12 +3,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "@/src/styles/workspace/workspace.css";
 import { AssignmentType } from "@/src/types/assignment";
-import { getAssignments, saveAssignments } from "@/src/lib/assignmentStorage";
 import { createAssignmentAPI } from "@/src/lib/api";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspaceModal.css";
 import LoadingScreen from "../shared/LoadingScreen";
-import { Island_Moments } from "next/font/google";
 
 export default function CreateAssignmentModal({ onClose }: any) {
   const assignmentStatus = {
@@ -40,21 +38,12 @@ export default function CreateAssignmentModal({ onClose }: any) {
     const saved = await createAssignmentAPI(newAssignment);
 
     if (saved) {
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         router.push(`/workspace/${getAssignmentId(saved)}`);
         setIsLoading(true);
       }, 900);
-    } else {
-      //fallback
-
-      saveAssignments(newAssignment);
-      router.push(`/workspace/${getAssignmentId(newAssignment)}`);
     }
   };
-
-  // if (isLoading) {
-  //   onclose();
-  // }
 
   return (
     <>

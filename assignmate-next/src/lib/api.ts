@@ -11,6 +11,19 @@ export async function fetchAssignments() {
   }
 }
 
+//Get one
+
+export async function getAssignmentById(id: string) {
+  try {
+    // if (!id) return;
+    const res = await api.get(`${BASE_URL}/${id}`);
+    return res.data;
+  } catch (err: any) {
+    console.error(`Error getting assignment id: ${id}`, err);
+    throw err;
+  }
+}
+
 //CREATE
 export async function createAssignmentAPI(data: any) {
   try {

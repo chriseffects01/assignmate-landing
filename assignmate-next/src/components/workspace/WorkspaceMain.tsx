@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getAssignments } from "@/src/lib/assignmentStorage";
+import { getAssignmentById } from "@/src/lib/api";
 import WorkspaceEditor from "./WorkspaceEditor";
 import WorkspaceHeader from "./WorkspaceHeader";
 import Notification from "../shared/Notification";
@@ -10,6 +10,7 @@ import WorkspaceMeta from "./WorkspaceMeta";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspaceMain.css";
 import { updateAssignmentAPI } from "@/src/lib/api";
+import LoadingScreen from "../shared/LoadingScreen";
 export type WorkspaceField =
   | "course"
   | "lecturer"
@@ -62,15 +63,22 @@ export default function WorkspaceMain() {
   useEffect(() => {
     async function load() {
       if (!id) return;
-      const all = await getAssignments();
-      const found = all.find((a) => getAssignmentId(a));
-      setAssignments(found || null);
-      setIsLoading(false);
+
+      try {
+        setIsLoading(true);
+        const data = await getAssignmentById(id);
+
+        setAssignments(data);
+      } catch (err) {
+        console.error(`Workspace mount crash:`, err);
+      } finally {
+        setIsLoading(false);
+      }
     }
     load();
   }, [id]);
   if (isLoading) {
-    <div className="workspace-loading">Loading...</div>;
+    <LoadingScreen message="Loading your workspace..." />;
   }
 
   useEffect(() => {
@@ -96,24 +104,19 @@ export default function WorkspaceMain() {
   const handleToggleEdit = async (field: WorkspaceField): Promise<void> => {
     console.log(`Edit button Clicked for field: ${field}`);
     const turningOff = isEditable[field];
-    // console.log(turningOff);
 
     if (turningOff) {
-      console.log(
-        `Detected save mode for [${field}]. Value to send: `,
-        values[field],
-      );
       try {
         const cleanValue = Array.isArray(values[field])
           ? values[field][0]
           : values[field];
-        console.log(`Awaiting DB Updatesequence for ${field}...`);
+        // console.log(`Awaiting DB Updatesequence for ${field}...`);
 
         await updateAssignmentAPI(getAssignmentId(assignment), {
           [field]: cleanValue,
         });
 
-        console.log(`Database updated successfully for ${field}`);
+        // console.log(`Database updated successfully for ${field}`);
       } catch (err: any) {
         console.error(`My error: Failed to update ${field} in DB:`, err);
         console.log(err.message);

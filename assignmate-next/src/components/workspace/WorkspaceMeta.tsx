@@ -2,7 +2,7 @@
 
 import "@/src/styles/workspace/workspaceMain.css";
 import { useAuth } from "@/src/context/AuthContext";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { WorkspaceField } from "./WorkspaceMain";
 import WorkspaceAiAssistant from "./WorkspaceAi";

@@ -1,6 +1,4 @@
-// import { getAssignments } from "./assignmentStorage";
-
-import { getAssignments } from "../services/assignmentService";
+import { fetchAssignments as getAssignments } from "./api";
 export async function getDashboardStats() {
   const assignments = await getAssignments();
 

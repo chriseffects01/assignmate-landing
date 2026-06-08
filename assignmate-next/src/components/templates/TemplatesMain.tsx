@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import LoadingScreen from "@/src/components/shared/LoadingScreen";
 import { useState } from "react";
 import { TemplateType } from "@/src/types/assignment";
-import { createAssignment } from "@/src/services/assignmentService";
+// import { createAssignment } from "@/src/services/assignmentService";
+import { createAssignmentAPI as createAssignment } from "@/src/lib/api";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 
 type FilterType = "all" | "essay" | "report" | "premium";
@@ -26,12 +27,12 @@ export default function TemplatesMain() {
 
     //This keeps all the "content" but throws away the database metadata.
 
-    // const { _id, createdAt, ...templateData } = template;
+    const { _id, createdAt, ...templateData } = template;
 
     try {
       // Passing the "clean" data to creation function
 
-      const newAssignment = await createAssignment(template);
+      const newAssignment = await createAssignment(templateData);
 
       console.log("New Assignment created:", newAssignment);
 

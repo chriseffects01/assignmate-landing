@@ -167,6 +167,7 @@
   margin: 0;
   line-height: 1.4;
   letter-spacing: -0.005em;
+  text-transform: capitalize;
 }
 
 /* 🚀 The Smooth Text Brush-Off Fade Mechanism */

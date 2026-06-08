@@ -307,90 +307,234 @@
   border-color: rgba(99, 102, 241, 0.4);
 }
 
+/* Assignments Grid Context */
 .assignments-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 16px;
 }
 
+/* 🌆 The Premium Gradient Card Layout */
 .assignment-card {
-  padding: 1.5rem;
-  border-radius: 1.5rem;
-  background: rgba(15, 23, 42, 0.88);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  box-shadow: 0 1rem 2.5rem rgba(2, 6, 23, 0.24);
-  transition: all 0.25s ease;
+  background: linear-gradient(
+    135deg,
+    rgba(20, 30, 55, 0.65),
+    rgba(10, 15, 30, 0.85)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
   cursor: pointer;
 }
 
+/* Hover State: Lift, Border Glow, and Shadow Spread */
 .assignment-card:hover {
-  transform: translateY(-0.2rem);
-  border-color: rgba(139, 92, 246, 0.22);
-  box-shadow: 0 1.25rem 3rem rgba(2, 6, 23, 0.32);
+  transform: translateY(-6px);
+  border-color: rgba(0, 195, 255, 0.4);
+  box-shadow:
+    0 8px 20px 0 rgba(0, 195, 255, 0.15),
+    inset 0 0 15px rgba(0, 195, 255, 0.05);
 }
 
-.assignment-status.is-draft {
-  background: rgba(245, 158, 11, 0.14);
-  color: #fbbf24;
+/* .assignment-card * {
+  margin-bottom: 0.5rem;
+} */
+
+/* Header & Meta Alignment */
+.assignment-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.assignment-status.is-completed {
-  color: #4ade80;
+/* 🟢 Status Tags & Breathing/Blinking Dot Animations */
+.assignment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
+.is-draft {
+  background: rgba(255, 165, 0, 0.12);
+  color: #ffb03a;
+  border: 1px solid rgba(255, 165, 0, 0.25);
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+.is-completed {
+  background: rgba(0, 230, 118, 0.12);
+  color: #00e676;
+  border: 1px solid rgba(0, 230, 118, 0.25);
+}
+
+/* The Blinking Indicator Dot */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.is-draft .status-dot {
+  animation: blinker 1.2s infinite alternate;
+}
+
+/* Content Typography */
 .assignment-card-title {
-  margin: 0.9rem 0;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: #ffffff;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+
+  letter-spacing: -0.02em;
 }
 
 .assignment-card-course {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #a5b4fc;
-}
-
-.assignment-card-time {
-  margin: 0.75rem 0 0;
   font-size: 0.9rem;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 12px;
 }
 
+.course-code {
+  color: #00c3ff;
+  font-weight: 500;
+}
+
+/* 📝 Snippet Preview Layout */
+.assignment-card-preview {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border-left: 3px solid rgba(0, 195, 255, 0.3);
+}
+
+.empty-preview {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ⌨️ Typing Indicator Style for Timestamps */
+.assignment-card-time {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.typing-text {
+  font-family:
+    "Courier New", Courier, monospace; /* Monospace for dev-OS feel */
+  border-right: 2px solid rgba(0, 195, 255, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation:
+    typing 3s steps(30, end) infinite alternate,
+    blink-caret 0.8s step-end infinite alternate;
+}
+
+/* Interactive Action Buttons */
 .assignment-card-actions {
   display: flex;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  gap: 12px;
 }
 
 .assignment-card-btn {
-  border: none;
-  border-radius: 0.875rem;
-
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease-in;
-}
-
-.assignment-card-btn:hover {
-  transform: translateY(-0.125rem);
+  transition: all 0.2s ease;
+  border: none;
 }
 
 .assignment-card-btn.primary {
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  background: #ffffff;
+  color: #0a0f1e;
+}
+
+.assignment-card-btn.primary:hover {
+  background: #00c3ff;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 195, 255, 0.4);
 }
 
 .assignment-card-btn.secondary {
-  background: rgba(30, 41, 59, 0.2);
-  color: #e2e8f0;
-  border: 0.0625rem solid rgba(148, 163, 184, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.assignment-card-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .hidden {
   display: none;
 }
 
-.p {
+/* --- Keyframe Animations --- */
+
+/* 1. Draft Badge Breathing */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(255, 165, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(255, 165, 0, 0.3);
+    border-color: rgba(255, 165, 0, 0.4);
+  }
+}
+
+/* 2. Draft Dot Blinking */
+@keyframes blinker {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+/* 3. Terminal Style Text Typing Effects */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgba(0, 195, 255, 0.75);
+  }
 }

@@ -40,3 +40,18 @@ const assignmentSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Assignment", assignmentSchema);
+function toTitleCase(str) {
+  if (!str) return;
+
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+}
+
+assignmentSchema.pre("save", function (next) {
+  if (this.isModified("title") && this.title) {
+    this.title = toTitleCase(this.title);
+  }
+  next();
+});

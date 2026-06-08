@@ -1,0 +1,66 @@
+/* Chart Container Frame */
+.chart-wrapper {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 30, 55, 0.4),
+    rgba(10, 15, 30, 0.7)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* 🧊 Glassmorphic Floating Tooltip Box */
+.chart-glass-tooltip {
+  background: rgba(13, 20, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 14px 18px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.tooltip-label {
+  margin: 0 0 8px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+}
+
+.tooltip-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 10px;
+}
+
+.tooltip-item {
+  margin: 6px 0;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Smooth out text rendering inside Recharts legend markers */
+.recharts-legend-item-text {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 500;
+  margin-left: 4px;
+  text-transform: capitalize;
+}
+
+.barchart {
+  cursor: pointer;
+}

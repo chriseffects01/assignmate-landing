@@ -41,7 +41,8 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
       <aside className={`dashboard-sidebar ${isOpen ? "open" : "collapsed"}`}>
         <nav className="dashboard-sidebar-nav">
           {navItems.map((item) => {
-            const isActive = pathname === item.path;
+            const isActive =
+              pathname === item.path || pathname.startsWith(`${item.path}`);
 
             return (
               <Link

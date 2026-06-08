@@ -51,9 +51,19 @@ export const getAssignments = async (req, res) => {
 
 //Get one assignment
 
-export const getAssignment = async (req, res) => {
-  const item = await Assignment.findById(req.params.id);
-  res.json(item);
+export const getAssignmentById = async (req, res) => {
+  try {
+    console.log("Backend fetching ID:", req.params.id);
+    const assignment = await Assignment.findById(req.params.id);
+
+    if (!assignment) {
+      return res.status(404).json({ message: "Assignment not fouund" });
+    }
+
+    res.json(assignment);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 export const updateAssignment = async (req, res) => {
@@ -68,10 +78,23 @@ export const updateAssignment = async (req, res) => {
     if (data._id) delete data._id;
     console.log("Final data being sent to database:", data);
 
-    const updated = await Assignment.findByIdAndUpdate(req.params.id, data, {
-      returnDocument: "after",
-      runValidators: true, // Bad
+    const assignment = await Assignment.findById(req.params.id);
+    if (!assignment) {
+      return res.status(404).json({
+        message: "No assignment found with that id",
+      });
+    }
+
+    Object.keys(data).forEach((key) => {
+      assignment[key] = data[key];
     });
+
+    // const updated = await Assignment.findByIdAndUpdate(req.params.id, data, {
+    //   returnDocument: "after",
+    //   runValidators: true, // Bad
+    // });
+
+    const updated = await assignment.save();
     console.log("updated logging", updated);
 
     if (!updated) {
@@ -80,7 +103,7 @@ export const updateAssignment = async (req, res) => {
       });
     }
 
-    res.json(updated);
+    return res.json(updated);
   } catch (err) {
     console.error("My Detailed Error:", err.message);
     res.status(500).json({ error: err.message });
