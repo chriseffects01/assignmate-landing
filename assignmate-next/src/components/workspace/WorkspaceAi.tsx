@@ -12,7 +12,7 @@ export default function WorkspaceAiAssistant() {
           <span className="ai-spark-icon">✨</span>
           <h3 className="ai-card-title">AI Assistant Workspace</h3>
         </div>
-        <span className="ai-status-pill">v1.0.4 - Active</span>
+        <span className="ai-status-pill">v1.0.1 - Active</span>
       </div>
 
       <p className="ai-card-subtitle">

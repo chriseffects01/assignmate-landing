@@ -1,13 +1,17 @@
-import { fetchAssignments as getAssignments } from "./api";
+import { fetchAssignments as getAssignments } from "../services/assignmentService";
+
+//
 export async function getDashboardStats() {
   const assignments = await getAssignments();
 
+  // SET FILTER BY STATUS
   const drafts = assignments.filter((a: any) => a.status === "draft").length;
 
   const completed = assignments.filter(
     (a: any) => a.status === "completed",
   ).length;
 
+  //SET FILTER BY CATEGORY
   const reports = assignments.filter(
     (a: any) => a.category === "report",
   ).length;
@@ -20,7 +24,7 @@ export async function getDashboardStats() {
     reports,
     essays,
   };
-  console.log(dashboardStat);
+  // console.log(dashboardStat);
 
   return dashboardStat;
 }

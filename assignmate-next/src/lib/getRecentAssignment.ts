@@ -1,4 +1,4 @@
-import { fetchAssignments as getAssignments } from "./api";
+import { fetchAssignments as getAssignments } from "../services/assignmentService";
 export async function getRecentAssignment(limit: number = 3) {
   const assignments = await getAssignments();
 

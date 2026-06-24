@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useEffectEvent } from "react";
-// import user
 import { useAuth } from "@/src/context/AuthContext";
 
 export default function Navbar({

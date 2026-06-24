@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "@/src/styles/workspace/workspace.css";
 import { AssignmentType } from "@/src/types/assignment";
-import { createAssignmentAPI } from "@/src/lib/api";
+import { createAssignmentAPI } from "@/src/services/assignmentService";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspaceModal.css";
 import LoadingScreen from "../shared/LoadingScreen";
@@ -39,7 +39,7 @@ export default function CreateAssignmentModal({ onClose }: any) {
 
     if (saved) {
       setTimeout(() => {
-        router.push(`/workspace/${getAssignmentId(saved)}`);
+        router.push(`/dashboard/workspace/${getAssignmentId(saved)}`);
         setIsLoading(true);
       }, 900);
     }

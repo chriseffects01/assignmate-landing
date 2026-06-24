@@ -1,16 +1,17 @@
-export const START_END = 864000000;
+//*******************************   VARIables for different files **********************************//
 
-export const DAY7 = 7;
-export const DAY30 = 30;
-export const DAY_SEMESTER = 120;
+// TIME CONSTANTS
+export const START_END: number = 864000000;
+export const DAY7: number = 7;
+export const DAY30: number = 30;
+export const DAY_SEMESTER: number = 120;
 
-export const KEY = "assignments";
+// LOCAL STORAGE KEYS
+export const KEY: string = "assignments";
+export const TOKEN_KEY: string = "token";
+export const USER_KEY: string = "user";
+export const CACHE_KEY: string = "assignmate_dashboard_stats_cache";
 
-export const BASE_URL = "http://localhost:5000/api/assignments";
-
-export const TOKEN_KEY = "token";
-export const USER_KEY = "user";
-
-export const API_URL = "http://localhost:5000/api/auth";
-
-export const CACHE_KEY = "assignmate_dashboard_stats_cache";
+// BASE URL FOR BACKEND
+export const BASE_URL: string = "http://localhost:5000/api/assignments";
+export const API_URL: string = "http://localhost:5000/api/auth";

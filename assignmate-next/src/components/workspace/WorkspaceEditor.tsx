@@ -6,7 +6,7 @@ import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspaceMain.css";
 import "@/src/styles/workspace/workspacetextArea.css";
 
-import { updateAssignmentAPI } from "@/src/lib/api";
+import { updateAssignmentAPI } from "@/src/services/assignmentService";
 //
 interface TextFormatting {
   bold: boolean;

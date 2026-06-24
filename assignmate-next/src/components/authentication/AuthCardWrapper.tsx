@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "@/src/components/shared/LoadingScreen";
 import { usePathname } from "next/navigation";
@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import "@/src/styles/auth/authPage.css";
 
 import React from "react";
-import Signup from "./Signup";
 
 export default function AuthLayout({
   children,

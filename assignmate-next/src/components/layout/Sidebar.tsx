@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LoadingScreen from "../shared/LoadingScreen";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type NavItem = {
   label: string;
@@ -13,26 +12,17 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: "Dashboard", path: "/dashboard" },
-  { label: "My Assignments", path: "/assignments" },
-  { label: "Templates", path: "/templates" },
-  { label: "Workspace", path: "/workspace" },
-  { label: "Saved Drafts", path: "/drafts" },
-  // { label: "Create", path: "/create" },
-  { label: "Settings", path: "/settings" },
+  { label: "My Assignments", path: "/dashboard/assignments" },
+  { label: "Templates", path: "/dashboard/templates" },
+  { label: "Workspace", path: "/dashboard/workspace" },
+  { label: "Saved Drafts", path: "/dashboard/drafts" },
+
+  { label: "Settings", path: "/dashboard/settings" },
 ];
 
 export default function Sidebar({ isOpen }: { isOpen: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-
-  function handleSpinner(path: string, time: number = 1000) {
-    setIsLoading(true);
-
-    setTimeout(() => {
-      router.push(path);
-    }, time);
-  }
 
   return (
     <>
@@ -42,17 +32,19 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
         <nav className="dashboard-sidebar-nav">
           {navItems.map((item) => {
             const isActive =
-              pathname === item.path || pathname.startsWith(`${item.path}`);
+              item.path === "/dashboard"
+                ? pathname === item.path
+                : pathname.startsWith(item.path);
 
             return (
               <Link
                 key={item.label}
                 href={item.path}
                 className={`dashboard-sidebar-link ${isActive ? "active" : ""}`}
-                onClick={() => {
-                  if (isActive) return;
-                  handleSpinner(item.path, 1400);
-                }}
+                // onClick={() => {
+                //   if (isActive) return;
+                //   setIsLoading(true);
+                // }}
               >
                 {item.label}
               </Link>

@@ -1,7 +1,8 @@
+"use client";
+
 import { useAuth } from "@/src/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import DashboardLayout from "@/src/components/layout/DashboardLayout";
 
 export default function ProtectedRoute({
   children,
@@ -14,7 +15,7 @@ export default function ProtectedRoute({
 
   useEffect(() => {
     if (!loading && !authenticated) {
-      router.push("/auth/login");
+      router.replace("/auth/login");
     }
   }, [authenticated, loading, router]);
   if (loading) {
@@ -25,9 +26,5 @@ export default function ProtectedRoute({
     return null;
   }
 
-  return (
-    <>
-      <DashboardLayout>{children}</DashboardLayout>
-    </>
-  );
+  return <>{children}</>;
 }

@@ -1,4 +1,4 @@
-import { fetchAssignments as getAssignments } from "./api";
+import { fetchAssignments as getAssignments } from "../services/assignmentService";
 import { START_END, DAY30, DAY7, DAY_SEMESTER } from "../var/var";
 
 export async function getChartDats(range: "7D" | "30D" | "Semester") {

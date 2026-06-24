@@ -1,5 +1,5 @@
 "use client";
-import { fetchAssignments as getAssignments } from "@/src/lib/api";
+import { fetchAssignments as getAssignments } from "@/src/services/assignmentService";
 import { AssignmentType } from "@/src/types/assignment";
 import SearchBar from "../dashboard/SearchBar";
 import { useEffect, useState } from "react";
@@ -188,7 +188,9 @@ export default function AssignmentsMain() {
                   type="button"
                   onClick={() => {
                     setIsloading(true);
-                    router.push(`/workspace/${getAssignmentId(assignment)}`);
+                    router.push(
+                      `/dashboard/workspace/${getAssignmentId(assignment)}`,
+                    );
                   }}
                 >
                   Continue
@@ -199,7 +201,9 @@ export default function AssignmentsMain() {
                   onClick={() => {
                     setIsloading(true);
 
-                    router.push(`/workspace/${getAssignmentId(assignment)}`);
+                    router.push(
+                      `/dashboard/workspace/${getAssignmentId(assignment)}`,
+                    );
                   }}
                 >
                   Details

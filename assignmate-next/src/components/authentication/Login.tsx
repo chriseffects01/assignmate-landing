@@ -1,7 +1,7 @@
 "use clent";
 import "@/src/styles/auth/authPage.css";
 import { useState } from "react";
-import { loginUser } from "@/src/services/authServices";
+import { authService } from "@/src/services/auth.load.services";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "../shared/LoadingScreen";
 
@@ -14,24 +14,28 @@ export default function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      const data = await loginUser({
+      await authService.login({
         username,
         email,
         password,
       });
 
-      setTimeout(() => {
-        setIsLoading(true);
-        router.replace("/dashboard");
-      }, 1200);
+      // setTimeout(() => {
+      //   setIsLoading(true);
+      //   router.replace("/dashboard");
+      // }, 1200);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      console.log(data);
+      // localStorage.setItem("token", data.token);
+      // localStorage.setItem("user", JSON.stringify(data.user));
+      // console.log(data);
+      router.replace("/dashboard");
     } catch (error: any) {
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (

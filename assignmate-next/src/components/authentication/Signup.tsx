@@ -1,6 +1,7 @@
 "use client";
 import "@/src/styles/auth/authPage.css";
-import { registerUser } from "@/src/services/authServices";
+// import { registerUser } from "@/src/services/authServices";
+import { authService } from "@/src/services/auth.load.services";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "../shared/LoadingScreen";
@@ -17,7 +18,7 @@ export default function Signup() {
     e.preventDefault();
 
     try {
-      const data = await registerUser({
+      const data = await authService.register({
         firstName,
         lastName,
         username,
@@ -29,7 +30,7 @@ export default function Signup() {
         setIsLoading(true);
         router.push("/dashboard");
       }, 1700);
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       console.log(data);

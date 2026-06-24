@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 import LoadingScreen from "@/src/components/shared/LoadingScreen";
 import { useState } from "react";
 import { TemplateType } from "@/src/types/assignment";
-// import { createAssignment } from "@/src/services/assignmentService";
-import { createAssignmentAPI as createAssignment } from "@/src/lib/api";
+import { createAssignmentAPI as createAssignment } from "@/src/services/assignmentService";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 
 type FilterType = "all" | "essay" | "report" | "premium";
@@ -22,10 +21,6 @@ export default function TemplatesMain() {
 
   const handleUseTemplate = async (template: TemplateType) => {
     setIsLoading(true);
-
-    // Destructive to remove the IDS and timestamps from the template
-
-    //This keeps all the "content" but throws away the database metadata.
 
     const { _id, createdAt, ...templateData } = template;
 
@@ -42,7 +37,7 @@ export default function TemplatesMain() {
         setTimeout(() => {
           //USing the id returned from the server for the new document
 
-          router.push(`/workspace/${getAssignmentId(newAssignment)}`);
+          router.push(`/dashboard/workspace/${getAssignmentId(newAssignment)}`);
         }, 1300);
       }
     } catch (err) {
@@ -140,7 +135,7 @@ export default function TemplatesMain() {
         <div className="templates-grid">
           {filteredTemplates.map((template) => (
             <div
-              key={template._id}
+              key={getAssignmentId(template)}
               className="assignment-card"
               onClick={() => handleUseTemplate(template)}
               id={`${template.premium && "template-premium-space"}`}

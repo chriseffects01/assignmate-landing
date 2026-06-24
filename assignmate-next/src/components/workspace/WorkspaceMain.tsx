@@ -2,14 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getAssignmentById } from "@/src/lib/api";
+import { getAssignmentById } from "@/src/services/assignmentService";
 import WorkspaceEditor from "./WorkspaceEditor";
 import WorkspaceHeader from "./WorkspaceHeader";
 import Notification from "../shared/Notification";
 import WorkspaceMeta from "./WorkspaceMeta";
 import getAssignmentId from "@/src/lib/getAssignmentId";
 import "@/src/styles/workspace/workspaceMain.css";
-import { updateAssignmentAPI } from "@/src/lib/api";
+import { updateAssignmentAPI } from "@/src/services/assignmentService";
 import LoadingScreen from "../shared/LoadingScreen";
 export type WorkspaceField =
   | "course"

@@ -30,33 +30,7 @@ export default function DashboardRecentAssignments() {
   return (
     <>
       {isLoading && <LoadingScreen message="Loading your workspace..." />}
-      {/* <section className="dashboard-section">
-        <div className="dashboard-section-header">
-          <h2>Recent Assignments</h2>
-        </div>
 
-        <div className="dashboard-list-placeholder">
-          <div>
-            <h3>Continue where you left off</h3>
-          </div>
-          {recent?.map((item: any) => (
-            <div key={getAssignmentId(item)} className="continue-card">
-              <h4>{item.title || "untitled"}</h4>
-              <h5> by {item.lecturer}</h5>
-              <p>{item.courseCode}</p>
-
-              <button
-                onClick={() => {
-                  setIsLoading(true);
-                  router.push(`/workspace/${getAssignmentId(item)}`);
-                }}
-              >
-                Continue
-              </button>
-            </div>
-          ))}
-        </div>
-      </section> */}
       <section className="dashboard-recent-section dashboard-section">
         <div className="section-header-block dashboard-section-header">
           <h2 className="section-main-title">Continue where you left off</h2>
@@ -93,7 +67,9 @@ export default function DashboardRecentAssignments() {
                       `Routing token link to workspace canvas: ${getAssignmentId(item)}`,
                     );
                     setIsLoading(true);
-                    router.push(`/workspace/${getAssignmentId(item)}`);
+                    router.push(
+                      `/dashboard/workspace/${getAssignmentId(item)}`,
+                    );
                   }}
                 >
                   <span>Continue</span>
