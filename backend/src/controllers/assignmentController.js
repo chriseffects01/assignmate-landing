@@ -1,4 +1,4 @@
-import Assignment from "../model/Assignment.js";
+import Assignment from '../model/Assignment.js';
 
 //Create
 export const createAssignment = async (req, res) => {
@@ -8,7 +8,7 @@ export const createAssignment = async (req, res) => {
     console.log(userId);
     if (!userId) {
       return res.status(401).json({
-        message: "Unauthorised: No user found on request",
+        message: 'Unauthorised: No user found on request',
       });
     }
     if (data._id) delete data._id;
@@ -20,7 +20,7 @@ export const createAssignment = async (req, res) => {
     res.status(201).json(assignment);
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.error("Creation Error:", err.message);
+    console.error('Creation Error:', err.message);
   }
 };
 
@@ -31,7 +31,7 @@ export const getAssignments = async (req, res) => {
 
     if (!userId) {
       return res.status(402).json({
-        message: "Unauthorised access: thief ole",
+        message: 'Unauthorised access: thief ole',
       });
       // console.log(userId);
     }
@@ -40,7 +40,7 @@ export const getAssignments = async (req, res) => {
     }).sort({ createdAt: -1 });
     return res.json(data).status(200);
   } catch (err) {
-    console.error("Backend error from get assignments:", err);
+    console.error('Backend error from get assignments:', err);
     return res
       .json({
         error: err.message,
@@ -53,11 +53,11 @@ export const getAssignments = async (req, res) => {
 
 export const getAssignmentById = async (req, res) => {
   try {
-    console.log("Backend fetching ID:", req.params.id);
+    console.log('Backend fetching ID:', req.params.id);
     const assignment = await Assignment.findById(req.params.id);
 
     if (!assignment) {
-      return res.status(404).json({ message: "Assignment not fouund" });
+      return res.status(404).json({ message: 'Assignment not fouund' });
     }
 
     res.json(assignment);
@@ -68,24 +68,24 @@ export const getAssignmentById = async (req, res) => {
 
 export const updateAssignment = async (req, res) => {
   try {
-    console.log("ID received", req.params.id);
+    console.log('ID received', req.params.id);
 
-    console.log("Body received:", req.body);
+    console.log('Body received:', req.body);
 
     //if frontend sent an array
     const data = Array.isArray(req.body) ? req.body[0] : req.body;
 
     if (data._id) delete data._id;
-    console.log("Final data being sent to database:", data);
+    console.log('Final data being sent to database:', data);
 
     const assignment = await Assignment.findById(req.params.id);
     if (!assignment) {
       return res.status(404).json({
-        message: "No assignment found with that id",
+        message: 'No assignment found with that id',
       });
     }
 
-    Object.keys(data).forEach((key) => {
+    Object.keys(data).forEach(key => {
       assignment[key] = data[key];
     });
 
@@ -95,17 +95,17 @@ export const updateAssignment = async (req, res) => {
     // });
 
     const updated = await assignment.save();
-    console.log("updated logging", updated);
+    console.log('updated logging', updated);
 
     if (!updated) {
       return res.status(404).json({
-        message: "No assignment found with that ID",
+        message: 'No assignment found with that ID',
       });
     }
 
     return res.json(updated);
   } catch (err) {
-    console.error("My Detailed Error:", err.message);
+    console.error('My Detailed Error:', err.message);
     res.status(500).json({ error: err.message });
   }
 };

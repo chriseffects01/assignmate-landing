@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const assignmentSchema = new mongoose.Schema(
   {
     title: String,
     content: String,
     status: {
       type: String,
-      default: "draft",
+      default: 'draft',
     },
 
     courseCode: String,
@@ -13,15 +13,15 @@ const assignmentSchema = new mongoose.Schema(
     lecturer: String,
     category: {
       type: String,
-      default: "report",
+      default: 'report',
     },
     dueDate: String,
     // level: String,
 
     type: {
       type: String,
-      enum: ["blank", "template"],
-      default: "blank",
+      enum: ['blank', 'template'],
+      default: 'blank',
     },
     createdAt: {
       type: Date,
@@ -30,27 +30,27 @@ const assignmentSchema = new mongoose.Schema(
 
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-export default mongoose.model("Assignment", assignmentSchema);
+export default mongoose.model('Assignment', assignmentSchema);
 function toTitleCase(str) {
   if (!str) return;
 
   return str
     .toLowerCase()
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1));
 }
 
-assignmentSchema.pre("save", function (next) {
-  if (this.isModified("title") && this.title) {
+assignmentSchema.pre('save', function (next) {
+  if (this.isModified('title') && this.title) {
     this.title = toTitleCase(this.title);
   }
   next();
