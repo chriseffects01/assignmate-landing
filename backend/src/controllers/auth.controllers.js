@@ -75,7 +75,7 @@ export async function loginUser(req, res) {
       });
     }
 
-    const { email, username, password } = validationResult.data;
+    const { email, password } = validationResult.data;
 
     // find user
     const user = await User.findOne({
@@ -95,19 +95,8 @@ export async function loginUser(req, res) {
 
     const token = jwttoken.sign({ _id: user._id, email: user.email });
 
-    logger.info(
-      '[Controller] jwt Token created successfully. Preview: ',
-      token.substring(0, 20) + '...'
-    );
-
     //send response
     logger.info('[Controller] attempting to set cookie');
-
-    const cookieStringCheck = `token=${token}; Path=/; HttpOnly `;
-    logger.info(
-      '[contoller] variable cookie check prior to  header injection:',
-      cookieStringCheck
-    );
 
     cookies.set(res, 'token', token);
 

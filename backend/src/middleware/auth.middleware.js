@@ -1,5 +1,6 @@
 import logger from '#config/logger.js';
 import { jwttoken } from '#utils/jwt.js';
+import { cookies } from '#utils/cookies.js';
 
 export const authMiddleware = async (req, res, next) => {
   logger.info(
@@ -7,10 +8,10 @@ export const authMiddleware = async (req, res, next) => {
   );
   logger.info(
     '[middleware] Step 1 - Checking cookie payload object:',
-    req.cookies
+    cookies.get(req, 'token')
   );
   try {
-    const token = req.cookies?.token;
+    const token = cookies.get(req, 'token');
     logger.info(token);
 
     if (!token) {

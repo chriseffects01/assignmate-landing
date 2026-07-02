@@ -51,7 +51,7 @@ app.get('/api', (req, res) => {
     message: 'API is still running...',
   });
 });
-app.use(arcjetMiddleWare);
+// app.use(arcjetMiddleWare);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/assignments', assignmentRoutes);

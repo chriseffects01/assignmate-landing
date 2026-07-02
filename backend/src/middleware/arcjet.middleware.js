@@ -9,16 +9,20 @@ export const arcjetMiddleWare = async (req, res, next) => {
     });
     logger.info(JSON.stringify(decision, null, 2));
 
+    logger.info('Conclusion:', decision.conclusion);
+    logger.info('Denied:', decision.isDenied());
+
     if (decision.isDenied()) {
       return res.status(429).json({
         success: false,
         message: 'Too many requests, try again later',
       });
     }
+
     next();
   } catch (e) {
     logger.error(`Error in arcjet middleware: ${e}`);
     logger.error(e.message);
-    next();
+    next(e);
   }
 };
