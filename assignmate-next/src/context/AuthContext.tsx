@@ -1,14 +1,13 @@
-"use client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { IUser } from "@/src/types/user.types";
-import { LoginPayload, RegisterPayload } from "@/src/types/auth.types";
-import LoadingScreen from "@/src/components/shared/LoadingScreen";
-import { authService } from "@/src/services/auth.load.services";
-import { storage } from "@/src/lib/storage";
+'use client';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { IUser } from '@/src/types/user.types';
+import { LoginPayload, RegisterPayload } from '@/src/types/auth.types';
+import LoadingScreen from '@/src/components/shared/LoadingScreen';
+import { authService } from '@/src/services/auth.service';
+import { storage } from '@/src/lib/storage';
 
 interface AuthContextType {
   user: IUser | null;
-  // token: string | null;
   loading: boolean;
   authenticated: boolean;
 
@@ -21,44 +20,37 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
-  // const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // const storedToken = storage.getToken();
-
-    const storedUser = storage.getUser();
-
-    // if (storedToken && storedUser) {
-    //   setToken(storedToken);
-    //   setUser(storedUser);
-    // }
-
-    if (storedUser) {
-      setUser(storedUser);
+    async function load() {
+      try {
+        const response = await authService.me();
+        setUser(response.user);
+      } catch (e: any) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     }
-
-    setLoading(false);
+    load();
   }, []);
 
   const login = async (data: LoginPayload) => {
-    const response = await authService.login(data);
+    await authService.login(data);
+    // console.log(response);
 
-    setUser(response.user);
-    // setToken(response.token);
+    const currentUser = await authService.me();
 
-    storage.setUser(response.user);
-    // storage.setToken(response.token);
+    setUser(currentUser.user);
   };
 
   const register = async (data: RegisterPayload) => {
-    const response = await authService.register(data);
+    await authService.register(data);
 
-    setUser(response.user);
-    // setToken(response.token);
+    const currentUser = await authService.me();
 
-    storage.setUser(response.user);
-    // storage.setToken(response.token);
+    setUser(currentUser.user);
   };
 
   // const logout = async () => {
@@ -84,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       <AuthContext.Provider
         value={{
           user,
-          // token,
+
           loading,
           authenticated: !!user,
           login,
@@ -102,7 +94,7 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
+    throw new Error('useAuth must be used inside AuthProvider');
   }
 
   return context;

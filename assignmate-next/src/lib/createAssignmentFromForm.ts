@@ -1,5 +1,7 @@
 import { AssignmentType } from "../types/assignment";
 
+// FORM DATA  FOR THE FORM 
+
 type FormData = {
   courseCode: string;
   course: string;
@@ -9,6 +11,8 @@ type FormData = {
 };
 
 export function CreateAssignmentFromForm(data: FormData): AssignmentType {
+
+  
   return {
     courseCode: data.courseCode,
     title: data.title,

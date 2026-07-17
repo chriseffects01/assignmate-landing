@@ -1,37 +1,30 @@
-"use clent";
-import "@/src/styles/auth/authPage.css";
-import { useState } from "react";
-import { authService } from "@/src/services/auth.load.services";
-import { useRouter } from "next/navigation";
-import LoadingScreen from "../shared/LoadingScreen";
+'use clent';
+import '@/src/styles/auth/authPage.css';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import LoadingScreen from '../shared/LoadingScreen';
+import { useAuth } from '@/src/context/AuthContext';
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const auth = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await authService.login({
+      await auth.login({
         username,
         email,
         password,
       });
 
-      // setTimeout(() => {
-      //   setIsLoading(true);
-      //   router.replace("/dashboard");
-      // }, 1200);
-
-      // localStorage.setItem("token", data.token);
-      // localStorage.setItem("user", JSON.stringify(data.user));
-      // console.log(data);
-      router.replace("/dashboard");
+      router.replace('/dashboard');
     } catch (error: any) {
       console.log(error.message);
     } finally {
@@ -46,7 +39,7 @@ export default function Login() {
           type="text"
           name="input-form-username"
           value={username}
-          onChange={(e) => {
+          onChange={e => {
             setUsername(e.target.value);
           }}
           placeholder="Username"
@@ -57,7 +50,7 @@ export default function Login() {
           type="email"
           name="input-form-email"
           value={email}
-          onChange={(e) => {
+          onChange={e => {
             setEmail(e.target.value);
           }}
           placeholder="student@gmail.com"
@@ -68,7 +61,7 @@ export default function Login() {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => {
+          onChange={e => {
             setPassword(e.target.value);
           }}
           name="input-form-password"

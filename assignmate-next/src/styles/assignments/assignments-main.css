@@ -38,7 +38,7 @@
   --btn-secondary-text: #0f172a;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   /* Backgrounds */
   --bg-app: #0b1020;
   --bg-surface: rgba(15, 23, 42, 0.92);
@@ -442,14 +442,14 @@
 
 .typing-text {
   font-family:
-    "Courier New", Courier, monospace; /* Monospace for dev-OS feel */
+    'Courier New', Courier, monospace; /* Monospace for dev-OS feel */
   border-right: 2px solid rgba(0, 195, 255, 0.75);
   white-space: nowrap;
   overflow: hidden;
   display: inline-block;
   animation:
-    typing 3s steps(30, end) infinite alternate,
-    blink-caret 0.8s step-end infinite alternate;
+    typing 3s steps(30, end) forwards,
+    blink-caret 0.8s step-end infinite forwards;
 }
 
 /* Interactive Action Buttons */

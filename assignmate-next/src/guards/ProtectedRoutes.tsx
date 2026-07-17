@@ -18,6 +18,7 @@ export default function ProtectedRoute({
       router.replace("/auth/login");
     }
   }, [authenticated, loading, router]);
+  
   if (loading) {
     return null;
   }

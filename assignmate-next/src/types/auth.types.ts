@@ -1,7 +1,6 @@
-import { IUser } from "./user.types";
+import { IUser } from './user.types';
 
 export interface AuthResponse {
-  token: string;
   user: IUser;
 }
 
@@ -20,3 +19,11 @@ export interface RegisterPayload {
   phoneNumber?: string;
   password: string;
 }
+
+// export interface LogoutPayload {
+
+// }
+
+// export interface DeleteAccountPayload {
+
+// }

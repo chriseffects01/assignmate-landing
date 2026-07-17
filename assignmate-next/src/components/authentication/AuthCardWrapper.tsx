@@ -1,12 +1,12 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import LoadingScreen from "@/src/components/shared/LoadingScreen";
-import { usePathname } from "next/navigation";
+'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import LoadingScreen from '@/src/components/shared/LoadingScreen';
+import { usePathname } from 'next/navigation';
 
-import "@/src/styles/auth/authPage.css";
+import '@/src/styles/auth/authPage.css';
 
-import React from "react";
+import React from 'react';
 
 export default function AuthLayout({
   children,
@@ -14,8 +14,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const loginPath = "/auth/login";
-  const signUpPath = "/auth/signup";
+  const loginPath = '/auth/login';
+  const signUpPath = '/auth/signup';
 
   const isLogin = pathname === loginPath;
   const isSignup = pathname === signUpPath;
@@ -33,7 +33,7 @@ export default function AuthLayout({
     <>
       {isLoading && (
         <LoadingScreen
-          message={`Loading ${pathname === loginPath ? "signUp" : "Login"} Screen...`}
+          message={`Loading ${pathname === loginPath ? 'signUp' : 'Login'} Screen...`}
         />
       )}
       <section className="auth-page">
@@ -45,8 +45,8 @@ export default function AuthLayout({
 
           <div className="auth-tabs">
             <button
-              className={`auth-tab ${isSignup ? "active" : ""}`}
-              onClick={(e) => {
+              className={`auth-tab ${isSignup ? 'active' : ''}`}
+              onClick={e => {
                 if (isSignup) {
                   e.preventDefault();
                   return;
@@ -58,8 +58,8 @@ export default function AuthLayout({
               Sign up
             </button>
             <button
-              className={`auth-tab ${isLogin ? "active" : ""}`}
-              onClick={(e) => {
+              className={`auth-tab ${isLogin ? 'active' : ''}`}
+              onClick={e => {
                 if (isLogin) {
                   e.preventDefault();
                   return;
@@ -75,18 +75,11 @@ export default function AuthLayout({
 
           <p className="auth-footer-text">
             {isLogin
-              ? "Log in, Start right where you stopped!"
-              : "Assignments everywhere you go."}
+              ? 'Log in, Start right where you stopped!'
+              : 'Assignments everywhere you go.'}
           </p>
         </div>
       </section>
     </>
   );
 }
-
-// export function handleDisplayDashboard() {
-//   setIsLoading(true);
-//   setTimeout(() => {
-//     router.push("/dashboard");
-//   }, 1200);
-// }

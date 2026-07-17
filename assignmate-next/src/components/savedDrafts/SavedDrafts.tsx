@@ -1,5 +1,202 @@
-"use client";
+'use client';
 
-export default function Drafts() {
-  return <h1>Your drafts</h1>;
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import {
+  FileText,
+  Trash2,
+  Calendar,
+  BookOpen,
+  Search,
+  Filter,
+  Plus,
+} from 'lucide-react';
+import { useDebounce } from '@/src/hooks/useDebounce';
+import { useAuth } from '@/src/context/AuthContext';
+
+import {
+  getAllLocalDrafts,
+  removeDraftFromLocal,
+} from '@/src/services/offlineDrafts';
+import OfflineDraft from '@/src/types/draft.types';
+import getAssignmentId from '@/src/lib/getAssignmentId';
+import LoadingScreen from '../shared/LoadingScreen';
+
+export default function SavedDraftsPage() {
+  const [drafts, setDrafts] = useState<OfflineDraft[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?._id;
+
+  console.log(userId);
+
+  useEffect(() => {
+    if (!authLoading && userId) {
+      setDrafts(getAllLocalDrafts(userId));
+    }
+  }, [userId, authLoading]);
+
+  const handleDeleteDraft = (id: string, e: React.MouseEvent) => {
+    e.preventDefault(); // Stop card click navigation
+    if (
+      confirm("Delete this offline copy? Your cloud save won't be affected.") &&
+      userId
+    ) {
+      removeDraftFromLocal(userId, id);
+      setDrafts(getAllLocalDrafts(userId));
+    }
+  };
+
+  // Filter based on search input
+  const filteredDrafts = drafts.filter(
+    draft =>
+      draft.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      (draft.courseCode &&
+        draft.courseCode
+          .toLowerCase()
+          .includes(debouncedSearchQuery.toLowerCase()))
+  );
+
+  if (authLoading) {
+    return <LoadingScreen message="Loading user offline assignments..." />;
+  }
+
+  if (!user) {
+    return (
+      <div className="p-8 text-center text-red-400">
+        Please log in to manage your offline drafts
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-8 max-w-7xl space-y-6 text-slate-200">
+      {/* 🌟 1. HERO SECTION (Matches your authentic workspace header structure) */}
+      <div className="space-y-2">
+        <span className="text-xs font-semibold tracking-wider text-emerald-500 uppercase">
+          Workspace
+        </span>
+        <h1 className="text-3xl font-black tracking-tight text-white">
+          Saved Drafts
+        </h1>
+        <p className="text-sm text-slate-400 max-w-2xl">
+          Organize your local copies, manage offline browser sandboxes, and keep
+          tracking progress safely.
+        </p>
+      </div>
+
+      {/* 🌟 2. SEARCH & FILTER UTILITY CONTROLS */}
+      <div className="flex flex-col sm:flex-row items-center gap-3 w-full bg-slate-900/40 p-3 rounded-2xl border border-slate-800/80">
+        <div className="relative w-full sm:flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <input
+            type="text"
+            placeholder="Search offline drafts..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full bg-slate-950/60 border border-slate-800/60 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 transition-all"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+          <button className="flex items-center justify-center gap-2 text-xs font-semibold px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700/40 transition-all w-full sm:w-auto">
+            <Filter className="h-3.5 w-3.5" />
+            <span>Local Only</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 🌟 3. THE CENTER CALLOUT BLOCK (Matches Assignments Page) */}
+      <div className="w-full p-6 bg-linear-to-r from-slate-900 via-slate-900/90 to-emerald-950/20 border border-slate-800 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-white">
+            Looking for your active cloud sheets?
+          </h3>
+          <p className="text-xs text-slate-400">
+            Flipping your Workspace Offline toggle saves persistent local
+            backups here in case your connection drops.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
+          <Link
+            href="/dashboard/workspace"
+            className="flex items-center justify-center gap-2 text-xs font-bold px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl transition-all shadow-md shadow-emerald-950/20 w-full md:w-auto"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Open Workspace</span>
+          </Link>
+        </div>
+      </div>
+      {/* 🌟 4. CARD GRID WITH PROPER SPACING & DEPTH */}
+      {filteredDrafts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center border border-dashed border-slate-800 rounded-2xl py-16 text-center bg-slate-900/10">
+          <FileText className="h-8 w-8 text-slate-600 mb-3" />
+          <p className="text-sm font-medium text-slate-400">
+            No matching local drafts found
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+          {filteredDrafts.map(draft => (
+            <Link
+              key={getAssignmentId(draft)}
+              href={`/dashboard/workspace/${getAssignmentId(draft)}`}
+              className="group relative flex flex-col justify-between p-6 bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl shadow-xl transition-all duration-300"
+            >
+              <div>
+                {/* Meta Header Badge Row */}
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="px-2.5 py-1 text-[10px] font-extrabold tracking-widest uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg">
+                    ⚡ Offline Copy
+                  </span>
+                  <button
+                    onClick={e => handleDeleteDraft(getAssignmentId(draft), e)}
+                    className="p-1.5 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800/80 transition-all opacity-0 group-hover:opacity-100"
+                    title="Delete assignment"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-base capitalize font-bold text-slate-100 group-hover:text-emerald-400 transition-colors line-clamp-1">
+                  {draft.title || 'Untitled Assignment'}
+                </h3>
+
+                {/* Snip Content Body */}
+                <p className="text-xs text-slate-400/80 mt-2 line-clamp-2 leading-relaxed min-h-8">
+                  {draft.content || 'Start drafting your masterpiece...'}
+                </p>
+              </div>
+
+              {/* Footer Meta Items */}
+              <div className="mt-6 pt-4 border-t border-slate-800/60 flex flex-col gap-2 text-[11px] text-slate-400 font-medium">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-3.5 w-3.5 text-emerald-500/70" />
+                  <span className="truncate text-slate-300">
+                    {draft.course || 'No course Specified'}
+                    {draft.courseCode ? ` - ${draft.courseCode}` : ''}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-slate-500 mt-1">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5" />
+                    <span>Locally Syncing</span>
+                  </div>
+                  <span className="text-[10px] bg-slate-950 px-2 py-0.5 rounded-md border border-slate-800 text-slate-400">
+                    {new Date(draft.lastSavedLocally).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }

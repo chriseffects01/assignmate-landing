@@ -32,8 +32,6 @@ export async function registerUser(req, res, next) {
     // Create token
     const token = jwttoken.sign({ _id: user._id, email: user.email });
 
-    logger.info(`User registered successfully: ${email}`);
-
     cookies.set(res, 'token', token);
 
     //return response
@@ -61,9 +59,27 @@ export async function registerUser(req, res, next) {
   }
 }
 
-export async function loginUser(req, res) {
-  logger.info('[controller] loginUSer invoked with body :', req.body);
+export async function getCurrentUser(req, res) {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
 
+    return res.status(200).json({
+      user,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      message: 'Internal server error',
+      error: e.message,
+    });
+  }
+}
+
+export async function loginUser(req, res) {
   try {
     const validationResult = loginSchema.safeParse(req.body);
 

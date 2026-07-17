@@ -1,24 +1,26 @@
-"use client";
-import "@/src/styles/auth/authPage.css";
-// import { registerUser } from "@/src/services/authServices";
-import { authService } from "@/src/services/auth.load.services";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import LoadingScreen from "../shared/LoadingScreen";
+'use client';
+import '@/src/styles/auth/authPage.css';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import LoadingScreen from '../shared/LoadingScreen';
+import { useAuth } from '@/src/context/AuthContext';
+
 export default function Signup() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const auth =  useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
-      const data = await authService.register({
+      await auth.register({
         firstName,
         lastName,
         username,
@@ -26,16 +28,11 @@ export default function Signup() {
         password,
       });
 
-      setTimeout(() => {
-        setIsLoading(true);
-        router.push("/dashboard");
-      }, 1700);
-      // localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      console.log(data);
+      router.push('/dashboard');
     } catch (error: any) {
       console.log(error.message);
+      console.error('My error message:', error);
+      throw new Error(error);
     }
   };
 
@@ -47,7 +44,7 @@ export default function Signup() {
           type="text"
           name="input-form-firstname"
           value={firstName}
-          onChange={(e) => {
+          onChange={e => {
             setFirstName(e.target.value);
           }}
           placeholder="First Name"
@@ -58,7 +55,7 @@ export default function Signup() {
           type="text"
           name="input-form-lastname"
           value={lastName}
-          onChange={(e) => {
+          onChange={e => {
             setLastName(e.target.value);
           }}
           placeholder="Last name"
@@ -69,7 +66,7 @@ export default function Signup() {
           type="text"
           name="input-form-username"
           value={username}
-          onChange={(e) => {
+          onChange={e => {
             setUsername(e.target.value);
           }}
           placeholder="Username"
@@ -80,7 +77,7 @@ export default function Signup() {
           type="email"
           name="input-form-email"
           value={email}
-          onChange={(e) => {
+          onChange={e => {
             setEmail(e.target.value);
           }}
           placeholder="student@gmail.com"
@@ -91,7 +88,7 @@ export default function Signup() {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => {
+          onChange={e => {
             setPassword(e.target.value);
           }}
           name="input-form-password"
@@ -100,7 +97,6 @@ export default function Signup() {
 
         <button
           type="submit"
-          // onClick={}
           className="auth-submit"
         >
           Create Account

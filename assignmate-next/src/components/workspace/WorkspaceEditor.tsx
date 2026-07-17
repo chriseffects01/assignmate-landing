@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import { Loader2, Save } from 'lucide-react';
 
-import getAssignmentId from "@/src/lib/getAssignmentId";
-import "@/src/styles/workspace/workspaceMain.css";
-import "@/src/styles/workspace/workspacetextArea.css";
+import getAssignmentId from '@/src/lib/getAssignmentId';
+import '@/src/styles/workspace/workspaceMain.css';
+import '@/src/styles/workspace/workspacetextArea.css';
 
-import { updateAssignmentAPI } from "@/src/services/assignmentService";
+import { updateAssignmentAPI } from '@/src/services/assignmentService';
 //
 interface TextFormatting {
   bold: boolean;
@@ -15,10 +16,17 @@ interface TextFormatting {
   strikethrough: boolean;
 }
 
-type Dropdown = "heading" | "list" | "fontFamily" | "fontSize" | null;
+type Dropdown = 'heading' | 'list' | 'fontFamily' | 'fontSize' | null;
 
-export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
-  const [content, setContent] = useState(assignment.content);
+export default function WorkspaceEditor({
+  assignment,
+  setSaveStatus,
+  isSaving,
+  onSave,
+  content,
+  setContent,
+}: any) {
+  // const [content, setContent] = useState(assignment.content);
   const [format, setFormat] = useState<TextFormatting>({
     bold: false,
     italic: false,
@@ -27,40 +35,30 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
   });
   const [activeDropdown, setActiveDropdown] = useState<Dropdown>(null);
 
-  const [selectedHeading, setSelectedHeading] = useState<string>("Normal Text");
-  const [selectedFontFamily, setSelectedFontFamily] = useState<string>("Inter");
-  const [selectedFontSize, setSelectedFontSize] = useState<string>("18px");
+  const [selectedHeading, setSelectedHeading] = useState<string>('Normal Text');
+  const [selectedFontFamily, setSelectedFontFamily] = useState<string>('Inter');
+  const [selectedFontSize, setSelectedFontSize] = useState<string>('18px');
 
   useEffect(() => {
     if (!assignment) return;
-
-    const timeout = setTimeout(async () => {
-      setSaveStatus("saving");
-      const updated = { ...assignment, content };
-      const id = getAssignmentId(assignment);
-
-      await updateAssignmentAPI(id, updated);
-    }, 900);
-
-    setSaveStatus("saved");
-    return () => clearTimeout(timeout);
+    setSaveStatus('idle');
   }, [content]);
 
   const toggleDropdown = (menu: Dropdown) => {
-    setActiveDropdown((prev) => (prev === menu ? null : menu));
+    setActiveDropdown(prev => (prev === menu ? null : menu));
   };
 
   const toggleFormat = (key: keyof TextFormatting) => {
-    setFormat((prev) => ({ ...prev, [key]: !prev[key] }));
+    setFormat(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handleHeadingSelect = (headingName: string, tag: string) => {
     setSelectedHeading(headingName);
     setActiveDropdown(null);
-    console.log(`Executing Rich  Text command: Format to <${tag}>`);
+    // console.log(`Executing Rich  Text command: Format to <${tag}>`);
   };
 
-  const handleListChange = (listType: "ordered" | "unordered") => {
+  const handleListChange = (listType: 'ordered' | 'unordered') => {
     setActiveDropdown(null);
     console.log(`Executing Rich Text Command: Insert ${listType} list`);
   };
@@ -75,39 +73,39 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
           <div className="toolbar-dropdown-wrapper">
             <button
               type="button"
-              className={`toolbar-dropdown-trigger ${activeDropdown === "heading" ? "open" : ""}`}
-              onClick={() => toggleDropdown("heading")}
+              className={`toolbar-dropdown-trigger ${activeDropdown === 'heading' ? 'open' : ''}`}
+              onClick={() => toggleDropdown('heading')}
             >
               <span>{selectedHeading}</span>
               <span className="dropdown-arrow">▼</span>
             </button>
 
-            {activeDropdown === "heading" && (
+            {activeDropdown === 'heading' && (
               <div className="toolbar-dropdown-menu">
                 <button
                   type="button"
-                  onClick={() => handleHeadingSelect("Normal Text", "p")}
+                  onClick={() => handleHeadingSelect('Normal Text', 'p')}
                 >
                   Normal Text
                 </button>
                 <button
                   type="button"
                   className="h1-style"
-                  onClick={() => handleHeadingSelect("Heading 1", "h1")}
+                  onClick={() => handleHeadingSelect('Heading 1', 'h1')}
                 >
                   Heading 1
                 </button>
                 <button
                   type="button"
                   className="h2-style"
-                  onClick={() => handleHeadingSelect("Heading 2", "h2")}
+                  onClick={() => handleHeadingSelect('Heading 2', 'h2')}
                 >
                   Heading 2
                 </button>
                 <button
                   type="button"
                   className="h3-style"
-                  onClick={() => handleHeadingSelect("Heading 3", "h3")}
+                  onClick={() => handleHeadingSelect('Heading 3', 'h3')}
                 >
                   Heading 3
                 </button>
@@ -121,19 +119,19 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
           <div className="toolbar-dropdown-wrapper">
             <button
               type="button"
-              className={`toolbar-dropdown-trigger ${activeDropdown === "fontFamily" ? "open" : ""}`}
-              onClick={() => toggleDropdown("fontFamily")}
+              className={`toolbar-dropdown-trigger ${activeDropdown === 'fontFamily' ? 'open' : ''}`}
+              onClick={() => toggleDropdown('fontFamily')}
             >
               <span>{selectedFontFamily}</span>
               <span className="dropdown-arrow">▼</span>
             </button>
-            {activeDropdown === "fontFamily" && (
+            {activeDropdown === 'fontFamily' && (
               <div className="toolbar-dropdown-menu">
                 <button
                   type="button"
-                  style={{ fontFamily: "Inter" }}
+                  style={{ fontFamily: 'Inter' }}
                   onClick={() => {
-                    setSelectedFontFamily("Inter");
+                    setSelectedFontFamily('Inter');
                     setActiveDropdown(null);
                   }}
                 >
@@ -141,9 +139,9 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
                 </button>
                 <button
                   type="button"
-                  style={{ fontFamily: "JetBrains Mono" }}
+                  style={{ fontFamily: 'JetBrains Mono' }}
                   onClick={() => {
-                    setSelectedFontFamily("JetBrains Mono");
+                    setSelectedFontFamily('JetBrains Mono');
                     setActiveDropdown(null);
                   }}
                 >
@@ -151,9 +149,9 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
                 </button>
                 <button
                   type="button"
-                  style={{ fontFamily: "serif" }}
+                  style={{ fontFamily: 'serif' }}
                   onClick={() => {
-                    setSelectedFontFamily("Merriweather");
+                    setSelectedFontFamily('Merriweather');
                     setActiveDropdown(null);
                   }}
                 >
@@ -167,15 +165,15 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
           <div className="toolbar-dropdown-wrapper">
             <button
               type="button"
-              className={`toolbar-dropdown-trigger ${activeDropdown === "fontSize" ? "open" : ""}`}
-              onClick={() => toggleDropdown("fontSize")}
+              className={`toolbar-dropdown-trigger ${activeDropdown === 'fontSize' ? 'open' : ''}`}
+              onClick={() => toggleDropdown('fontSize')}
             >
               <span>{selectedFontSize}</span>
               <span className="dropdown-arrow">▼</span>
             </button>
-            {activeDropdown === "fontSize" && (
+            {activeDropdown === 'fontSize' && (
               <div className="toolbar-dropdown-menu micro-menu">
-                {["12px", "14px", "16px", "18px", "24px"].map((size) => (
+                {['12px', '14px', '16px', '18px', '24px'].map(size => (
                   <button
                     type="button"
                     key={size}
@@ -196,8 +194,8 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
           <div className="toolbar-action-buttons">
             <button
               type="button"
-              className={`tool-btn ${format.bold ? "active-clicked" : ""}`}
-              onClick={() => toggleFormat("bold")}
+              className={`tool-btn ${format.bold ? 'active-clicked' : ''}`}
+              onClick={() => toggleFormat('bold')}
               title="Bold"
             >
               <strong>B</strong>
@@ -205,16 +203,16 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
 
             <button
               type="button"
-              className={`tool-btn ${format.italic ? "active-clicked" : ""}`}
-              onClick={() => toggleFormat("italic")}
+              className={`tool-btn ${format.italic ? 'active-clicked' : ''}`}
+              onClick={() => toggleFormat('italic')}
               title="Italic"
             >
               <em>I</em>
             </button>
             <button
               type="button"
-              className={`tool-btn ${format.underline ? "active-clicked" : ""}`}
-              onClick={() => toggleFormat("underline")}
+              className={`tool-btn ${format.underline ? 'active-clicked' : ''}`}
+              onClick={() => toggleFormat('underline')}
               title="Underline"
             >
               <u>U</u>
@@ -222,8 +220,8 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
 
             <button
               type="button"
-              className={`tool-btn ${format.strikethrough ? "active-clicked" : ""}`}
-              onClick={() => toggleFormat("strikethrough")}
+              className={`tool-btn ${format.strikethrough ? 'active-clicked' : ''}`}
+              onClick={() => toggleFormat('strikethrough')}
               title="Strikethrough"
             >
               <s>S</s>
@@ -236,25 +234,25 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
           <div className="toolbar-dropdown-wrapper">
             <button
               type="button"
-              className={`toolbar-dropdown-trigger ${activeDropdown === "list" ? "open" : ""}`}
-              onClick={() => toggleDropdown("list")}
+              className={`toolbar-dropdown-trigger ${activeDropdown === 'list' ? 'open' : ''}`}
+              onClick={() => toggleDropdown('list')}
               title="List Formatting"
             >
               <span>📊 Lists</span>
               <span className="dropdown-arrow">▼</span>
             </button>
 
-            {activeDropdown === "list" && (
+            {activeDropdown === 'list' && (
               <div className="toolbar-dropdown-menu">
                 <button
                   type="button"
-                  onClick={() => handleListChange("unordered")}
+                  onClick={() => handleListChange('unordered')}
                 >
                   • Unordered Bullet List
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleListChange("ordered")}
+                  onClick={() => handleListChange('ordered')}
                 >
                   1. Ordered Numbered List
                 </button>
@@ -263,8 +261,22 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
           </div>
           <div className="toolbar-divider"></div>
 
-          <button className="toolbar-btn btn-save" title="Save Document">
-            Save Progress
+          <button
+            onClick={onSave}
+            disabled={isSaving}
+            title="Save Document"
+            className=" h-8 bg-[#10b081] hover:bg-[#059669] disabled:bg-[#047857] px-8 py-2 rounded whitespace-nowrap shadow-md transition-all font-semibold text-white cursor-pointer disabled:cursor-not-allowed"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="animate-spin h-4 w-4 shrink-0" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <span>Save Progress</span>
+              </>
+            )}
           </button>
         </div>
 
@@ -279,8 +291,12 @@ export default function WorkspaceEditor({ assignment, setSaveStatus }: any) {
             }}
             name="editor"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={e => {
+              setContent(e.target.value);
+              setSaveStatus('idle');
+            }}
           />
+          {/* <button className="bg-red-500 text-4xl">Yoooooo</button> */}
         </div>
       </div>
     </>

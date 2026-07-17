@@ -1,20 +1,20 @@
-import { fetchAssignments as getAssignments } from "../services/assignmentService";
-import { START_END, DAY30, DAY7, DAY_SEMESTER } from "../var/var";
+import { fetchAllAssignments } from '../services/assignmentService';
+import { START_END, DAY30, DAY7, DAY_SEMESTER } from '../var/var';
 
-export async function getChartDats(range: "7D" | "30D" | "Semester") {
-  const assignments = await getAssignments();
+export async function getChartDats(range: '7D' | '30D' | 'Semester') {
+  const assignments = await fetchAllAssignments();
 
   const now = Date.now();
   let days = DAY7;
-  if (range === "30D") days = DAY30;
-  if (range === "Semester") days = DAY_SEMESTER;
+  if (range === '30D') days = DAY30;
+  if (range === 'Semester') days = DAY_SEMESTER;
 
   const data = Array.from({ length: days }, (_, i) => {
     const start = now - i * START_END;
     const end = start + START_END;
 
     const count = assignments.filter(
-      (a: any) => a.createdAt >= start && a.createdAt < end,
+      (a: any) => a.createdAt >= start && a.createdAt < end
     ).length;
 
     return count;

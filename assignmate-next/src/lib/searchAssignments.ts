@@ -1,6 +1,6 @@
-import { fetchAssignments as getAssignments } from "../services/assignmentService";
+import { fetchAllAssignments } from '../services/assignmentService';
 export async function searchAssignments(query: string) {
-  const assignments = await getAssignments();
+  const assignments = await fetchAllAssignments();
 
   if (!query) return [];
 

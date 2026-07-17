@@ -1,15 +1,19 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import CreateAssignmentModal from "./WorkspaceCreateAssignment";
-import "@/src/styles/workspace/workspace.css";
-import LoadingScreen from "../shared/LoadingScreen";
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import CreateAssignmentModal from './WorkspaceCreateAssignment';
+import '@/src/styles/workspace/workspace.css';
+import LoadingScreen from '../shared/LoadingScreen';
 
 export default function WorkspaceHome() {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  function navigateRouter(path: string) {
+    setIsLoading(true);
+    router.push(path);
+  }
 
   return (
     <>
@@ -28,13 +32,8 @@ export default function WorkspaceHome() {
               </span>
             </div>
           </header>
-          {/* <p className="workspace-hero-subtitle">
-            Start something new or continue or continue your work
-          </p> */}
 
           {/* Interactive Circular Actions Grid  */}
-
-          {/* <div className="workspace-actions"> */}
 
           <div className="workspace-actions-grid">
             {/* <!-- Action Item 1 --> */}
@@ -44,10 +43,7 @@ export default function WorkspaceHome() {
                 className="workspace-circle-btn btn-blue"
                 aria-label="Create Project"
                 onClick={() => {
-                  // setIsLoading(true);
                   setShowModal(true);
-
-                  // return setIsLoading(false);
                 }}
               >
                 {/* Create new */}
@@ -66,8 +62,7 @@ export default function WorkspaceHome() {
                 className="workspace-circle-btn btn-gold"
                 aria-label="Browse drafts"
                 onClick={() => {
-                  setIsLoading(true);
-                  router.push("/assignments");
+                  navigateRouter('/dashboard/assignments');
                 }}
               >
                 <span className="workspace-btn-icon">✨</span>
@@ -84,8 +79,7 @@ export default function WorkspaceHome() {
                 className="workspace-circle-btn btn-purple"
                 aria-label="View Templates"
                 onClick={() => {
-                  setIsLoading(true);
-                  router.push("/templates");
+                  navigateRouter('/dashboard/templates');
                 }}
               >
                 {/* Templates

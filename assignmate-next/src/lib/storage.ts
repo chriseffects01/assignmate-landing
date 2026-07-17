@@ -1,20 +1,14 @@
-import { KEY, TOKEN_KEY, USER_KEY } from "../var/var";
+import { KEY, USER_KEY } from '../var/var';
+import { IUser } from '../types/user.types';
 
 export const storage = {
-  getToken: () => localStorage.getItem(TOKEN_KEY),
-  setToken: (token: string) => {
-    localStorage.setItem(TOKEN_KEY, token);
-  },
-
-  removeToken: () => localStorage.removeItem(TOKEN_KEY),
-
   getUser: () => {
     const user = localStorage.getItem(USER_KEY);
 
     return user ? JSON.parse(user) : null;
   },
 
-  setUser: (user: unknown) => {
+  setUser: (user: IUser) => {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   },
 
@@ -23,7 +17,6 @@ export const storage = {
   },
 
   clearAuth: () => {
-    localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(KEY);
   },
 };

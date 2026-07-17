@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import "@/src/styles/workspace/workspaceMain.css";
-import { useAuth } from "@/src/context/AuthContext";
-import React from "react";
+import '@/src/styles/workspace/workspaceMain.css';
+import { useAuth } from '@/src/context/AuthContext';
+import React from 'react';
 
-import { WorkspaceField } from "./WorkspaceMain";
-import WorkspaceAiAssistant from "./WorkspaceAi";
+import { WorkspaceField } from './WorkspaceMain';
+import WorkspaceAiAssistant from './WorkspaceAi';
 
 interface WorkspaceMetaProps {
   values: Record<WorkspaceField, string>;
@@ -53,21 +53,20 @@ export default function WorkspaceMeta({
             value={values.courseCode}
             disabled={!isEditable.courseCode}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onchange("courseCode", e.target.value)
+              onchange('courseCode', e.target.value)
             }
             name="assignment-coursecode"
           />
 
           <button
             type="button"
-            className={`meta-edit-btn ${isEditable.courseCode ? "active-save" : ""}`}
+            className={`meta-edit-btn ${isEditable.courseCode ? 'active-save' : ''}`}
             title="Edit Field"
             onClick={() => {
-              // console.log("Clicked");
-              onToggleEdit("courseCode");
+              onToggleEdit('courseCode');
             }}
           >
-            {isEditable.courseCode ? "✅" : "✏️"}
+            {isEditable.courseCode ? '✅' : '✏️'}
           </button>
         </div>
       </div>
@@ -81,21 +80,21 @@ export default function WorkspaceMeta({
             value={values.course}
             disabled={!isEditable.course}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onchange("course", e.target.value)
+              onchange('course', e.target.value)
             }
             name="assignment-course"
           />
 
           <button
             type="button"
-            className={`meta-edit-btn ${isEditable.course ? "active-save" : ""}`}
+            className={`meta-edit-btn ${isEditable.course ? 'active-save' : ''}`}
             title="Edit Field"
             onClick={() => {
               // console.log("Clicked");
-              onToggleEdit("course");
+              onToggleEdit('course');
             }}
           >
-            {isEditable.course ? "✅" : "✏️"}
+            {isEditable.course ? '✅' : '✏️'}
           </button>
         </div>
       </div>
@@ -109,21 +108,21 @@ export default function WorkspaceMeta({
             value={values.lecturer}
             disabled={!isEditable.lecturer}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onchange("lecturer", e.target.value)
+              onchange('lecturer', e.target.value)
             }
             name="assignment-lecturer"
           />
 
           <button
             type="button"
-            className={`meta-edit-btn ${isEditable.lecturer ? "active-save" : ""}`}
+            className={`meta-edit-btn ${isEditable.lecturer ? 'active-save' : ''}`}
             title="Edit Field"
             onClick={() => {
               // console.log("Clicked");
-              onToggleEdit("lecturer");
+              onToggleEdit('lecturer');
             }}
           >
-            {isEditable.lecturer ? "✅" : "✏️"}
+            {isEditable.lecturer ? '✅' : '✏️'}
           </button>
         </div>
       </div>
@@ -138,21 +137,21 @@ export default function WorkspaceMeta({
             value={values.dueDate}
             disabled={!isEditable.dueDate}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onchange("dueDate", e.target.value)
+              onchange('dueDate', e.target.value)
             }
             name="assignment-dueDate"
           />
 
           <button
             type="button"
-            className={`meta-edit-btn ${isEditable.dueDate ? "active-save" : ""}`}
+            className={`meta-edit-btn ${isEditable.dueDate ? 'active-save' : ''}`}
             title="Edit Field"
             onClick={() => {
               // console.log("Clicked");
-              onToggleEdit("dueDate");
+              onToggleEdit('dueDate');
             }}
           >
-            {isEditable.dueDate ? "✅" : "✏️"}
+            {isEditable.dueDate ? '✅' : '✏️'}
           </button>
         </div>
       </div>
@@ -166,33 +165,22 @@ export default function WorkspaceMeta({
             value={values.level}
             disabled={!isEditable.level}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onchange("level", e.target.value)
+              onchange('level', e.target.value)
             }
             name="assignment-level"
           />
           <button
             type="button"
-            className={`meta-edit-btn ${isEditable.level ? "active-save" : ""}`}
+            className={`meta-edit-btn ${isEditable.level ? 'active-save' : ''}`}
             title="Edit Field"
             onClick={() => {
               // console.log("Clicked");
-              onToggleEdit("level");
+              onToggleEdit('level');
             }}
           >
-            {isEditable.level ? "✅" : "✏️"}
+            {isEditable.level ? '✅' : '✏️'}
           </button>
         </div>
-
-        {/* <div className="ai-thinking-space">
-          <div className="ai-thinking-status">
-            <span className="pulse-dot"></span>
-            <span className="status-text">AI is deep in thought...</span>
-          </div>
-          <p className="ai-response-placeholder">
-            System waiting for prompt execution sequence.
-          </p>
-
-        </div> */}
 
         <WorkspaceAiAssistant />
       </div>

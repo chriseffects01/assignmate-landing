@@ -1,39 +1,59 @@
-"use client";
-import { fetchAssignments as getAssignments } from "@/src/services/assignmentService";
-import { AssignmentType } from "@/src/types/assignment";
-import SearchBar from "../dashboard/SearchBar";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import getAssignmentId from "@/src/lib/getAssignmentId";
-import { formatAssignmentTimeStamp } from "@/src/utils/dateUtils";
-import LoadingScreen from "../shared/LoadingScreen";
+'use client';
+import { fetchAssignmentsByQuery } from '@/src/services/assignmentService';
+import { AssignmentType } from '@/src/types/assignment';
+import { useEffect, useState } from 'react';
+import getAssignmentId from '@/src/lib/getAssignmentId';
+import { formatAssignmentTimeStamp } from '@/src/utils/dateUtils';
+import Link from 'next/link';
+import { SearchBar } from '../shared/SearchBar';
+import { AssignmentSkeleton } from '../shared/SkeletonLoading';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
-    "all" | "drafts" | "completed"
-  >("all");
+    'all' | 'drafts' | 'completed'
+  >('all');
   const [assignments, setAssignments] = useState<AssignmentType[]>([]);
-  const router = useRouter();
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
+  const [activeSearch, setActiveSearch] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+
+  const loadingSkeletonNumber = 9;
 
   useEffect(() => {
     async function load() {
-      const data = await getAssignments();
-      setAssignments(data || []);
+      setIsloading(true);
+      try {
+        const backendStatus =
+          activeFilter === 'drafts' ? 'draft' : activeFilter;
+
+        const res = await fetchAssignmentsByQuery(
+          activeSearch,
+          currentPage,
+          loadingSkeletonNumber,
+          backendStatus
+        );
+
+        if (res) {
+          setAssignments(res.assignments || []);
+          setTotalPages(res.pagination?.totalPages || 1);
+          setTotalItems(res.pagination?.totalItems || 0);
+        }
+      } catch (e) {
+        console.error(e);
+        throw e;
+      } finally {
+        setIsloading(false);
+      }
     }
     load();
-  }, []);
-
-  const filteredAssignments =
-    activeFilter === "all"
-      ? assignments
-      : activeFilter === "drafts"
-        ? assignments.filter((assignment) => assignment.status === "draft")
-        : assignments.filter((assignment) => assignment.status === "completed");
+  }, [activeSearch, currentPage, activeFilter]);
 
   return (
     <>
-      {isLoading && <LoadingScreen message="Loading your workspace" />}
       <main className="assignments-main">
         <section className="assignments-header">
           <div>
@@ -46,63 +66,39 @@ export default function AssignmentsMain() {
           </div>
 
           <div className="assignments-header-actions">
-            <button
+            <Link
               className="assignments-secondary-btn"
-              type="button"
-              onClick={() => {
-                setIsloading(true);
-                router.push("/templates");
-              }}
+              href="/dashboard/templates"
             >
               Use Templates
-            </button>
+            </Link>
 
-            <button
+            <Link
               className="assignments-primary-btn"
-              type="button"
-              onClick={() => {
-                setIsloading(true);
-                router.push("/workspace");
-              }}
+              href="/dashboard/workspace"
             >
               + New Assignments
-            </button>
+            </Link>
           </div>
         </section>
 
         <section className="assignments-toolbar">
-          <SearchBar />
-
-          <div className="assignments-filter-group">
-            <button
-              className={`assignments-filter-btn ${
-                activeFilter === "all" ? "active" : ""
-              }`}
-              type="button"
-              onClick={() => setActiveFilter("all")}
-            >
-              All
-            </button>
-            <button
-              className={`assignments-filter-btn ${
-                activeFilter === "drafts" ? "active" : ""
-              }`}
-              type="button"
-              onClick={() => setActiveFilter("drafts")}
-            >
-              Drafts
-            </button>
-
-            <button
-              className={`assignments-filter-btn ${
-                activeFilter === "completed" ? "active" : ""
-              }`}
-              type="button"
-              onClick={() => setActiveFilter("completed")}
-            >
-              Completed
-            </button>
-          </div>
+          <SearchBar
+            placeholder="assignments"
+            onSearchSubmit={finalQuery => {
+              setCurrentPage(1);
+              setActiveSearch(finalQuery);
+            }}
+            filterOptions={[
+              { label: 'All', value: 'all' },
+              { label: 'Drafts', value: 'drafts' },
+              { label: 'Completed', value: 'completed' },
+            ]}
+            onFilterChange={(value: any) => {
+              setCurrentPage(1);
+              setActiveFilter(value);
+            }}
+          />
         </section>
 
         <section className="assignment-empty-state">
@@ -114,103 +110,127 @@ export default function AssignmentsMain() {
           </div>
 
           <div className="assignments-empty-actions">
-            <button
+            <Link
               className="assignments-primary-btn"
-              type="button"
-              onClick={() => {
-                setIsloading(true);
-                router.push("/workspace");
-              }}
+              href="/dashboard/workspace"
             >
               Create New
-            </button>
-            <button
+            </Link>
+            <Link
               className="assignments-secondary-btn"
-              type="button"
-              onClick={() => {
-                setIsloading(true);
-                router.push("/templates");
-              }}
+              href="/dashboard/templates"
             >
               Browse Templates
-            </button>
+            </Link>
           </div>
         </section>
+        {totalPages > 1 && (
+          <div className="flex items-center mb-4 pb-4 justify-between pt-6 border-b border-slate-800/60 ">
+            <p className="text-xs text-slate-500">
+              Showing Page{'  '}
+              <span className="text-slate-300 font-semibold">
+                {currentPage}
+              </span>
+              {'  '}
+              of{'  '}
+              <span className="text-slate-300 font-semibold">{totalPages}</span>
+              {'  '}({totalItems} items total)
+            </p>
+
+            <div className="flex items-center gap-2 ">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-xs font-bold bg-slate-900 border-slate-800 rounded-xl text-slate-300 hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-slate-900 translate-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Previous
+              </button>
+
+              <button
+                onClick={() =>
+                  setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-xs font-bold bg-slate-900 border border-slate-800 rounded-xl text-slate-300 hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-slate-900 transition-all cursor-pointer flex items-center gap-2"
+              >
+                Next <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         <section className="assignments-grid">
-          {filteredAssignments.map((assignment) => (
-            <article
-              className="assignment-card"
-              key={getAssignmentId(assignment)}
-            >
-              <div className="assignment-card-top">
-                <span
-                  className={`assignment-status ${
-                    assignment.status === "completed"
-                      ? "is-completed"
-                      : "is-draft"
-                  }`}
-                >
-                  <span className="status-dot"></span>
-                  {assignment.status === "completed"
-                    ? "📝 Completed"
-                    : "⌛ Drafts"}
-                </span>
-                <div className="assignment-card-icon">📂</div>
-              </div>
-              <h2 className="assignment-card-title">{assignment.title} </h2>
-              <p className="assignment-card-course">
-                📚 <span>{assignment.course} </span>
-                💠<span>{assignment.courseCode}</span>
-              </p>
-              <div className="assignment-card-preview">
-                {assignment.content ? (
-                  assignment.content.substring(0, 75) +
-                  (assignment.content.length > 75 ? "..." : "")
-                ) : (
-                  <span className="empty-preview">
-                    No new content written 😱
+          {isLoading ? (
+            Array.from({ length: loadingSkeletonNumber }).map((_, i) => (
+              <AssignmentSkeleton key={i} />
+            ))
+          ) : assignments.length === 0 ? (
+            <div className="col-span-full text-center py-12 text-slate-500">
+              No active database assignments matched your query string.
+            </div>
+          ) : (
+            assignments.map(assignment => (
+              <article
+                className="assignment-card"
+                key={getAssignmentId(assignment)}
+              >
+                <div className="assignment-card-top">
+                  <span
+                    className={`assignment-status ${
+                      assignment.status === 'completed'
+                        ? 'is-completed'
+                        : 'is-draft'
+                    }`}
+                  >
+                    <span className="status-dot"></span>
+                    {assignment.status === 'completed'
+                      ? '📝 Completed'
+                      : '⌛ Drafts'}
                   </span>
-                )}
-              </div>
+                  <div className="assignment-card-icon">📂</div>
+                </div>
+                <h2 className="assignment-card-title">{assignment.title} </h2>
+                <p className="assignment-card-course">
+                  📚 <span>{assignment.course} </span>
+                  💠<span>{assignment.courseCode}</span>
+                </p>
+                <div className="assignment-card-preview">
+                  {assignment.content ? (
+                    assignment.content.substring(0, 75) +
+                    (assignment.content.length > 75 ? '...' : '')
+                  ) : (
+                    <span className="empty-preview">
+                      No new content written 😱
+                    </span>
+                  )}
+                </div>
 
-              <p className="assignment-card-time">
-                <span className="typing-text">
-                  {formatAssignmentTimeStamp(assignment.updatedAt || "")}
-                </span>
-              </p>
+                <p className="assignment-card-time">
+                  <span className="typing-text">
+                    {formatAssignmentTimeStamp(assignment.updatedAt || '')}
+                  </span>
+                </p>
 
-              <div className="assignment-card-actions">
-                <button
-                  className={`assignment-card-btn primary ${
-                    assignment.status === "completed" ? "hidden" : ""
-                  }`}
-                  type="button"
-                  onClick={() => {
-                    setIsloading(true);
-                    router.push(
-                      `/dashboard/workspace/${getAssignmentId(assignment)}`,
-                    );
-                  }}
-                >
-                  Continue
-                </button>
-                <button
-                  className="assignment-card-btn secondary"
-                  type="button"
-                  onClick={() => {
-                    setIsloading(true);
-
-                    router.push(
-                      `/dashboard/workspace/${getAssignmentId(assignment)}`,
-                    );
-                  }}
-                >
-                  Details
-                </button>
-              </div>
-            </article>
-          ))}
+                <div className="assignment-card-actions">
+                  <Link
+                    className={`assignment-card-btn primary ${
+                      assignment.status === 'completed' ? 'hidden' : ''
+                    }`}
+                    href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
+                  >
+                    Continue
+                  </Link>
+                  <Link
+                    className="assignment-card-btn secondary"
+                    href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
+                  >
+                    Details
+                  </Link>
+                </div>
+              </article>
+            ))
+          )}
         </section>
       </main>
     </>

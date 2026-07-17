@@ -1,22 +1,22 @@
-import { fetchAssignments as getAssignments } from "../services/assignmentService";
+import { fetchAllAssignments } from '../services/assignmentService';
 
 //
 export async function getDashboardStats() {
-  const assignments = await getAssignments();
+  const assignments = await fetchAllAssignments();
 
   // SET FILTER BY STATUS
-  const drafts = assignments.filter((a: any) => a.status === "draft").length;
+  const drafts = assignments.filter((a: any) => a.status === 'draft').length;
 
   const completed = assignments.filter(
-    (a: any) => a.status === "completed",
+    (a: any) => a.status === 'completed'
   ).length;
 
   //SET FILTER BY CATEGORY
   const reports = assignments.filter(
-    (a: any) => a.category === "report",
+    (a: any) => a.category === 'report'
   ).length;
 
-  const essays = assignments.filter((a: any) => a.category === "essay").length;
+  const essays = assignments.filter((a: any) => a.category === 'essay').length;
 
   const dashboardStat = {
     drafts,
@@ -24,7 +24,6 @@ export async function getDashboardStats() {
     reports,
     essays,
   };
-  // console.log(dashboardStat);
 
   return dashboardStat;
 }

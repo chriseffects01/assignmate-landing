@@ -4,7 +4,7 @@ export interface IUser {
   lastName: string;
   username: string;
   email: string;
-  subscription: string;
-  verified: boolean;
+  subscription?: string;
+  verified?: boolean;
   phoneNumber?: string;
 }
