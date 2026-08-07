@@ -1,9 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
-import "@/src/styles/workspace/workspace-ai.css";
+import '@/src/styles/workspace/workspace-ai.css';
+import { useOfflineModal } from '@/src/context/OfflineModalContext';
+import { useNotification } from '@/src/context/NotificationContext';
 
 export default function WorkspaceAiAssistant() {
+  const { openOfflineModal, closeOfflineModal, isOpen } = useOfflineModal();
+  const { toast, confirm } = useNotification();
   return (
     <div className="ai-workspace-card">
       {/* Module Title Section */}
@@ -56,7 +59,29 @@ export default function WorkspaceAiAssistant() {
             className="ai-terminal-input"
             placeholder="Tell AI your assignment topic or task rules..."
           />
-          <button className="ai-plane-send-btn" aria-label="Send Payload Link">
+          <button
+            onClick={() => {
+              openOfflineModal();
+              confirm({
+                title: "You're Offline",
+                message: ` We couldn't connect to Assignmate's Server. 
+                If this assignmate was saved offline use, you can continue working without an internet connection. 
+                Otherwise reconnect and try again. `,
+                confirmText: 'Open offline drafts',
+                cancelText: 'Retry connection',
+                onConfirm: () => {
+                  console.log('Yowaa');
+                },
+
+                onCancel: () => {
+                  closeOfflineModal();
+                  //Retry
+                },
+              });
+            }}
+            className="ai-plane-send-btn"
+            aria-label="Send Payload Link"
+          >
             <span className="btn-icon-plane">✈️</span>
           </button>
         </div>

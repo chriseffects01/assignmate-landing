@@ -1,23 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import CreateAssignmentModal from './WorkspaceCreateAssignment';
 import '@/src/styles/workspace/workspace.css';
-import LoadingScreen from '../shared/LoadingScreen';
+import Link from 'next/link';
 
 export default function WorkspaceHome() {
-  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  function navigateRouter(path: string) {
-    setIsLoading(true);
-    router.push(path);
-  }
 
   return (
     <>
-      {isLoading && <LoadingScreen message="Loading your screen..." />}
       <div className="workspace-home">
         <div className="workspace-hero-container">
           <header
@@ -41,7 +33,7 @@ export default function WorkspaceHome() {
             <div className="workspace-action-card">
               <button
                 className="workspace-circle-btn btn-blue"
-                aria-label="Create Project"
+                title="Create Project"
                 onClick={() => {
                   setShowModal(true);
                 }}
@@ -58,15 +50,13 @@ export default function WorkspaceHome() {
 
             {/* <!-- Action Item 2 --> */}
             <div className="workspace-action-card">
-              <button
+              <Link
                 className="workspace-circle-btn btn-gold"
-                aria-label="Browse drafts"
-                onClick={() => {
-                  navigateRouter('/dashboard/assignments');
-                }}
+                title="Browse drafts"
+                href="/dashboard/drafts"
               >
                 <span className="workspace-btn-icon">✨</span>
-              </button>
+              </Link>
               <h3 className="workspace-action-title">Browse Drafts</h3>
               <p className="workspace-action-desc">
                 Add collaborators and sync access control settings.
@@ -75,17 +65,14 @@ export default function WorkspaceHome() {
 
             {/* <!-- Action Item 3 --> */}
             <div className="workspace-action-card">
-              <button
+              <Link
                 className="workspace-circle-btn btn-purple"
-                aria-label="View Templates"
-                onClick={() => {
-                  navigateRouter('/dashboard/templates');
-                }}
+                title="View Templates"
+                href="/dashboard/templates"
               >
-                {/* Templates
-                 */}
+                {/* Templates   */}
                 <span className="workspace-btn-icon">📊</span>
-              </button>
+              </Link>
               <h3 className="workspace-action-title">View Templates</h3>
               <p className="workspace-action-desc">
                 Kickoff your work with premium templates

@@ -11,7 +11,7 @@ export const MAX_FREE_DRAFTS: number = 7;
 export const KEY: string = 'assignments';
 export const USER_KEY: string = 'user';
 export const CACHE_KEY: string = 'assignmate_dashboard_stats_cache';
-export const ASSIGNMENTSkEY: string = 'assignmate_draft_';
+export const ASSIGNMENTSkEY: string = 'assignmate_draft';
 
 // BASE URL FOR BACKEND
 export const BASE_URL: string = 'http://localhost:5000/api/assignments';

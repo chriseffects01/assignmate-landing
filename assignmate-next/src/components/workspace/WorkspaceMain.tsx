@@ -2,21 +2,15 @@
 
 import '@/src/styles/workspace/workspaceMain.css';
 import { useParams } from 'next/navigation';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNotification } from '@/src/context/NotificationContext';
 import { getAssignmentById } from '@/src/services/assignmentService';
 import WorkspaceEditor from './WorkspaceEditor';
 import WorkspaceHeader from './WorkspaceHeader';
-import Notification from '../shared/Notification';
 import WorkspaceMeta from './WorkspaceMeta';
 import { updateAssignmentAPI } from '@/src/services/assignmentService';
 import LoadingScreen from '../shared/LoadingScreen';
-import { ASSIGNMENTSkEY, MAX_FREE_DRAFTS } from '@/src/var/var';
-import {
-  removeDraftFromLocal,
-  saveDraftToLocal,
-  getAllLocalDrafts,
-} from '@/src/services/offlineDrafts';
-import getAssignmentId from '@/src/lib/getAssignmentId';
+import { draftService } from '@/src/services/drafts/draft.service';
 
 import { useAuth } from '@/src/context/AuthContext';
 export type WorkspaceField =
@@ -40,7 +34,6 @@ export default function WorkspaceMain() {
       level: false,
     }
   );
-  const [notification, setNotification] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
     'idle'
   );
@@ -49,6 +42,7 @@ export default function WorkspaceMain() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isOfflineSyncEnabled, setIsOfflineSyncEnabled] =
     useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [values, setValues] = useState<Record<WorkspaceField, string>>({
     course: '',
     lecturer: '',
@@ -58,47 +52,51 @@ export default function WorkspaceMain() {
     level: '',
     //
   });
-  const { user } = useAuth();
+  const { user, isOffline } = useAuth();
   const userId = user?._id;
+  console.log('User is offline:', isOffline);
+  const { toast, confirm } = useNotification();
 
   const params = useParams();
   const id = params?.id as string;
   useEffect(() => {
     if (saveStatus === 'saved') {
-      setNotification('All changes saved');
-
-      setTimeout(() => {
-        setNotification('');
-      }, 2000);
+      toast.success('All changes saved ');
     }
   }, [saveStatus]);
 
-  useEffect(() => {
-    if (id && userId) {
-      console.log(userId, id);
-      const hasExistingBackup = localStorage.getItem(
-        `${ASSIGNMENTSkEY}${userId}_${id}`
-      );
-      console.log(hasExistingBackup);
-      if (hasExistingBackup) {
-        setIsOfflineSyncEnabled(true);
-      } else {
-        setIsOfflineSyncEnabled(false);
+  const handleOfflineToggle = (checked: boolean) => {
+    if (checked === isOfflineSyncEnabled) return;
+    if (!userId) return;
+
+    if (checked) {
+      if (!draftService.canSave(userId, id)) {
+        alert('Maximum offline assignments reached');
+        return;
       }
+      toast.success('Saved for offline usage');
+
+      draftService.save(userId, id, values, editorContent);
+    } else {
+      toast.info('Removed from offline backup');
+      draftService.remove(userId, id);
     }
+
+    setIsOfflineSyncEnabled(checked);
+  };
+
+  useEffect(() => {
+    if (!userId) return;
+    if (!id) return;
+
+    setIsOfflineSyncEnabled(draftService.exists(userId, id));
   }, [id, userId]);
 
   useEffect(() => {
-    if (id && userId) {
-      if (isOfflineSyncEnabled) {
-        saveDraftToLocal(userId, id, values, editorContent);
-      } else {
-        removeDraftFromLocal(userId, id);
-      }
-    }
-  }, [editorContent, values, isOfflineSyncEnabled, id, userId]);
+    if (!userId || !id || !isOfflineSyncEnabled) return;
 
-  const [isLoading, setIsLoading] = useState(true);
+    draftService.save(userId, id, values, editorContent);
+  }, [editorContent, values, isOfflineSyncEnabled, id, userId]);
 
   useEffect(() => {
     async function load() {
@@ -110,6 +108,21 @@ export default function WorkspaceMain() {
 
         setAssignments(data);
       } catch (err) {
+        if (!navigator.onLine) {
+          confirm({
+            title: "You're Offline !",
+            message:
+              "This assignment can't be loaded. Continue using your offline drafts? ",
+
+            confirmText: 'Go to drafts page',
+            cancelText: 'Retry',
+            type: 'warning',
+            onConfirm: async () => {
+              toast.success('Moving to drafts page');
+            },
+          });
+          return;
+        }
         console.error(`Workspace mount crash:`, err);
       } finally {
         setIsLoading(false);
@@ -132,6 +145,15 @@ export default function WorkspaceMain() {
       });
     }
   }, [assignment]);
+
+  const handleToggleEdit = async (field: WorkspaceField): Promise<void> => {
+    setIsEditable(prev => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handleChange = (field: WorkspaceField, text: string): void => {
+    setValues(prev => ({ ...prev, [field]: text }));
+    setSaveStatus('idle');
+  };
 
   const handleSave = async () => {
     if (isSaving) return;
@@ -157,58 +179,20 @@ export default function WorkspaceMain() {
     }
   };
 
-  const handleOfflineToggle = (checked: boolean) => {
-    if (checked === isOfflineSyncEnabled) return;
-
-    if (checked && userId) {
-      const currentDrafts = getAllLocalDrafts(userId);
-      const isAlreadySavedLocally = currentDrafts.some(
-        draft => getAssignmentId(draft) === id
-      );
-
-      if (
-        !isAlreadySavedLocally &&
-        currentDrafts.length > MAX_FREE_DRAFTS &&
-        userId
-      ) {
-        alert('Maximum offline assignments reached');
-        return;
-      }
-
-      saveDraftToLocal(userId, id, values, editorContent);
-      setIsOfflineSyncEnabled(true);
-    } else {
-      if (userId) {
-        removeDraftFromLocal(userId, id);
-        setIsOfflineSyncEnabled(false);
-      }
-    }
-  };
-
   if (isLoading) {
     return <LoadingScreen message="Loading your workspace..." />;
   }
 
   if (!assignment) {
-    return <LoadingScreen />;
+    return <div className="px-2 m-3 ">No assignment found</div>;
   }
 
   //////////////////////////////////////////////***************************8 */
 
   // Initially blank state for edits
 
-  const handleToggleEdit = async (field: WorkspaceField): Promise<void> => {
-    setIsEditable(prev => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const handleChange = (field: WorkspaceField, text: string): void => {
-    setValues(prev => ({ ...prev, [field]: [text] }));
-    setSaveStatus('idle');
-  };
-
   return (
     <>
-      {notification && <Notification message={notification} />}
       <div className="workspace-layout">
         <aside className="workspace-meta-panel">
           <div className="panel-header">

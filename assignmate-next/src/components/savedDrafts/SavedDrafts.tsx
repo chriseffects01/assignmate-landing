@@ -13,11 +13,9 @@ import {
 } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/useDebounce';
 import { useAuth } from '@/src/context/AuthContext';
+import { useNotification } from '@/src/context/NotificationContext';
 
-import {
-  getAllLocalDrafts,
-  removeDraftFromLocal,
-} from '@/src/services/offlineDrafts';
+import { draftService } from '@/src/services/drafts/draft.service';
 import OfflineDraft from '@/src/types/draft.types';
 import getAssignmentId from '@/src/lib/getAssignmentId';
 import LoadingScreen from '../shared/LoadingScreen';
@@ -28,24 +26,34 @@ export default function SavedDraftsPage() {
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { user, loading: authLoading } = useAuth();
   const userId = user?._id;
-
-  console.log(userId);
+  const { toast, confirm } = useNotification();
 
   useEffect(() => {
     if (!authLoading && userId) {
-      setDrafts(getAllLocalDrafts(userId));
+      setDrafts(draftService.getAll(userId));
     }
   }, [userId, authLoading]);
 
   const handleDeleteDraft = (id: string, e: React.MouseEvent) => {
     e.preventDefault(); // Stop card click navigation
-    if (
-      confirm("Delete this offline copy? Your cloud save won't be affected.") &&
-      userId
-    ) {
-      removeDraftFromLocal(userId, id);
-      setDrafts(getAllLocalDrafts(userId));
-    }
+
+    if (userId)
+      confirm({
+        title: 'Delete Offline Draft?',
+        message: "Delete this offline copy? Your cloud save won't be affected.",
+        confirmText: 'Delete Draft',
+        cancelText: 'keep It',
+        type: 'danger',
+        onConfirm: async () => {
+          try {
+            draftService.remove(userId, id);
+            setDrafts(draftService.getAll(userId));
+            toast.success('Draft remove successfully');
+          } catch {
+            toast.error('Failed to delete draft');
+          }
+        },
+      });
   };
 
   // Filter based on search input

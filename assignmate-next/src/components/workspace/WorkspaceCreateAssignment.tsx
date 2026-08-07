@@ -1,24 +1,26 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import "@/src/styles/workspace/workspace.css";
-import { AssignmentType } from "@/src/types/assignment";
-import { createAssignmentAPI } from "@/src/services/assignmentService";
-import getAssignmentId from "@/src/lib/getAssignmentId";
-import "@/src/styles/workspace/workspaceModal.css";
-import LoadingScreen from "../shared/LoadingScreen";
+'use client';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import '@/src/styles/workspace/workspace.css';
+import { AssignmentType } from '@/src/types/assignment';
+import { createAssignmentAPI } from '@/src/services/assignmentService';
+import getAssignmentId from '@/src/lib/getAssignmentId';
+import '@/src/styles/workspace/workspaceModal.css';
+import LoadingScreen from '../shared/LoadingScreen';
+import { useNotification } from '@/src/context/NotificationContext';
 
 export default function CreateAssignmentModal({ onClose }: any) {
   const assignmentStatus = {
-    courseCode: "",
-    title: "",
-    course: "",
-    lecturer: "",
+    courseCode: '',
+    title: '',
+    course: '',
+    lecturer: '',
   };
 
   const [form, setForm] = useState(assignmentStatus);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useNotification();
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,13 +31,15 @@ export default function CreateAssignmentModal({ onClose }: any) {
       _id: crypto.randomUUID(),
 
       ...form,
-      content: "",
+      content: '',
       createdAt: Date.now(),
-      status: "draft",
+      status: 'draft',
 
-      category: "",
+      category: '',
     };
+
     const saved = await createAssignmentAPI(newAssignment);
+    toast.success('Assignment created successfully');
 
     if (saved) {
       setTimeout(() => {

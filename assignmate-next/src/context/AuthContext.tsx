@@ -1,15 +1,23 @@
 'use client';
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { IUser } from '@/src/types/user.types';
 import { LoginPayload, RegisterPayload } from '@/src/types/auth.types';
 import LoadingScreen from '@/src/components/shared/LoadingScreen';
 import { authService } from '@/src/services/auth.service';
-import { storage } from '@/src/lib/storage';
-
+import { OfflineError, UnathourizedError } from '../errors/appError';
+import { storage } from '../lib/storage';
+import { useNotification } from './NotificationContext';
 interface AuthContextType {
   user: IUser | null;
   loading: boolean;
   authenticated: boolean;
+  isOffline: boolean;
 
   login: (data: LoginPayload) => Promise<void>;
   register: (data: RegisterPayload) => Promise<void>;
@@ -21,36 +29,79 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isOffline, setIsOffline] = useState<boolean>(false);
+  const { toast } = useNotification();
 
   useEffect(() => {
-    async function load() {
-      try {
-        const response = await authService.me();
-        setUser(response.user);
-      } catch (e: any) {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
+    const cachedUser = storage.getUser();
+    if (cachedUser) {
+      setUser(cachedUser);
     }
-    load();
   }, []);
+
+  const load = useCallback(async () => {
+    try {
+      const response = await authService.me();
+      const user = response.user;
+
+      storage.setUser(user);
+
+      if (isOffline) {
+        setIsOffline(false);
+        toast.success("You're back online");
+      }
+      setUser(user);
+    } catch (e: any) {
+      if (e instanceof OfflineError) {
+        if (!isOffline) {
+          setIsOffline(true);
+          toast.warning("You're Offline");
+        }
+        return;
+      }
+
+      if (e instanceof UnathourizedError) {
+        storage.removeUser();
+        setUser(null);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [isOffline, toast]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      load();
+    };
+
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [load]);
 
   const login = async (data: LoginPayload) => {
     await authService.login(data);
-    // console.log(response);
 
     const currentUser = await authService.me();
-
-    setUser(currentUser.user);
+    const user = currentUser.user;
+    setUser(user);
+    storage.setUser(user);
   };
 
   const register = async (data: RegisterPayload) => {
     await authService.register(data);
 
     const currentUser = await authService.me();
+    const user = currentUser.user;
 
-    setUser(currentUser.user);
+    setUser(user);
+    storage.setUser(user);
   };
 
   // const logout = async () => {
@@ -76,6 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       <AuthContext.Provider
         value={{
           user,
+          isOffline,
 
           loading,
           authenticated: !!user,

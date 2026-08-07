@@ -19,7 +19,7 @@ export async function fetchAllAssignments() {
     throw err;
   }
 }
-
+// CRUD --
 /*
  * Use case 2: FETCHING ASSIGNMENTS PER CONDITION (PAGINATION ORR QUERY)
  */

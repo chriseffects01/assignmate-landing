@@ -1,4 +1,4 @@
-import { api } from '@/src/services/api';
+import { api, normalizeApiError } from '@/src/services/api';
 import {
   LoginPayload,
   RegisterPayload,
@@ -7,20 +7,32 @@ import {
 
 export const authService = {
   async login(data: LoginPayload) {
-    const response = await api.post<AuthResponse>('/api/auth/login', data);
+    try {
+      const response = await api.post<AuthResponse>('/api/auth/login', data);
 
-    return response.data;
+      return response.data;
+    } catch (e: any) {
+      throw normalizeApiError(e);
+    }
   },
 
   async register(data: RegisterPayload) {
-    const response = await api.post<AuthResponse>('api/auth/register', data);
+    try {
+      const response = await api.post<AuthResponse>('api/auth/register', data);
 
-    return response.data;
+      return response.data;
+    } catch (e: any) {
+      throw normalizeApiError(e);
+    }
   },
 
   async me() {
-    const response = await api.get<AuthResponse>('/api/auth/me');
+    try {
+      const response = await api.get<AuthResponse>('/api/auth/me');
 
-    return response.data;
+      return response.data;
+    } catch (e: any) {
+      throw normalizeApiError(e);
+    }
   },
 };

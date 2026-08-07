@@ -7,7 +7,9 @@ import { formatAssignmentTimeStamp } from '@/src/utils/dateUtils';
 import Link from 'next/link';
 import { SearchBar } from '../shared/SearchBar';
 import { AssignmentSkeleton } from '../shared/SkeletonLoading';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, HardDrive } from 'lucide-react';
+import { draftService } from '@/src/services/drafts/draft.service';
+import { useAuth } from '@/src/context/AuthContext';
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
@@ -21,6 +23,8 @@ export default function AssignmentsMain() {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
 
+  const { user } = useAuth();
+  const userId: any = user?._id;
   const loadingSkeletonNumber = 9;
 
   useEffect(() => {
@@ -170,66 +174,73 @@ export default function AssignmentsMain() {
               No active database assignments matched your query string.
             </div>
           ) : (
-            assignments.map(assignment => (
-              <article
-                className="assignment-card"
-                key={getAssignmentId(assignment)}
-              >
-                <div className="assignment-card-top">
-                  <span
-                    className={`assignment-status ${
-                      assignment.status === 'completed'
-                        ? 'is-completed'
-                        : 'is-draft'
-                    }`}
-                  >
-                    <span className="status-dot"></span>
-                    {assignment.status === 'completed'
-                      ? '📝 Completed'
-                      : '⌛ Drafts'}
-                  </span>
-                  <div className="assignment-card-icon">📂</div>
-                </div>
-                <h2 className="assignment-card-title">{assignment.title} </h2>
-                <p className="assignment-card-course">
-                  📚 <span>{assignment.course} </span>
-                  💠<span>{assignment.courseCode}</span>
-                </p>
-                <div className="assignment-card-preview">
-                  {assignment.content ? (
-                    assignment.content.substring(0, 75) +
-                    (assignment.content.length > 75 ? '...' : '')
-                  ) : (
-                    <span className="empty-preview">
-                      No new content written 😱
+            assignments.map(assignment => {
+              const savedOfffline =
+                userId &&
+                draftService.exists(userId, getAssignmentId(assignment));
+              return (
+                <article
+                  className="assignment-card"
+                  key={getAssignmentId(assignment)}
+                >
+                  <div className="assignment-card-top">
+                    <span
+                      className={`assignment-status ${
+                        assignment.status === 'completed'
+                          ? 'is-completed'
+                          : 'is-draft'
+                      }`}
+                    >
+                      <span className="status-dot"></span>
+                      {assignment.status === 'completed'
+                        ? '📝 Completed'
+                        : '⌛ Drafts'}
                     </span>
-                  )}
-                </div>
+                    <div className="assignment-card-icon">
+                      {savedOfffline && '📂'}
+                    </div>
+                  </div>
+                  <h2 className="assignment-card-title">{assignment.title} </h2>
+                  <p className="assignment-card-course">
+                    📚 <span>{assignment.course} </span>
+                    💠<span>{assignment.courseCode}</span>
+                  </p>
+                  <div className="assignment-card-preview">
+                    {assignment.content ? (
+                      assignment.content.substring(0, 75) +
+                      (assignment.content.length > 75 ? '...' : '')
+                    ) : (
+                      <span className="empty-preview">
+                        No content written ...
+                      </span>
+                    )}
+                  </div>
 
-                <p className="assignment-card-time">
-                  <span className="typing-text">
-                    {formatAssignmentTimeStamp(assignment.updatedAt || '')}
-                  </span>
-                </p>
+                  <p className="assignment-card-time">
+                    <span className="typing-text">
+                      {formatAssignmentTimeStamp(assignment.updatedAt || '')}
+                    </span>
+                  </p>
 
-                <div className="assignment-card-actions">
-                  <Link
-                    className={`assignment-card-btn primary ${
-                      assignment.status === 'completed' ? 'hidden' : ''
-                    }`}
-                    href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
-                  >
-                    Continue
-                  </Link>
-                  <Link
-                    className="assignment-card-btn secondary"
-                    href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
-                  >
-                    Details
-                  </Link>
-                </div>
-              </article>
-            ))
+                  <div className="assignment-card-actions">
+                    <Link
+                      className={`assignment-card-btn primary ${
+                        assignment.status === 'completed' ? 'hidden' : ''
+                      }`}
+                      href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
+                    >
+                      Continue
+                    </Link>
+                    <Link
+                      className="assignment-card-btn secondary"
+                      href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
+                    >
+                      Details
+                    </Link>
+                  </div>
+                </article>
+              );
+            })
           )}
         </section>
       </main>
