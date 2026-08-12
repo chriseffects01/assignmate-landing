@@ -28,6 +28,9 @@ export function OFflineModalContextProvider({
     console.log('Modal is closed');
     setIsOpen(false);
   };
+  const handleRetry = async () => {
+    
+  }
 
   return (
     <OfflineModalContext.Provider

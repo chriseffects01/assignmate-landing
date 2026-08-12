@@ -3,7 +3,7 @@ import { getRecentAssignment } from '@/src/lib/getRecentAssignment';
 import getAssignmentId from '@/src/lib/getAssignmentId';
 import { AssignmentSkeleton } from '../shared/SkeletonLoading';
 import Link from 'next/link';
-
+import SimpleEmptyState from '../shared/SimpleEmptyState';
 export default function DashboardRecentAssignments() {
   const [recent, setRecent] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,9 +39,7 @@ export default function DashboardRecentAssignments() {
               <AssignmentSkeleton key={i} />
             ))
           ) : recent.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-slate-500">
-              No Recent Assignments.
-            </div>
+            <SimpleEmptyState message="No recent assignments" />
           ) : (
             recent.map(item => (
               <div

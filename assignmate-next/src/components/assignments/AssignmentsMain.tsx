@@ -1,15 +1,23 @@
 'use client';
+
 import { fetchAssignmentsByQuery } from '@/src/services/assignmentService';
 import { AssignmentType } from '@/src/types/assignment';
 import { useEffect, useState } from 'react';
 import getAssignmentId from '@/src/lib/getAssignmentId';
 import { formatAssignmentTimeStamp } from '@/src/utils/dateUtils';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SearchBar } from '../shared/SearchBar';
 import { AssignmentSkeleton } from '../shared/SkeletonLoading';
 import { ArrowLeft, ArrowRight, HardDrive } from 'lucide-react';
 import { draftService } from '@/src/services/drafts/draft.service';
 import { useAuth } from '@/src/context/AuthContext';
+import { useNotification } from '@/src/context/NotificationContext';
+import { handleOfflineError } from '@/src/utils/handleOfflineError';
+import { OfflineError } from '@/src/errors/appError';
+import { ReconnectOverlay } from '../shared/ReconnectOverlay';
+import { FileText } from 'lucide-react';
+import SimpleEmptyState from '../shared/SimpleEmptyState';
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
@@ -22,10 +30,29 @@ export default function AssignmentsMain() {
 
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [isRetrying, setIsRetrying] = useState<boolean>(false);
 
   const { user } = useAuth();
+  const router = useRouter();
   const userId: any = user?._id;
   const loadingSkeletonNumber = 9;
+  const { toast, confirm, closeConfirm } = useNotification();
+
+  const loadAssignment = async () => {
+    const backendStatus = activeFilter === 'drafts' ? 'draft' : activeFilter;
+    const res = await fetchAssignmentsByQuery(
+      activeSearch,
+      currentPage,
+      loadingSkeletonNumber,
+      backendStatus
+    );
+
+    if (res) {
+      setAssignments(res.assignments || []);
+      setTotalPages(res.pagination?.totalPages || 1);
+      setTotalItems(res.pagination?.totalItems || 0);
+    }
+  };
 
   useEffect(() => {
     async function load() {
@@ -46,8 +73,23 @@ export default function AssignmentsMain() {
           setTotalPages(res.pagination?.totalPages || 1);
           setTotalItems(res.pagination?.totalItems || 0);
         }
-      } catch (e) {
+      } catch (e: any) {
+        handleOfflineError({
+          err: e,
+          OfflineErrorClass: OfflineError,
+          confirm,
+          toast,
+          router,
+          setIsRetrying,
+          onRetry: loadAssignment,
+          message:
+            'Assignments could not be loaded. Continue with your offline drafts.',
+          closeModal: closeConfirm,
+        });
+
         console.error(e);
+        toast.error("Couldn't load assignments");
+
         throw e;
       } finally {
         setIsloading(false);
@@ -55,6 +97,10 @@ export default function AssignmentsMain() {
     }
     load();
   }, [activeSearch, currentPage, activeFilter]);
+
+  if (isRetrying) {
+    return <ReconnectOverlay />;
+  }
 
   return (
     <>
@@ -170,9 +216,7 @@ export default function AssignmentsMain() {
               <AssignmentSkeleton key={i} />
             ))
           ) : assignments.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-slate-500">
-              No active database assignments matched your query string.
-            </div>
+            <SimpleEmptyState message="No Assignment found" />
           ) : (
             assignments.map(assignment => {
               const savedOfffline =

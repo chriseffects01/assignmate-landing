@@ -7,13 +7,13 @@ import { CheckCircle2, AlertTriangle, Info, XCircle, X } from 'lucide-react';
 import React from 'react';
 
 export function NotificationOverlay() {
-  const { toasts, removeToast, confirmState, closeConfirm } = useNotification();
+  const { toasts, removeToast, confirmState } = useNotification();
 
   return (
     <>
       {/* Toast Container  */}
 
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-3 w-full max-w-sm px-4 sm:px-0 pointer-events-none">
+      <div className="fixed top-4 right-4 z-9999 flex flex-col gap-3 w-full max-w-sm px-4 sm:px-0 pointer-events-none">
         {toasts.map(t => (
           <ToastItem key={t.id} toast={t} onClose={() => removeToast(t.id)} />
         ))}
@@ -43,9 +43,8 @@ export function NotificationOverlay() {
 
             <div className="flex items-center justify-end gap-3 mt-6">
               <button
-                onClick={() => {
+                onClick={async () => {
                   if (confirmState.onCancel) confirmState.onCancel();
-                  closeConfirm();
                 }}
                 className="px-4 py-2 text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition-all cursor-pointer"
               >
@@ -55,7 +54,6 @@ export function NotificationOverlay() {
               <button
                 onClick={async () => {
                   await confirmState.onConfirm();
-                  closeConfirm();
                 }}
                 className={`px-4 py-2 text-sm font-semibold text-white rounded-xl transition-all cursor-pointer ${
                   confirmState.type === 'danger'
@@ -90,7 +88,7 @@ function ToastItem({ toast, onClose }: { toast: any; onClose: () => void }) {
 
   return (
     <div
-      className={`pointer-events-auto flex items-center justify-between gap-3 p-4 rounded-xl border bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-xl text-slate-800 dark:text-slate-100 transition-all animate-slide-in ${borders[toast.type as ToastType]}`}
+      className={`pointer-events-auto flex items-center justify-between gap-3 p-4 rounded-xl border-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-xl text-slate-800 dark:text-slate-100 transition-all animate-slide-in ${borders[toast.type as ToastType]}`}
     >
       <div className="flex items-center gap-3">
         {icons[toast.type as ToastType]}

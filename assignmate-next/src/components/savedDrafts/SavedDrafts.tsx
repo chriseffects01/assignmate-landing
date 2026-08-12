@@ -19,6 +19,7 @@ import { draftService } from '@/src/services/drafts/draft.service';
 import OfflineDraft from '@/src/types/draft.types';
 import getAssignmentId from '@/src/lib/getAssignmentId';
 import LoadingScreen from '../shared/LoadingScreen';
+import SimpleEmptyState from '../shared/SimpleEmptyState';
 
 export default function SavedDraftsPage() {
   const [drafts, setDrafts] = useState<OfflineDraft[]>([]);
@@ -26,7 +27,7 @@ export default function SavedDraftsPage() {
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { user, loading: authLoading } = useAuth();
   const userId = user?._id;
-  const { toast, confirm } = useNotification();
+  const { toast, confirm, closeConfirm } = useNotification();
 
   useEffect(() => {
     if (!authLoading && userId) {
@@ -51,7 +52,12 @@ export default function SavedDraftsPage() {
             toast.success('Draft remove successfully');
           } catch {
             toast.error('Failed to delete draft');
+          } finally {
+            closeConfirm();
           }
+        },
+        onCancel: () => {
+          closeConfirm();
         },
       });
   };
@@ -138,18 +144,13 @@ export default function SavedDraftsPage() {
       </div>
       {/* 🌟 4. CARD GRID WITH PROPER SPACING & DEPTH */}
       {filteredDrafts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center border border-dashed border-slate-800 rounded-2xl py-16 text-center bg-slate-900/10">
-          <FileText className="h-8 w-8 text-slate-600 mb-3" />
-          <p className="text-sm font-medium text-slate-400">
-            No matching local drafts found
-          </p>
-        </div>
+        <SimpleEmptyState message="No matching local drafts found" />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
           {filteredDrafts.map(draft => (
             <Link
               key={getAssignmentId(draft)}
-              href={`/dashboard/workspace/${getAssignmentId(draft)}`}
+              href={`/dashboard/drafts/${getAssignmentId(draft)}`}
               className="group relative flex flex-col justify-between p-6 bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl shadow-xl transition-all duration-300"
             >
               <div>

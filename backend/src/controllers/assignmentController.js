@@ -147,9 +147,11 @@ export const updateAssignment = async (req, res) => {
       });
     }
 
-    return res.json(updated);
+    logger.info("Update complete")
+
+    return res.status(200).json(updated);
   } catch (err) {
-    logger.error('My Detailed Error:', err.message);
-    res.status(500).json({ error: err.message });
+    logger.error('My Detailed Error:', err);
+    res.status(500).json({ error: err });
   }
 };

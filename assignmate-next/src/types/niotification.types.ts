@@ -14,7 +14,7 @@ export interface ConfirmOptions {
   cancelText?: string;
   type?: 'danger' | 'warning' | 'info';
   onConfirm: () => void | Promise<void>;
-  onCancel?: () => void;
+  onCancel?: () => void | Promise<void>;
 }
 
 export interface NotificationContextType {

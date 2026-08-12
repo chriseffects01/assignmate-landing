@@ -11,8 +11,13 @@ import WorkspaceMeta from './WorkspaceMeta';
 import { updateAssignmentAPI } from '@/src/services/assignmentService';
 import LoadingScreen from '../shared/LoadingScreen';
 import { draftService } from '@/src/services/drafts/draft.service';
-
+import { useRouter } from 'next/navigation';
+import { handleOfflineError } from '@/src/utils/handleOfflineError';
+import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import { useAuth } from '@/src/context/AuthContext';
+import { OfflineError } from '@/src/errors/appError';
+import { EmptyState } from '../shared/EmptyState';
+
 export type WorkspaceField =
   | 'course'
   | 'lecturer'
@@ -42,7 +47,8 @@ export default function WorkspaceMain() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isOfflineSyncEnabled, setIsOfflineSyncEnabled] =
     useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRetrying, setIsRetrying] = useState<boolean>(false);
   const [values, setValues] = useState<Record<WorkspaceField, string>>({
     course: '',
     lecturer: '',
@@ -54,8 +60,8 @@ export default function WorkspaceMain() {
   });
   const { user, isOffline } = useAuth();
   const userId = user?._id;
-  console.log('User is offline:', isOffline);
-  const { toast, confirm } = useNotification();
+  const { toast, confirm, closeConfirm } = useNotification();
+  const router = useRouter();
 
   const params = useParams();
   const id = params?.id as string;
@@ -98,6 +104,12 @@ export default function WorkspaceMain() {
     draftService.save(userId, id, values, editorContent);
   }, [editorContent, values, isOfflineSyncEnabled, id, userId]);
 
+  const loadAssignment = async () => {
+    const data = await getAssignmentById(id);
+
+    setAssignments(data);
+  };
+
   useEffect(() => {
     async function load() {
       if (!id) return;
@@ -107,22 +119,20 @@ export default function WorkspaceMain() {
         const data = await getAssignmentById(id);
 
         setAssignments(data);
-      } catch (err) {
-        if (!navigator.onLine) {
-          confirm({
-            title: "You're Offline !",
-            message:
-              "This assignment can't be loaded. Continue using your offline drafts? ",
+      } catch (err: any) {
+        handleOfflineError({
+          err,
+          OfflineErrorClass: OfflineError,
+          confirm,
+          toast,
+          router,
+          setIsRetrying,
+          onRetry: loadAssignment,
 
-            confirmText: 'Go to drafts page',
-            cancelText: 'Retry',
-            type: 'warning',
-            onConfirm: async () => {
-              toast.success('Moving to drafts page');
-            },
-          });
-          return;
-        }
+          message:
+            "This assignment can't be loaded. Continue using your offline drafts.",
+          closeModal: closeConfirm,
+        });
         console.error(`Workspace mount crash:`, err);
       } finally {
         setIsLoading(false);
@@ -173,18 +183,45 @@ export default function WorkspaceMain() {
       setSaveStatus('saved');
     } catch (e: any) {
       console.error('Error saving assignment:', e);
+      toast.error('Could not save assignment.');
       setSaveStatus('idle');
     } finally {
       setIsSaving(false);
     }
   };
 
+  if (isRetrying) {
+    return <ReconnectOverlay />;
+  }
+
   if (isLoading) {
     return <LoadingScreen message="Loading your workspace..." />;
   }
 
+  if (isOffline) {
+    return (
+      <EmptyState
+        isOffline={isOffline}
+        path="/dashboard/drafts"
+        toast={toast}
+        onRetry={loadAssignment}
+        title="Can't Reach Assignment"
+        pathText="Drafts"
+        message="You are currently offline and cannot connect to our Assignmate servers. Check your connection or continue working from your offline drafts "
+      />
+    );
+  }
+
   if (!assignment) {
-    return <div className="px-2 m-3 ">No assignment found</div>;
+    return (
+      <EmptyState
+        isOffline={isOffline}
+        path="/dashboard/assignments"
+        context="Assignment"
+        contextMessage="No assignment with that id found"
+        contextPath="/dashboard/assignments"
+      />
+    );
   }
 
   //////////////////////////////////////////////***************************8 */

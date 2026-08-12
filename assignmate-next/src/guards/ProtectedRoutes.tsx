@@ -30,11 +30,11 @@ export default function ProtectedRoute({
     return null;
   }
 
-  console.log('Protected routes checking the stuffff:', {
-    loading,
-    authenticated,
-    isOffline,
-  });
+  // console.log('Protected routes checking the stuffff:', {
+  //   loading,
+  //   authenticated,
+  //   isOffline,
+  // });
 
   return <>{children}</>;
 }

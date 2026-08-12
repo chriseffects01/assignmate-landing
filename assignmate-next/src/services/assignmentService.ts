@@ -1,5 +1,5 @@
 import { BASE_URL } from '../var/var';
-import { api } from './api';
+import { api, normalizeApiError } from './api';
 //GEt all
 
 /*
@@ -13,10 +13,9 @@ export async function fetchAllAssignments() {
         fetchAll: true,
       },
     });
-    console.log(res);
     return res.data.assignments;
   } catch (err: any) {
-    throw err;
+    normalizeApiError(err);
   }
 }
 // CRUD --
@@ -45,7 +44,7 @@ export async function fetchAssignmentsByQuery(
     return response.data;
   } catch (e: any) {
     console.error('error getting assignments by query  ');
-    throw e;
+    normalizeApiError(e);
   }
 }
 
@@ -60,7 +59,7 @@ export async function getAssignmentById(id: string) {
     return res.data;
   } catch (err: any) {
     console.error(`Error getting assignment id: ${id}`, err);
-    throw err;
+    normalizeApiError(err);
   }
 }
 
@@ -71,7 +70,8 @@ export async function createAssignmentAPI(data: any) {
     const res = await api.post(BASE_URL, data);
     return res.data;
   } catch (err: any) {
-    throw err;
+    console.error('Error creating assignment :', err);
+    normalizeApiError(err);
   }
 }
 
@@ -85,6 +85,6 @@ export async function updateAssignmentAPI(id: string, data: any) {
     const res = await api.put(`${BASE_URL}/${id}`, data);
     return res.data;
   } catch (err: any) {
-    throw err;
+    normalizeApiError(err);
   }
 }
