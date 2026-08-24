@@ -12,13 +12,11 @@ interface WorkspaceHeaderProps {
   onTitleChange: (text: string) => void;
   onToggleTitleEdit: () => Promise<void>;
   assignment: any;
-  saveStatus: string;
-  onToggle: (checked: boolean) => void;
+  onToggle?: (checked: boolean) => void;
   isEnabled: boolean;
   // isSaving: boolean;
 }
 export default function WorkspaceHeader({
-  saveStatus,
   titleValue,
   isTitleEditable,
   onTitleChange,
@@ -63,7 +61,9 @@ export default function WorkspaceHeader({
         {!isOnline && <span className="offline">Offline </span>}
         {isOnline && <span className="online">Online</span>} */}
 
-        <OfflineToggle isEnabled={isEnabled} onToggle={onToggle} />
+        {onToggle && (
+          <OfflineToggle isEnabled={isEnabled} onToggle={onToggle} />
+        )}
       </div>
     </div>
   );

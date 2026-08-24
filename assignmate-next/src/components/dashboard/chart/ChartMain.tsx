@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BarChart,
   Bar,
@@ -7,17 +6,17 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
-import "@/src/styles/charts/charts.css";
+} from 'recharts';
+import '@/src/styles/charts/charts.css';
 
 // 🌌 Custom Glassmorphic Tooltip Component
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const colorMap: { [key: string]: string } = {
-      "url(#completedGrad)": "#00e676",
-      "url(#draftsGrad)": "#ffb03a",
-      "url(#essaysGrad)": "#00c3ff",
-      "url(#reportsGrad)": "#9d4edd",
+      'url(#completedGrad)': '#00e676',
+      'url(#draftsGrad)': '#ffb03a',
+      'url(#essaysGrad)': '#00c3ff',
+      'url(#reportsGrad)': '#9d4edd',
     };
     return (
       <div className="chart-glass-tooltip">
@@ -32,7 +31,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 className="tooltip-dot"
                 style={{ backgroundColor: dotColor }}
               ></span>
-              {item.name.charAt(0).toUpperCase() + item.name.slice(1)} :{" "}
+              {item.name.charAt(0).toUpperCase() + item.name.slice(1)} :{' '}
               <strong>{item.value}</strong>
             </p>
           );
@@ -77,12 +76,12 @@ export default function ChartBar({ currentData }: { currentData: any[] }) {
           {/* Clean Axis Controls */}
           <XAxis
             dataKey="name"
-            tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
+            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
@@ -90,15 +89,15 @@ export default function ChartBar({ currentData }: { currentData: any[] }) {
           {/* Custom Interactive Tooltip */}
           <Tooltip
             content={<CustomTooltip />}
-            cursor={{ fill: "rgba(255,255,255,0.04)", radius: 8 }}
+            cursor={{ fill: 'rgba(255,255,255,0.04)', radius: 8 }}
           />
 
           <Legend
             iconType="circle"
             wrapperStyle={{
-              paddingTop: "20px",
-              fontSize: "13px",
-              color: "#fff",
+              paddingTop: '20px',
+              fontSize: '13px',
+              color: '#fff',
             }}
           />
 

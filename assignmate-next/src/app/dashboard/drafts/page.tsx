@@ -1,12 +1,7 @@
-"use client";
+'use client';
 
-import Drafts from "@/src/components/savedDrafts/SavedDrafts";
-import ProtectedRoute from "@/src/guards/ProtectedRoutes";
+import Drafts from '@/src/components/savedDrafts/SavedDrafts';
 
 export default function DraftsPage() {
-  return (
-    <ProtectedRoute>
-      <Drafts />
-    </ProtectedRoute>
-  );
+  return <Drafts />;
 }

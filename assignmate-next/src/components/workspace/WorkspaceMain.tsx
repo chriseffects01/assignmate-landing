@@ -39,6 +39,7 @@ export default function WorkspaceMain() {
       level: false,
     }
   );
+
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
     'idle'
   );
@@ -242,7 +243,6 @@ export default function WorkspaceMain() {
             onTitleChange={text => handleChange('title', text)}
             onToggleTitleEdit={() => handleToggleEdit('title')}
             assignment={assignment}
-            saveStatus={saveStatus}
             onToggle={handleOfflineToggle}
             isEnabled={isOfflineSyncEnabled}
           />
@@ -253,6 +253,7 @@ export default function WorkspaceMain() {
             onchange={handleChange}
             onToggleEdit={handleToggleEdit}
             assignment={assignment}
+            isOffline={false}
           />
         </aside>
 

@@ -9,14 +9,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SearchBar } from '../shared/SearchBar';
 import { AssignmentSkeleton } from '../shared/SkeletonLoading';
-import { ArrowLeft, ArrowRight, HardDrive } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { draftService } from '@/src/services/drafts/draft.service';
 import { useAuth } from '@/src/context/AuthContext';
 import { useNotification } from '@/src/context/NotificationContext';
 import { handleOfflineError } from '@/src/utils/handleOfflineError';
 import { OfflineError } from '@/src/errors/appError';
 import { ReconnectOverlay } from '../shared/ReconnectOverlay';
-import { FileText } from 'lucide-react';
 import SimpleEmptyState from '../shared/SimpleEmptyState';
 
 export default function AssignmentsMain() {
@@ -277,7 +276,7 @@ export default function AssignmentsMain() {
                     </Link>
                     <Link
                       className="assignment-card-btn secondary"
-                      href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
+                      href={`/dashboard/assignments/${getAssignmentId(assignment)}`}
                     >
                       Details
                     </Link>

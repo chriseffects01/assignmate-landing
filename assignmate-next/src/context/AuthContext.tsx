@@ -13,6 +13,9 @@ import { authService } from '@/src/services/auth.service';
 import { OfflineError, UnathourizedError } from '../errors/appError';
 import { storage } from '../lib/storage';
 import { useNotification } from './NotificationContext';
+import { UpdateProfile } from '@/src/services/profileService';
+import { UpdateProfileData } from '../types/profile';
+
 interface AuthContextType {
   user: IUser | null;
   loading: boolean;
@@ -21,6 +24,7 @@ interface AuthContextType {
 
   login: (data: LoginPayload) => Promise<void>;
   register: (data: RegisterPayload) => Promise<void>;
+  updateUser: (data: UpdateProfileData) => Promise<IUser | undefined>;
   // logout: () => void;
 }
 
@@ -45,12 +49,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const user = response.user;
 
       storage.setUser(user);
+      setUser(user);
 
       if (isOffline) {
         setIsOffline(false);
         toast.success("You're back online");
       }
-      setUser(user);
     } catch (e: any) {
       if (e instanceof OfflineError) {
         if (!isOffline) {
@@ -92,6 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const user = currentUser.user;
     setUser(user);
     storage.setUser(user);
+    toast.success('Logged in successfully');
   };
 
   const register = async (data: RegisterPayload) => {
@@ -102,6 +107,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setUser(user);
     storage.setUser(user);
+    toast.success('Signed up successfully');
+  };
+
+  const updateUser = async (data: UpdateProfileData) => {
+    const response = await UpdateProfile(data);
+    console.log('Update Profile Response:', response);
+    if (!response) return;
+    const updatedUser = response.user;
+
+    console.log('Updated user:', updatedUser);
+    setUser(updatedUser);
+    storage.setUser(updatedUser);
+
+    if (response.message) {
+      toast.success(response.message);
+    }
+
+    return updatedUser;
   };
 
   // const logout = async () => {
@@ -133,6 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           authenticated: !!user,
           login,
           register,
+          updateUser,
           // logout,
         }}
       >

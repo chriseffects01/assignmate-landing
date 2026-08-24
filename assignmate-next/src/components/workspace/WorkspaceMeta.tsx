@@ -13,6 +13,7 @@ interface WorkspaceMetaProps {
   onchange: (field: WorkspaceField, text: string) => void;
   onToggleEdit: (field: WorkspaceField) => Promise<void>;
   assignment: any;
+  isOffline?: boolean;
 }
 
 export default function WorkspaceMeta({
@@ -20,6 +21,7 @@ export default function WorkspaceMeta({
   isEditable,
   onchange,
   onToggleEdit,
+  isOffline,
 }: WorkspaceMetaProps) {
   const { user } = useAuth();
 
@@ -181,8 +183,7 @@ export default function WorkspaceMeta({
             {isEditable.level ? '✅' : '✏️'}
           </button>
         </div>
-
-        <WorkspaceAiAssistant />
+        {!isOffline && <WorkspaceAiAssistant />}
       </div>
     </div>
   );

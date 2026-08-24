@@ -1,4 +1,4 @@
-import { BASE_URL } from '../var/var';
+import { ASSIGNMENT_URL } from '../var/var';
 import { api, normalizeApiError } from './api';
 //GEt all
 
@@ -8,7 +8,7 @@ import { api, normalizeApiError } from './api';
 
 export async function fetchAllAssignments() {
   try {
-    const res = await api.get(BASE_URL, {
+    const res = await api.get(ASSIGNMENT_URL, {
       params: {
         fetchAll: true,
       },
@@ -31,7 +31,7 @@ export async function fetchAssignmentsByQuery(
   fetchAll: boolean = false
 ) {
   try {
-    const response = await api.get(BASE_URL, {
+    const response = await api.get(ASSIGNMENT_URL, {
       params: {
         search,
         page,
@@ -54,7 +54,7 @@ export async function getAssignmentById(id: string) {
   try {
     if (!id) throw 'No assignment id passed into the getAssignmentIdFunction ';
 
-    const res = await api.get(`${BASE_URL}/${id}`);
+    const res = await api.get(`${ASSIGNMENT_URL}/${id}`);
 
     return res.data;
   } catch (err: any) {
@@ -67,7 +67,7 @@ export async function getAssignmentById(id: string) {
 export async function createAssignmentAPI(data: any) {
   try {
     if (!data) throw 'No data in creating assignment';
-    const res = await api.post(BASE_URL, data);
+    const res = await api.post(ASSIGNMENT_URL, data);
     return res.data;
   } catch (err: any) {
     console.error('Error creating assignment :', err);
@@ -82,7 +82,7 @@ export async function updateAssignmentAPI(id: string, data: any) {
     if (!id && !data)
       throw 'No id of assignments passed or no data to update passed';
 
-    const res = await api.put(`${BASE_URL}/${id}`, data);
+    const res = await api.put(`${ASSIGNMENT_URL}/${id}`, data);
     return res.data;
   } catch (err: any) {
     normalizeApiError(err);

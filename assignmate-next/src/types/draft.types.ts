@@ -7,6 +7,7 @@ export default interface OfflineDraft {
   lecturer: string;
   category: string;
   dueDate: string;
+  level?: string;
   type: string;
   lastSavedLocally: string;
 }

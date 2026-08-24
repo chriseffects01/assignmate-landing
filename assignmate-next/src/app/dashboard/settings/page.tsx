@@ -1,11 +1,6 @@
-"use client";
-import Settings from "@/src/components/settings/Settings";
-import ProtectedRoute from "@/src/guards/ProtectedRoutes";
+'use client';
+import SettingsHome from '@/src/components/settings/SettingsHome';
 
-export default function SettingsPage() {
-  return (
-    <ProtectedRoute>
-      <Settings />
-    </ProtectedRoute>
-  );
+export default function SettingsHomePage() {
+  return <SettingsHome />;
 }

@@ -1,0 +1,280 @@
+/* ==========================================================================
+   AssignMate - Assignment Details Stylesheet
+   ========================================================================== */
+
+:root {
+  /* Default Light Mode Theme Variables */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-field: #f1f5f9;
+  --border-color: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-label: #2563eb;
+
+  --accent-blue: #2563eb;
+  --accent-blue-hover: #1d4ed8;
+  --accent-blue-text: #ffffff;
+
+  --status-draft-bg: #fef3c7;
+  --status-draft-border: #f59e0b;
+  --status-draft-text: #b45309;
+
+  --status-completed-bg: #d1fae5;
+  --status-completed-border: #10b981;
+  --status-completed-text: #047857;
+
+  --btn-delete-bg: #fee2e2;
+  --btn-delete-border: #f87171;
+  --btn-delete-text: #dc2626;
+  --btn-delete-hover: #fca5a5;
+}
+
+/* Dark Mode Theme Variables (AssignMate Default) */
+
+[data-theme='dark'],
+body.dark {
+  --bg-primary: #070d1e;
+  --bg-card: #0c1427;
+  --bg-field: #101b35;
+  --border-color: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-label: #60a5fa;
+
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #2563eb;
+  --accent-blue-text: #ffffff;
+
+  --status-draft-bg: rgba(120, 53, 15, 0.3);
+  --status-draft-border: #d97706;
+  --status-draft-text: #fbbf24;
+
+  --status-completed-bg: rgba(6, 78, 59, 0.3);
+  --status-completed-border: #059669;
+  --status-completed-text: #34d399;
+
+  --btn-delete-bg: rgba(127, 29, 29, 0.3);
+  --btn-delete-border: #991b1b;
+  --btn-delete-text: #f87171;
+  --btn-delete-hover: rgba(153, 27, 27, 0.5);
+}
+
+/* Base Wrapper */
+.details-page-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  color: var(--text-main);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+/* Top Navigation Bar */
+.details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.back-link {
+  color: var(--text-label);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.back-link:hover {
+  opacity: 0.8;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Buttons */
+.btn-delete {
+  background-color: var(--btn-delete-bg);
+  border: 1px solid var(--btn-delete-border);
+  color: var(--btn-delete-text);
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: var(--btn-delete-hover);
+}
+
+.btn-workspace {
+  background-color: var(--accent-blue);
+  color: var(--accent-blue-text);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-workspace:hover {
+  background-color: var(--accent-blue-hover);
+}
+
+/* Main Content Grid */
+.details-layout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+/* Responsive Desktop Split */
+@media (min-width: 1024px) {
+  .details-layout-grid {
+    flex-direction: column;
+  }
+}
+
+/* Shared Card Box Styling */
+.details-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Metadata Panel */
+.metadata-panel {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .metadata-panel {
+    width: 380px;
+    flex-shrink: 0;
+  }
+}
+
+.card-header-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-label);
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Status Badges */
+.status-badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+}
+
+.status-badge.draft {
+  background-color: var(--status-draft-bg);
+  border-color: var(--status-draft-border);
+  color: var(--status-draft-text);
+}
+
+.status-badge.completed {
+  background-color: var(--status-completed-bg);
+  border-color: var(--status-completed-border);
+  color: var(--status-completed-text);
+}
+
+/* Form Fields Layout */
+.metadata-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.grid-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.field-box {
+  background-color: var(--bg-field);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-label);
+  margin-bottom: 0.25rem;
+}
+
+.field-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin: 0;
+  word-break: break-word;
+}
+
+/* Right Side Preview Panel */
+.preview-panel {
+  width: 100%;
+  flex: 1;
+  min-height: 450px;
+}
+
+.preview-body {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  white-space: pre-wrap;
+  word-break: break-word;
+}

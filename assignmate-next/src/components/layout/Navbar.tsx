@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useAuth } from "@/src/context/AuthContext";
+import { useState } from 'react';
+import { useAuth } from '@/src/context/AuthContext';
+import Link from 'next/link';
 
 export default function Navbar({
   isSidebarOpen,
@@ -18,7 +19,7 @@ export default function Navbar({
     <header className="dashboard-navbar">
       <div className="dashboard-navbar-left">
         <button
-          className={`sidebar-toggle-btn ${isSidebarOpen ? "" : "sidebar-open"}`}
+          className={`sidebar-toggle-btn ${isSidebarOpen ? '' : 'sidebar-open'}`}
           onClick={() => {
             toggleSidebar();
           }}
@@ -29,7 +30,7 @@ export default function Navbar({
         <div className="dashboard-profile-picture">
           <div className="dashboard-profile-pic-inner"></div>
         </div>
-        <p className="dashboard-user-name">{user?.username || "Student"}</p>
+        <p className="dashboard-user-name">{user?.username || 'Student'}</p>
         <p className="dashboard-nav-logo"> | AssignMate</p>
       </div>
 
@@ -68,9 +69,9 @@ export default function Navbar({
       </div>
 
       <div className="dashboard-navbar-right">
-        <button type="button" className="dashboard-new-button">
+        <Link href={'/dashboard/workspace'} className="dashboard-new-button">
           + New
-        </button>
+        </Link>
 
         <div className="dashboard-avatar">CA</div>
       </div>
