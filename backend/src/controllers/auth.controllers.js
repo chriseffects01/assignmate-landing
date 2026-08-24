@@ -13,6 +13,7 @@ export async function registerUser(req, res, next) {
     const validationResult = registerUpSchema.safeParse(req.body);
 
     if (!validationResult.success) {
+      logger.error('Error formatting with zod');
       return res.status(400).json({
         error: 'Validation failed',
         details: formatValidation(validationResult.error),
@@ -72,6 +73,101 @@ export async function getCurrentUser(req, res) {
       user,
     });
   } catch (e) {
+    logger.error('[AuthContoller/ME] Error getting /me');
+    return res.status(500).json({
+      message: 'Internal server error',
+      error: e.message,
+    });
+  }
+}
+
+export async function updateProfile(req, res) {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+
+    if (!user) {
+      logger.error('No user found for that updateProfile stuff');
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
+
+    const {
+      firstName,
+      lastName,
+      middleName,
+      level,
+      department,
+      faculty,
+      registrationNumber,
+      accountType,
+      businessName,
+      businessPhone,
+    } = req.body;
+
+    if (!user.accountType) {
+      if (!['business', 'student'].includes(accountType)) {
+        return res.status(400).json({
+          message: 'Please select account Type',
+        });
+      }
+      user.accountType = accountType;
+    }
+
+    // Update basic information
+    user.firstName = firstName ?? user.firstName;
+    user.middleName = middleName ?? user.middleName;
+    user.lastName = lastName ?? user.lastName;
+
+    //Student specific information
+    if (user.accountType === 'student') {
+      user.level = level ?? user.level;
+      user.faculty = faculty ?? user.faculty;
+      user.registrationNumber = registrationNumber ?? user.registrationNumber;
+      user.department = department ?? user.department;
+    } else if (user.accountType === 'business') {
+      user.businessName = businessName ?? user.businessName;
+      user.businessPhone = businessPhone ?? user.businessPhone;
+    }
+
+    //Profile check complete
+
+    const basicProfileComplete =
+      Boolean(user.firstName?.trim()) && Boolean(user.lastName?.trim());
+
+    let profileComplete = basicProfileComplete;
+
+    if (user.accountType === 'student') {
+      profileComplete =
+        basicProfileComplete &&
+        Boolean(user.level) &&
+        Boolean(user.department?.trim()) &&
+        Boolean(user.faculty?.trim()) &&
+        Boolean(user.registrationNumber?.trim()) &&
+        Boolean(user.middleName?.trim());
+    } else if (user.accountType === 'business') {
+      profileComplete =
+        basicProfileComplete &&
+        Boolean(user.businessName?.trim()) &&
+        Boolean(user.businessPhone?.trim());
+    }
+
+    user.profileCompleted = profileComplete;
+
+    await user.save();
+    logger.info(`Profile updated for ${user.username}`);
+
+    return res.status(200).json({
+      message: profileComplete
+        ? 'Profile completed successfully'
+        : 'Profile updated but still incomplete!',
+
+      profileCompleted: user.profileCompleted,
+      user,
+    });
+  } catch (e) {
+    logger.error(e);
+    logger.error(e.message);
     return res.status(500).json({
       message: 'Internal server error',
       error: e.message,
@@ -84,7 +180,7 @@ export async function loginUser(req, res) {
     const validationResult = loginSchema.safeParse(req.body);
 
     if (!validationResult.success) {
-      logger.error('Error in login');
+      logger.error('Error formatting with zod');
       return res.status(400).json({
         error: 'Validation failed',
         details: formatValidation(validationResult.error),

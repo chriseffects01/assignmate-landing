@@ -7,7 +7,6 @@ const assignmentSchema = new mongoose.Schema(
       type: String,
       default: 'draft',
     },
-
     courseCode: String,
     course: String,
     lecturer: String,
@@ -17,7 +16,6 @@ const assignmentSchema = new mongoose.Schema(
     },
     dueDate: String,
     // level: String,
-
     type: {
       type: String,
       enum: ['blank', 'template'],

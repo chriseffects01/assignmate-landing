@@ -3,10 +3,6 @@ import { jwttoken } from '#utils/jwt.js';
 import { cookies } from '#utils/cookies.js';
 
 export const authMiddleware = async (req, res, next) => {
-  logger.info(
-    '[MiddleWare]  verifying request for  protected route access ...'
-  );
-
   try {
     const token = cookies.get(req, 'token');
 

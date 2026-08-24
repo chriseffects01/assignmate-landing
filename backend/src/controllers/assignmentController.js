@@ -16,7 +16,9 @@ export const createAssignment = async (req, res) => {
       ...data,
       user: userId,
     });
-
+    logger.info(
+      `[Conroller]: Assignment created successfully - ${assignment.title}`
+    );
     res.status(201).json(assignment);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -83,6 +85,8 @@ export const getAssignments = async (req, res) => {
     const totalAssignments = await Assignment.countDocuments(mongoQuery);
     const totalPages = Math.ceil(totalAssignments / limitNum);
 
+    logger.info('[Contoller]: Assignments fetched successfully');
+
     return res.status(200).json({
       success: true,
       assignments,
@@ -147,7 +151,7 @@ export const updateAssignment = async (req, res) => {
       });
     }
 
-    logger.info("Update complete")
+    logger.info('Update complete');
 
     return res.status(200).json(updated);
   } catch (err) {
