@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import '@/src/styles/auth/authPage.css';
 
 import React from 'react';
+import Link from 'next/link';
 
 export default function AuthLayout({
   children,
@@ -20,22 +21,8 @@ export default function AuthLayout({
   const isLogin = pathname === loginPath;
   const isSignup = pathname === signUpPath;
 
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  function toggleAuth(path: string) {
-    setIsLoading(true);
-    setTimeout(() => {
-      router.push(path);
-    }, 800);
-  }
-
   return (
     <>
-      {isLoading && (
-        <LoadingScreen
-          message={`Loading ${pathname === loginPath ? 'signUp' : 'Login'} Screen...`}
-        />
-      )}
       <section className="auth-page">
         <div className="auth-card">
           <div className="auth-header">
@@ -44,32 +31,18 @@ export default function AuthLayout({
           </div>
 
           <div className="auth-tabs">
-            <button
+            <Link
               className={`auth-tab ${isSignup ? 'active' : ''}`}
-              onClick={e => {
-                if (isSignup) {
-                  e.preventDefault();
-                  return;
-                }
-                toggleAuth(signUpPath);
-              }}
-              type="button"
+              href={signUpPath}
             >
               Sign up
-            </button>
-            <button
+            </Link>
+            <Link
               className={`auth-tab ${isLogin ? 'active' : ''}`}
-              onClick={e => {
-                if (isLogin) {
-                  e.preventDefault();
-                  return;
-                }
-                toggleAuth(loginPath);
-              }}
-              type="button"
+              href={loginPath}
             >
               Login
-            </button>
+            </Link>
           </div>
           <div>{children}</div>
 

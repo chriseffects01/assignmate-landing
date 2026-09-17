@@ -7,22 +7,17 @@ import LoadingScreen from '../shared/LoadingScreen';
 import { useAuth } from '@/src/context/AuthContext';
 
 export default function Signup() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const auth =  useAuth();
-
+  const { register } = useAuth();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
-      await auth.register({
-        firstName,
-        lastName,
+      await register({
         username,
         email,
         password,
@@ -33,6 +28,8 @@ export default function Signup() {
       console.log(error.message);
       console.error('My error message:', error);
       throw new Error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -40,28 +37,6 @@ export default function Signup() {
     <>
       {isLoading && <LoadingScreen message="Loading your dashboard... " />}
       <form onSubmit={handleSubmit} className="auth-form">
-        <input
-          type="text"
-          name="input-form-firstname"
-          value={firstName}
-          onChange={e => {
-            setFirstName(e.target.value);
-          }}
-          placeholder="First Name"
-          className="auth-input"
-        />
-
-        <input
-          type="text"
-          name="input-form-lastname"
-          value={lastName}
-          onChange={e => {
-            setLastName(e.target.value);
-          }}
-          placeholder="Last name"
-          className="auth-input"
-        />
-
         <input
           type="text"
           name="input-form-username"
@@ -95,10 +70,7 @@ export default function Signup() {
           className="auth-input"
         />
 
-        <button
-          type="submit"
-          className="auth-submit"
-        >
+        <button type="submit" className="auth-submit">
           Create Account
         </button>
       </form>

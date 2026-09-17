@@ -1,13 +1,10 @@
-export default interface OfflineDraft {
+import { AssignmentMetadata } from './Workspace.types';
+
+export interface OfflineDraft {
   _id: string;
-  title: string;
-  content: string;
-  courseCode: string;
-  course: string;
-  lecturer: string;
-  category: string;
-  dueDate: string;
-  level?: string;
+  metadata: AssignmentMetadata;
   type: string;
+  category: string;
+  content: string[];
   lastSavedLocally: string;
 }

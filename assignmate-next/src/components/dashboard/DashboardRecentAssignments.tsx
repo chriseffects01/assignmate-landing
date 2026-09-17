@@ -3,9 +3,11 @@ import { getRecentAssignment } from '@/src/lib/getRecentAssignment';
 import getAssignmentId from '@/src/lib/getAssignmentId';
 import { AssignmentSkeleton } from '../shared/SkeletonLoading';
 import Link from 'next/link';
+import { stripHtml } from '@/src/utils/formatters';
 import SimpleEmptyState from '../shared/SimpleEmptyState';
+import { AssignmentType } from '@/src/types/assignment';
 export default function DashboardRecentAssignments() {
-  const [recent, setRecent] = useState<any[]>([]);
+  const [recent, setRecent] = useState<AssignmentType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loadingSkeletonNumber: number = 3;
 
@@ -49,16 +51,26 @@ export default function DashboardRecentAssignments() {
                 {/* Top Tag Metadata Bar */}
                 <div className="card-top-meta">
                   <div className="course-badge-group">
-                    <span className="badge-course-name">{item.course}</span>
-                    <span className="badge-course-code">{item.courseCode}</span>
+                    <span className="badge-course-name">
+                      {item.metadata?.course}
+                    </span>
+                    <span className="badge-course-code">
+                      {item.metadata?.courseCode}
+                    </span>
                   </div>
-                  <span className="card-lecturer-text">by {item.lecturer}</span>
+                  <span className="card-lecturer-text">
+                    by {item.metadata?.lecturer}
+                  </span>
                 </div>
 
                 {/* Title & Fading Paragraph Content Teaser */}
                 <div className="card-body-content">
-                  <h3 className="card-assignment-title">{item.title}</h3>
-                  <p className="card-content-preview-fade">{item.content}</p>
+                  <h3 className="card-assignment-title">
+                    {item.metadata?.title}
+                  </h3>
+                  <p className="card-content-preview-fade">
+                    {stripHtml(item.content)}
+                  </p>
                 </div>
 
                 {/* Bottom Form Action Row */}

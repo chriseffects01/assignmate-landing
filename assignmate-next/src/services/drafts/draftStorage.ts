@@ -1,13 +1,14 @@
-import OfflineDraft from '@/src/types/draft.types';
+import { OfflineDraft } from '@/src/types/draft.types';
 
 import { getDraftStorageKey, getUserPrefix } from './draftKeys';
 import { createofflinedraft } from './draftMapper';
+import { AssignmentMetadata } from '@/src/types/Workspace.types';
 
 export const saveDraftToLocal = (
   userId: string,
   id: string,
-  fields: any,
-  content: string
+  fields: AssignmentMetadata,
+  content: string[]
 ) => {
   const draft = createofflinedraft(id, fields, content);
 
@@ -37,5 +38,3 @@ export const getAllLocalDrafts = (userId: string) => {
   }
   return drafts;
 };
-
-

@@ -1,31 +1,26 @@
+import { AssignmentMetadata } from './Workspace.types';
+
 export type AssignmentType = {
   _id: string;
-  title: string;
-  content: string;
+  metadata: AssignmentMetadata;
+  content: string[];
   category: string;
-  course: string;
-  courseCode: string;
-  lecturer?: string;
-  createdAt: number;
-  updatedAt?: string;
-  dueDate?: string;
-  level?: number;
-  type?: "blank";
+  type?: 'blank';
   description?: string;
-  status: "draft" | "completed";
+  updatedAt?: string;
+  createdAt?: string;
+  status: 'draft' | 'completed';
 };
 
 export type TemplateType = {
   _id: string;
   title: string;
   content: string;
-  category: "essay" | "report" | "presentation";
+  category: 'essay' | 'report' | 'presentation';
   description: string;
   dueDate?: string;
-  level?: number;
   premium?: boolean;
-  type?: "template";
-
+  type?: 'template';
   createdAt: number;
-  status: "draft";
+  status: 'draft';
 };

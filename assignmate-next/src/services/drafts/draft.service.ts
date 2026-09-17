@@ -9,7 +9,7 @@ import { MAX_FREE_DRAFTS } from '@/src/var/var';
 import { getDraftStorageKey } from './draftKeys';
 
 export const draftService = {
-  save(userId: string, id: string, fields: any, content: string) {
+  save(userId: string, id: string, fields: any, content: string[]) {
     saveDraftToLocal(userId, id, fields, content);
   },
 

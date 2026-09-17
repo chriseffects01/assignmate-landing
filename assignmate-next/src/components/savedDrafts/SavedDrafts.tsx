@@ -15,9 +15,9 @@ import {
 import { useDebounce } from '@/src/hooks/useDebounce';
 import { useAuth } from '@/src/context/AuthContext';
 import { useNotification } from '@/src/context/NotificationContext';
-
+import { stripHtml } from '@/src/utils/formatters';
 import { draftService } from '@/src/services/drafts/draft.service';
-import OfflineDraft from '@/src/types/draft.types';
+import { OfflineDraft } from '@/src/types/draft.types';
 import getAssignmentId from '@/src/lib/getAssignmentId';
 import LoadingScreen from '../shared/LoadingScreen';
 import SimpleEmptyState from '../shared/SimpleEmptyState';
@@ -82,9 +82,11 @@ export default function SavedDraftsPage() {
   // Filter based on search input
   const filteredDrafts = drafts.filter(
     draft =>
-      draft.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-      (draft.courseCode &&
-        draft.courseCode
+      draft.metadata?.title
+        .toLowerCase()
+        .includes(debouncedSearchQuery.toLowerCase()) ||
+      (draft.metadata?.courseCode &&
+        draft.metadata?.courseCode
           .toLowerCase()
           .includes(debouncedSearchQuery.toLowerCase()))
   );
@@ -242,12 +244,13 @@ export default function SavedDraftsPage() {
 
                 {/* Title */}
                 <h3 className="text-base capitalize font-bold text-slate-100 group-hover:text-emerald-400 transition-colors line-clamp-1">
-                  {draft.title || 'Untitled Assignment'}
+                  {draft.metadata?.title || 'Untitled Assignment'}
                 </h3>
 
                 {/* Snip Content Body */}
                 <p className="text-xs text-slate-400/80 mt-2 line-clamp-2 leading-relaxed min-h-8">
-                  {draft.content || 'Start drafting your masterpiece...'}
+                  {stripHtml(draft.content) ||
+                    'Start drafting your masterpiece...'}
                 </p>
               </div>
 
@@ -256,8 +259,10 @@ export default function SavedDraftsPage() {
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-3.5 w-3.5 text-emerald-500/70" />
                   <span className="truncate text-slate-300">
-                    {draft.course || 'No course Specified'}
-                    {draft.courseCode ? ` - ${draft.courseCode}` : ''}
+                    {draft.metadata?.course || 'No course Specified'}
+                    {draft.metadata?.courseCode
+                      ? ` - ${draft.metadata?.courseCode}`
+                      : ''}
                   </span>
                 </div>
 

@@ -23,7 +23,7 @@
   top: 0;
   background: rgba(28, 40, 83, 0.8);
   backdrop-filter: blur(10px);
-  z-index: 20;
+  z-index: 9999;
 }
 
 .dashboard-profile-picture {

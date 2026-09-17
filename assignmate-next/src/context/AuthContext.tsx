@@ -25,7 +25,8 @@ interface AuthContextType {
   login: (data: LoginPayload) => Promise<void>;
   register: (data: RegisterPayload) => Promise<void>;
   updateUser: (data: UpdateProfileData) => Promise<IUser | undefined>;
-  // logout: () => void;
+  logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -127,18 +128,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return updatedUser;
   };
 
-  // const logout = async () => {
-  //   try {
-  //     await logout();
-  //     // setToken(null);
+  const logout = async () => {
+    await authService.logout();
 
-  //     storage.clearAuth();
-  //   } catch (err) {
-  //     console.error("Backend logout failed", err);
-  //   } finally {
-  //     setUser(null);
-  //   }
-  // };
+    storage.clearAuth();
+    setUser(null);
+  };
+
+  const deleteAccount = async () => {
+    await authService.deleteAccount();
+    storage.clearAuth();
+    setUser(null);
+    toast.success('Account Permanently deleted');
+  };
 
   if (loading) {
     return <LoadingScreen message="Loading your Screen..." />;
@@ -151,13 +153,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         value={{
           user,
           isOffline,
-
           loading,
           authenticated: !!user,
           login,
           register,
           updateUser,
-          // logout,
+          logout,
+          deleteAccount,
         }}
       >
         {children}

@@ -84,6 +84,8 @@ html {
   border: 1px solid #cbd5e1;
   border-radius: 14px;
   font-size: 1.12rem;
+  font-weight: 400;
+  color: black;
   outline: none;
   transition: all 0.3s ease;
 }

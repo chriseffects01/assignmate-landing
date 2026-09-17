@@ -8,12 +8,17 @@ import { handleOfflineError } from '@/src/utils/handleOfflineError';
 import { useAuth } from '@/src/context/AuthContext';
 import { useParams } from 'next/navigation';
 import { EmptyState } from '../shared/EmptyState';
-import { getAssignmentById } from '@/src/services/assignmentService';
+import {
+  deleteAssignment,
+  getAssignmentById,
+} from '@/src/services/assignmentService';
+import { stripHtml } from '@/src/utils/formatters';
 import { OfflineError } from '@/src/errors/appError';
 import { useRouter } from 'next/navigation';
 import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import Link from 'next/link';
 import getAssignmentId from '@/src/lib/getAssignmentId';
+import { draftService } from '@/src/services/drafts/draft.service';
 
 const formatDateValue = (
   value: string | Date | null | undefined,
@@ -46,7 +51,8 @@ export default function AssignmentsDetails() {
   const router = useRouter();
 
   const { toast, confirm, closeConfirm } = useNotification();
-  const { isOffline } = useAuth();
+  const { isOffline, user } = useAuth();
+  const userId = user?._id;
   const loadAssignmentById = async () => {
     const data: AssignmentType = await getAssignmentById(assignmentId);
 
@@ -81,7 +87,7 @@ export default function AssignmentsDetails() {
     load();
   }, [assignmentId]);
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     confirm({
       title: 'Delete assignment?',
       message: 'This assignment will be deleted permanently!',
@@ -89,14 +95,27 @@ export default function AssignmentsDetails() {
       cancelText: 'Cancel',
       type: 'danger',
       onConfirm: async () => {
-        toast.success('Assignment deleted successfully');
+        if (!userId) return;
+        try {
+          const res = await deleteAssignment(id);
+          draftService.remove(userId, id);
+
+          toast.success(
+            res.success === true ? res.message : 'failed to delete assignment'
+          );
+          router.push('/dashboard/assignments');
+        } catch (e) {
+          console.error('Failed to delete assignment:', e);
+        } finally {
+          closeConfirm();
+        }
       },
       onCancel: () => {
         closeConfirm();
       },
     });
   };
-
+  console.log(assignment);
   if (isRetrying) {
     return <ReconnectOverlay />;
   }
@@ -140,7 +159,10 @@ export default function AssignmentsDetails() {
         </Link>
 
         <div className="header-actions">
-          <button onClick={handleDelete} className="btn-delete">
+          <button
+            onClick={() => handleDelete(getAssignmentId(assignment))}
+            className="btn-delete"
+          >
             Delete
           </button>
           <Link
@@ -175,43 +197,62 @@ export default function AssignmentsDetails() {
 
           <div className="metadata-stack">
             <div className="field-box">
-              <label className="field-label">Name</label>
-              <p className="field-value">{assignment.title || '—'}</p>
+              <span className="field-label">Name</span>
+              <p className="field-value">{assignment.metadata?.title || '—'}</p>
             </div>
 
             <div className="grid-two-col">
               <div className="field-box">
-                <label className="field-label">Course</label>
-                <p className="field-value">{assignment.course || '—'}</p>
+                <span className="field-label">Course</span>
+                <p className="field-value">
+                  {assignment.metadata?.course || '—'}
+                </p>
               </div>
 
               <div className="field-box">
-                <label className="field-label">Course Code</label>
-                <p className="field-value">{assignment.courseCode || '—'}</p>
+                <span className="field-label">Course Code</span>
+                <p className="field-value">
+                  {assignment.metadata?.courseCode || '—'}
+                </p>
               </div>
             </div>
-
-            <div className="field-box">
-              <label className="field-label">Lecturer</label>
-              <p className="field-value">{assignment.lecturer || '—'}</p>
+            <div className="grid-two-col">
+              <div className="field-box">
+                <span className="field-label">Lecturer</span>
+                <p className="field-value">
+                  {assignment.metadata?.lecturer || '—'}
+                </p>
+              </div>
+              <div className="field-box">
+                <span className="field-label">Department</span>
+                <p className="field-value">
+                  {assignment.metadata?.department || '—'}
+                </p>
+              </div>
             </div>
 
             <div className="grid-two-col">
               <div className="field-box">
-                <label className="field-label">Due Date</label>
-                <p className="field-value">{assignment.dueDate || '—'}</p>
+                <span className="field-label">Due Date</span>
+                <p className="field-value">
+                  {assignment.metadata?.dueDate || '—'}
+                </p>
               </div>
 
               <div className="field-box">
-                <label className="field-label">Level</label>
-                <p className="field-value">{assignment.level || '—'}</p>
+                <span className="field-label">Reg No/Matric No</span>
+                <p className="field-value">
+                  {assignment.metadata?.registrationNumber || '—'}
+                </p>
               </div>
             </div>
 
             <div className="field-box">
-              <label className="field-label">Edited On</label>
+              <span className="field-label">Edited On</span>
               <p className="field-value">
                 {formatDateValue(assignment.updatedAt, 'time')}
+                {', '}
+                {formatDateValue(assignment.updatedAt, 'date')}
               </p>
             </div>
           </div>
@@ -224,7 +265,7 @@ export default function AssignmentsDetails() {
             <span className="card-subtitle">Read-only mode</span>
           </div>
 
-          <div className="preview-body">{assignment.content}</div>
+          <div className="preview-body">{stripHtml(assignment.content)}</div>
         </section>
       </main>
     </div>

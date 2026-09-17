@@ -88,3 +88,16 @@ export async function updateAssignmentAPI(id: string, data: any) {
     normalizeApiError(err);
   }
 }
+
+export async function deleteAssignment(id: string) {
+  try {
+    if (!id) throw 'No assignment id Provided';
+    const res = await api.delete<{
+      success: boolean;
+      message: string;
+    }>(`${ASSIGNMENT_URL}/${id}`);
+    return res.data;
+  } catch (e: any) {
+    throw normalizeApiError(e);
+  }
+}

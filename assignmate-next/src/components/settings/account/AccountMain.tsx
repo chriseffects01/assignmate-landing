@@ -11,11 +11,28 @@ import '@/src/styles/settings/settings-account.css';
 import { useNotification } from '@/src/context/NotificationContext';
 
 export default function AccountSettingsMainPage() {
-  const { user } = useAuth();
+  const { user, logout, deleteAccount } = useAuth();
   const { toast, confirm, closeConfirm } = useNotification();
 
   const handleLogout = () => {
-    toast.success('Logging out...');
+    confirm({
+      title: 'Logout?',
+      message: 'Are you sure you want to logout?',
+      confirmText: 'Logout',
+      cancelText: 'Cancel',
+      onConfirm: async () => {
+        try {
+          logout();
+          toast.success('Logged out successfully');
+        } catch (e: any) {
+          toast.error('Could not logout try again later');
+          throw e;
+        } finally {
+          closeConfirm();
+        }
+      },
+      onCancel: closeConfirm,
+    });
   };
 
   const handleDeleteAccount = () => {
@@ -25,8 +42,15 @@ export default function AccountSettingsMainPage() {
       confirmText: 'Delete',
       cancelText: 'No',
       onConfirm: async () => {
-        toast.success('Acoount deleted successfully');
-        closeConfirm();
+        try {
+          deleteAccount();
+          toast.success('Acoount deleted successfully');
+        } catch (e: any) {
+          toast.error('Error deleting account try again later');
+          throw e;
+        } finally {
+          closeConfirm();
+        }
       },
       onCancel: closeConfirm,
     });

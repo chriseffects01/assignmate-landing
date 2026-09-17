@@ -35,4 +35,25 @@ export const authService = {
       throw normalizeApiError(e);
     }
   },
+
+  async logout() {
+    try {
+      const response = await api.post<{ message: string }>('/api/auth/logout');
+
+      return response.data;
+    } catch (e: any) {
+      throw normalizeApiError(e);
+    }
+  },
+
+  async deleteAccount() {
+    try {
+      const response = await api.delete<{ message: string }>(
+        'api/auth/account'
+      );
+      return response.data;
+    } catch (e: any) {
+      throw normalizeApiError(e);
+    }
+  },
 };

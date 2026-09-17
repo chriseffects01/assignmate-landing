@@ -38,11 +38,12 @@ export default function FeedbackSettings() {
     };
 
     try {
+      toast.success('Feedback submitted successfully');
       console.log(
         'prepared payload feedback:',
         JSON.stringify(payload, null, 2)
       );
-      toast.success('Feedback submitted successfully');
+      await new Promise(res => setTimeout(res, 5000));
 
       setSubmitted(true);
       setRating(0);
@@ -88,7 +89,9 @@ export default function FeedbackSettings() {
           <form onSubmit={handleSubmit} className="feedback-form">
             {/* Star Rating Section */}
             <div className="form-group">
-              <label>How would you rate your experience?</label>
+              <label htmlFor="message">
+                How would you rate your experience?
+              </label>
               <div className="star-rating-container">
                 {[1, 2, 3, 4, 5].map(star => (
                   <button

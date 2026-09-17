@@ -12,18 +12,8 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload {
-  firstName: string;
-  lastName: string;
   username: string;
   email: string;
   phoneNumber?: string;
   password: string;
 }
-
-// export interface LogoutPayload {
-
-// }
-
-// export interface DeleteAccountPayload {
-
-// }

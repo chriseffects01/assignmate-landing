@@ -116,7 +116,7 @@ export function EmptyState({
               href={contextPath}
               className="flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl shadow-lg shadow-blue-600/20 transition-all"
             >
-              <span>{contextMessage}</span>
+              <span>Back to Assignments</span>
             </Link>
           </div>
         )}

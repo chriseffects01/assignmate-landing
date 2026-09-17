@@ -2,19 +2,25 @@
 
 import '@/src/styles/workspace/workspaceMain.css';
 import { useEffect, useState } from 'react';
-import OfflineDraft from '@/src/types/draft.types';
+import { OfflineDraft } from '@/src/types/draft.types';
 import { draftService } from '@/src/services/drafts/draft.service';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/src/context/AuthContext';
 import { EmptyState } from '../shared/EmptyState';
 import { useNotification } from '@/src/context/NotificationContext';
 import LoadingScreen from '../shared/LoadingScreen';
-import WorkspaceHeader from '../workspace/WorkspaceHeader';
-import WorkspaceEditor from '../workspace/WorkspaceEditor';
-import WorkspaceMeta from '../workspace/WorkspaceMeta';
+import { WorkspaceEditor } from '../workspace/editor/WorkspaceEditor';
 import type { WorkspaceField } from '../workspace/WorkspaceMain';
+import { PanelLeftClose, PanelLeft, Settings, FileText } from 'lucide-react';
+import Sidebar from '@/src/components/workspace/workspaceSidebar/Sidebar';
+import {
+  AssignmentMetadata,
+  createInitialMetadara,
+} from '@/src/types/Workspace.types';
+import { getUserFullname } from '@/src/lib/fullname';
 
 export default function DraftsWorkspace() {
+  const { user } = useAuth();
   const [draft, setDraft] = useState<OfflineDraft | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
@@ -22,31 +28,31 @@ export default function DraftsWorkspace() {
   );
   const [isEditable, setIsEditable] = useState<Record<WorkspaceField, boolean>>(
     {
+      fullname: false,
+      faculty: false,
+      department: false,
+      registrationNumber: false,
       course: false,
       lecturer: false,
       title: false,
       dueDate: false,
       courseCode: false,
-      level: false,
     }
   );
 
-  const [editorContent, setEditorContent] = useState<string>('');
+  const [editorContent, setEditorContent] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [values, setValues] = useState<Record<WorkspaceField, string>>({
-    course: '',
-    lecturer: '',
-    title: '',
-    dueDate: '',
-    courseCode: '',
-    level: '',
-  });
+  const [metadata, setMetadata] = useState<AssignmentMetadata>(() =>
+    createInitialMetadara({}, user)
+  );
+  const [mobileTab, setMobileTab] = useState<'editor' | 'meta'>('editor');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const params = useParams();
-  const { user } = useAuth();
   const assignmentId = params?.id as string;
   const userId = user?._id;
   const { toast } = useNotification();
+  const fullName = getUserFullname();
 
   useEffect(() => {
     const load = () => {
@@ -77,31 +83,35 @@ export default function DraftsWorkspace() {
     if (draft) {
       setEditorContent(draft.content);
 
-      setValues({
-        course: draft.course || '',
-        lecturer: draft.lecturer || '',
-        title: draft.title || '',
-        dueDate: draft.dueDate || '',
-        courseCode: draft.courseCode || '',
-        level: draft.level || '',
+      setMetadata({
+        fullname: draft.metadata.fullname || fullName,
+        faculty: draft.metadata.faculty || user?.faculty || '',
+        department: draft.metadata.department || user?.department || '',
+        registrationNumber:
+          draft.metadata.department || user?.registrationNumber || '',
+        course: draft.metadata.course || '',
+        lecturer: draft.metadata.lecturer || '',
+        title: draft.metadata.title || '',
+        dueDate: draft.metadata.dueDate || '',
+        courseCode: draft.metadata.courseCode || '',
       });
     }
   }, [draft]);
 
   const handleToggleEdit = async (field: WorkspaceField): Promise<void> => {
     setIsEditable(prev => ({ ...prev, [field]: !prev[field] }));
+    setSaveStatus('idle');
   };
 
-  const handleChange = (field: WorkspaceField, text: string): void => {
-    setValues(prev => ({ ...prev, [field]: text }));
-    setSaveStatus('idle');
+  const handleMetaChange = (field: WorkspaceField, text: string): void => {
+    setMetadata(prev => ({ ...prev, [field]: text }));
   };
 
   const handleSave = async () => {
     if (isSaving) return;
     if (!userId) return;
     console.log('Dumping data payload:', {
-      ...values,
+      ...metadata,
       content: editorContent,
     });
 
@@ -109,7 +119,7 @@ export default function DraftsWorkspace() {
       setIsSaving(true);
       setSaveStatus('saving');
       await new Promise(resolve => setTimeout(resolve, 1500));
-      draftService.save(userId, assignmentId, values, editorContent);
+      draftService.save(userId, assignmentId, metadata, editorContent);
 
       setSaveStatus('saved');
     } catch (e: any) {
@@ -137,41 +147,104 @@ export default function DraftsWorkspace() {
 
   return (
     <>
-      <div className="workspace-layout">
-        <aside className="workspace-meta-panel">
-          <div className="panel-header">
-            <h2 className="panel-title">Draft Settings</h2>
+      <div className="relative flex h-screen w-full flex-col overflow-hidden bg-slate-900 text-slate-100">
+        {/* Top Header Bar */}
+        <header className="flex h-14 w-full items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 backdrop-blur-md shrink-0 z-20">
+          {/* Desktop Sidebar Toggle Button */}
+          <button
+            onClick={() => setIsSidebarOpen(prev => !prev)}
+            className=" md:flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-800/50 px-3 py-1.5 text-xs text-slate-50 hover:bg-slate-800 hover:text-white transition-all cursor-pointer "
+            title={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          >
+            {isSidebarOpen ? (
+              <PanelLeftClose size={18} />
+            ) : (
+              <PanelLeft size={18} />
+            )}
+            <span className="font-medium">
+              {isSidebarOpen ? 'Hide Details' : 'Show Details'}
+            </span>
+          </button>
+
+          {/* Right Header Status & Save Button */}
+          <div className="flex items-center gap-3 ml-auto">
+            <span className="text-xs font-medium text-slate-400 capitalize">
+              {saveStatus === 'saving'
+                ? 'Saving...'
+                : saveStatus === 'saved'
+                  ? 'Saved'
+                  : 'Unsaved changes'}
+            </span>
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-500 active:scale-95 disabled:opacity-50 transition-all shadow-sm shadow-blue-500/20"
+            >
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
           </div>
+        </header>
 
-          <WorkspaceHeader
-            titleValue={values.title}
-            isTitleEditable={isEditable.title}
-            onTitleChange={text => handleChange('title', text)}
-            onToggleTitleEdit={() => handleToggleEdit('title')}
-            assignment={draft}
-            isEnabled
-          />
+        {/* Main Workspace Body */}
+        <div className="flex flex-1 overflow-hidden relative">
+          {/* Collapsible Sidebar (Desktop) / Settings Panel (Mobile) */}
+          <aside
+            className={`border-r border-slate-800 bg-slate-900 transition-all duration-300 ease-in-out shrink-0  custom-scrollbar
+             md:block overflow-y-auto
+            ${isSidebarOpen ? 'w-105 opacity-100!' : 'w-0 opacity-0 border-none overflow-hidden'}
+            ${mobileTab === 'meta' ? 'block! absolute inset-0 z-20 w-full h-full bg-slate-900 overflow-y-auto p-4' : ''}`}
+          >
+            <div className="p-4 space-y-6">
+              <Sidebar
+                metadata={metadata}
+                onMetaChange={handleMetaChange}
+                isEditable={isEditable}
+                onToggleEdit={handleToggleEdit}
+                isOffline={true}
+              />
+            </div>
+          </aside>
 
-          <WorkspaceMeta
-            values={values}
-            isEditable={isEditable}
-            onToggleEdit={handleToggleEdit}
-            assignment={draft}
-            onchange={handleChange}
-            isOffline={true}
-          />
-        </aside>
+          {/* Main Canvas / Editor Area */}
+          <main
+            className={`flex-1 overflow-y-auto bg-slate-950 p-4 md:p-8
+            ${mobileTab === 'meta' ? 'hidden md:block' : 'block'}`}
+          >
+            <div className="mx-auto max-w-4xl h-full">
+              <WorkspaceEditor
+                content={editorContent}
+                onChange={(html: string[]) => setEditorContent(html)}
+              />
+            </div>
+          </main>
+        </div>
 
-        <main className="workspace-editor-canvas">
-          <WorkspaceEditor
-            assignment={draft}
-            setSaveStatus={setSaveStatus}
-            onSave={handleSave}
-            content={editorContent}
-            isSaving={isSaving}
-            setContent={setEditorContent}
-          />
-        </main>
+        {/* Mobile Bottom Navigation Bar */}
+        <nav className="flex md:hidden h-14 border-t border-slate-800 bg-slate-900 items-center justify-around px-2 z-30 shrink-0">
+          <button
+            onClick={() => setMobileTab('editor')}
+            className={`flex flex-col items-center gap-1 text-xs transition-colors ${
+              mobileTab === 'editor'
+                ? 'text-blue-400 font-semibold'
+                : 'text-slate-400'
+            }`}
+          >
+            <FileText size={18} />
+            <span>Editor</span>
+          </button>
+
+          <button
+            onClick={() => setMobileTab('meta')}
+            className={`flex flex-col items-center gap-1 text-xs transition-colors ${
+              mobileTab === 'meta'
+                ? 'text-blue-400 font-semibold'
+                : 'text-slate-400'
+            }`}
+          >
+            <Settings size={18} />
+            <span>Settings</span>
+          </button>
+        </nav>
       </div>
     </>
   );

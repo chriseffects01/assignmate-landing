@@ -13,14 +13,20 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "axios": "^1.16.1",
+    "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/extension-text-align": "^3.31.3",
+    "@tiptap/extension-underline": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/react": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
+    "axios": "^1.20.0",
     "chart.js": "^4.5.1",
     "cookies-next": "^6.1.1",
     "lucide-react": "^1.23.0",
-    "next": "^16.2.7",
-    "react": "19.2.4",
-    "react-dom": "^19.2.4",
-    "react-router-dom": "^7.13.2",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3",
     "recharts": "^3.8.1"
   },
   "devDependencies": {
@@ -32,7 +38,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.0",
     "postcss": "^8.5.16",
-    "tailwind": "^4.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

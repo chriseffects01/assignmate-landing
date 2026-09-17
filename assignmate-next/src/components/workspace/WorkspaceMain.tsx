@@ -5,88 +5,103 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useNotification } from '@/src/context/NotificationContext';
 import { getAssignmentById } from '@/src/services/assignmentService';
-import WorkspaceEditor from './WorkspaceEditor';
-import WorkspaceHeader from './WorkspaceHeader';
-import WorkspaceMeta from './WorkspaceMeta';
+import { WorkspaceEditor } from './editor/WorkspaceEditor';
 import { updateAssignmentAPI } from '@/src/services/assignmentService';
 import LoadingScreen from '../shared/LoadingScreen';
-import { draftService } from '@/src/services/drafts/draft.service';
+import { draftService as draft } from '@/src/services/drafts/draft.service';
 import { useRouter } from 'next/navigation';
 import { handleOfflineError } from '@/src/utils/handleOfflineError';
 import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import { useAuth } from '@/src/context/AuthContext';
 import { OfflineError } from '@/src/errors/appError';
 import { EmptyState } from '../shared/EmptyState';
+import { PanelLeftClose, PanelLeft, Settings, FileText } from 'lucide-react';
+import {
+  AssignmentMetadata,
+  createInitialMetadara,
+} from '@/src/types/Workspace.types';
+import Sidebar from '@/src/components/workspace/workspaceSidebar/Sidebar';
+import { AssignmentType } from '@/src/types/assignment';
+import { getUserFullname } from '@/src/lib/fullname';
 
-export type WorkspaceField =
-  | 'course'
-  | 'lecturer'
-  | 'title'
-  | 'courseCode'
-  | 'level'
-  | 'dueDate';
+export type WorkspaceField = keyof AssignmentMetadata;
 
 export default function WorkspaceMain() {
-  ///////////////////////
-
   const [isEditable, setIsEditable] = useState<Record<WorkspaceField, boolean>>(
     {
+      fullname: false,
+      faculty: false,
+      department: false,
+      registrationNumber: false,
       course: false,
       lecturer: false,
       title: false,
       dueDate: false,
       courseCode: false,
-      level: false,
     }
   );
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
     'idle'
   );
-  const [assignment, setAssignments] = useState<any>(null);
-  const [editorContent, setEditorContent] = useState<string>('');
+  const [assignment, setAssignments] = useState<AssignmentType | null>(null);
+  const [editorContent, setEditorContent] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isOfflineSyncEnabled, setIsOfflineSyncEnabled] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isRetrying, setIsRetrying] = useState<boolean>(false);
-  const [values, setValues] = useState<Record<WorkspaceField, string>>({
-    course: '',
-    lecturer: '',
-    title: '',
-    dueDate: '',
-    courseCode: '',
-    level: '',
-    //
-  });
+
   const { user, isOffline } = useAuth();
+  const [metadata, setMetadata] = useState<AssignmentMetadata>(() =>
+    createInitialMetadara({}, user)
+  );
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [mobileTab, setMobileTab] = useState<'editor' | 'meta'>('editor');
+
   const userId = user?._id;
   const { toast, confirm, closeConfirm } = useNotification();
   const router = useRouter();
 
+  const fullName = getUserFullname();
+
   const params = useParams();
   const id = params?.id as string;
+
   useEffect(() => {
     if (saveStatus === 'saved') {
       toast.success('All changes saved ');
     }
   }, [saveStatus]);
 
+  const handleMetaChange = (key: keyof AssignmentMetadata, value: string) => {
+    setMetadata(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleToggleEdit = (key: keyof AssignmentMetadata) => {
+    setIsEditable(prev => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+    setSaveStatus('idle');
+  };
+
   const handleOfflineToggle = (checked: boolean) => {
     if (checked === isOfflineSyncEnabled) return;
     if (!userId) return;
 
     if (checked) {
-      if (!draftService.canSave(userId, id)) {
-        alert('Maximum offline assignments reached');
+      if (!draft.canSave(userId, id)) {
+        toast.info('Maximum offline assignments reached');
         return;
       }
       toast.success('Saved for offline usage');
 
-      draftService.save(userId, id, values, editorContent);
+      draft.save(userId, id, metadata, editorContent);
     } else {
       toast.info('Removed from offline backup');
-      draftService.remove(userId, id);
+      draft.remove(userId, id);
     }
 
     setIsOfflineSyncEnabled(checked);
@@ -96,14 +111,14 @@ export default function WorkspaceMain() {
     if (!userId) return;
     if (!id) return;
 
-    setIsOfflineSyncEnabled(draftService.exists(userId, id));
+    setIsOfflineSyncEnabled(draft.exists(userId, id));
   }, [id, userId]);
 
   useEffect(() => {
     if (!userId || !id || !isOfflineSyncEnabled) return;
 
-    draftService.save(userId, id, values, editorContent);
-  }, [editorContent, values, isOfflineSyncEnabled, id, userId]);
+    draft.save(userId, id, metadata, editorContent);
+  }, [editorContent, metadata, isOfflineSyncEnabled, id, userId]);
 
   const loadAssignment = async () => {
     const data = await getAssignmentById(id);
@@ -146,39 +161,47 @@ export default function WorkspaceMain() {
     if (assignment) {
       setEditorContent(assignment.content);
 
-      setValues({
-        course: assignment.course || '',
-        lecturer: assignment.lecturer || '',
-        title: assignment.title || '',
-        dueDate: assignment.dueDate || '',
-        courseCode: assignment.courseCode || '',
-        level: assignment.level || '',
+      setMetadata({
+        fullname: assignment.metadata.fullname || fullName,
+        faculty: assignment.metadata.faculty || user?.faculty || '',
+        department: assignment.metadata.department || user?.department || '',
+        registrationNumber:
+          assignment.metadata.registrationNumber ||
+          user?.registrationNumber ||
+          '',
+        course: assignment.metadata.course || '',
+        lecturer: assignment.metadata.lecturer || '',
+        title: assignment.metadata.title || '',
+        dueDate: assignment.metadata.dueDate || '',
+        courseCode: assignment.metadata.courseCode || '',
       });
     }
   }, [assignment]);
 
-  const handleToggleEdit = async (field: WorkspaceField): Promise<void> => {
-    setIsEditable(prev => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const handleChange = (field: WorkspaceField, text: string): void => {
-    setValues(prev => ({ ...prev, [field]: text }));
-    setSaveStatus('idle');
-  };
-
   const handleSave = async () => {
+    if (!assignment) return;
     if (isSaving) return;
-    console.log('Dumping data payload:', {
-      ...values,
-      content: editorContent,
-    });
+
     try {
       setIsSaving(true);
       setSaveStatus('saving');
 
+      assignment.metadata.fullname = metadata.fullname;
+      assignment.metadata.department = metadata.department;
+      assignment.metadata.faculty = metadata.faculty;
+      assignment.metadata.registrationNumber = metadata.registrationNumber;
+      assignment.metadata.course = metadata.course;
+      assignment.metadata.courseCode = metadata.courseCode;
+      assignment.metadata.title = metadata.title;
+      assignment.metadata.lecturer = metadata.lecturer;
+      assignment.metadata.dueDate = metadata.dueDate;
+
       await new Promise(resolve => setTimeout(resolve, 1500));
+
       await updateAssignmentAPI(id, {
-        ...values,
+        metadata: {
+          ...assignment?.metadata,
+        },
         content: editorContent,
       });
       setSaveStatus('saved');
@@ -216,7 +239,7 @@ export default function WorkspaceMain() {
   if (!assignment) {
     return (
       <EmptyState
-        isOffline={isOffline}
+        isOffline={false}
         path="/dashboard/assignments"
         context="Assignment"
         contextMessage="No assignment with that id found"
@@ -224,49 +247,113 @@ export default function WorkspaceMain() {
       />
     );
   }
-
-  //////////////////////////////////////////////***************************8 */
-
-  // Initially blank state for edits
-
+  // console.log(assignment);
   return (
     <>
-      <div className="workspace-layout">
-        <aside className="workspace-meta-panel">
-          <div className="panel-header">
-            <h2 className="panel-title">Assignment Settings</h2>
+      <div className="relative flex h-screen w-full flex-col overflow-hidden bg-slate-900 text-slate-100">
+        {/* Top Header Bar */}
+        <header className="flex h-14 w-full items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 backdrop-blur-md shrink-0 z-10">
+          {/* Desktop Sidebar Toggle Button */}
+          <button
+            onClick={() => setIsSidebarOpen(prev => !prev)}
+            className=" md:flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-800/50 px-3 py-1.5 text-xs text-slate-50 hover:bg-slate-800 hover:text-white transition-all cursor-pointer"
+            title={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          >
+            {isSidebarOpen ? (
+              <PanelLeftClose size={18} />
+            ) : (
+              <PanelLeft size={18} />
+            )}
+            <span className="font-medium">
+              {isSidebarOpen ? 'Hide Details' : 'Show Details'}
+            </span>
+          </button>
+
+          {/* Right Header Status & Save Button */}
+          <div className="flex items-center gap-3 ml-auto">
+            <span className="text-xs font-medium text-slate-400 capitalize">
+              {saveStatus === 'saving'
+                ? 'Saving...'
+                : saveStatus === 'saved'
+                  ? 'Saved'
+                  : 'Unsaved changes'}
+            </span>
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-500 active:scale-95 disabled:opacity-50 transition-all shadow-sm shadow-blue-500/20"
+            >
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
           </div>
+        </header>
 
-          <WorkspaceHeader
-            titleValue={values.title}
-            isTitleEditable={isEditable.title}
-            onTitleChange={text => handleChange('title', text)}
-            onToggleTitleEdit={() => handleToggleEdit('title')}
-            assignment={assignment}
-            onToggle={handleOfflineToggle}
-            isEnabled={isOfflineSyncEnabled}
-          />
+        {/* Main Workspace Body */}
+        <div className="flex flex-1 overflow-hidden relative">
+          {/* Collapsible Sidebar (Desktop) / Settings Panel (Mobile) */}
+          <aside
+            className={`border-r border-slate-800 bg-slate-900 transition-all duration-300 ease-in-out shrink-0 custom-scrollbar
+             md:block overflow-y-auto
+            ${isSidebarOpen ? 'w-105 opacity-100!' : 'w-0 opacity-0 border-none overflow-hidden'}
+            ${mobileTab === 'meta' ? 'block! absolute inset-0 z-20 w-full h-full bg-slate-900 overflow-y-auto p-4' : ''}`}
+          >
+            <div className="p-4 space-y-6">
+              <Sidebar
+                metadata={metadata}
+                onMetaChange={handleMetaChange}
+                isEditable={isEditable}
+                onToggleEdit={handleToggleEdit}
+                isEnabled={isOfflineSyncEnabled}
+                onToggleOffline={handleOfflineToggle}
+                isOffline={isOffline}
+              />
+            </div>
+          </aside>
 
-          <WorkspaceMeta
-            values={values}
-            isEditable={isEditable}
-            onchange={handleChange}
-            onToggleEdit={handleToggleEdit}
-            assignment={assignment}
-            isOffline={false}
-          />
-        </aside>
+          {/* Main Canvas / Editor Area */}
+          <main
+            className={`flex-1 overflow-y-auto bg-slate-950 p-4 md:p-8
+            ${mobileTab === 'meta' ? 'hidden md:block' : 'block'}`}
+          >
+            <div className="mx-auto max-w-4xl h-full">
+              <WorkspaceEditor
+                content={editorContent}
+                onChange={(html: string[]) => {
+                  queueMicrotask(() => {
+                    setEditorContent(html);
+                  });
+                }}
+              />
+            </div>
+          </main>
+        </div>
 
-        <main className="workspace-editor-canvas">
-          <WorkspaceEditor
-            assignment={assignment}
-            setSaveStatus={setSaveStatus}
-            onSave={handleSave}
-            isSaving={isSaving}
-            content={editorContent}
-            setContent={setEditorContent}
-          />
-        </main>
+        {/* Mobile Bottom Navigation Bar */}
+        <nav className="flex md:hidden h-14 border-t border-slate-800 bg-slate-900 items-center justify-around px-2 z-30 shrink-0">
+          <button
+            onClick={() => setMobileTab('editor')}
+            className={`flex flex-col items-center gap-1 text-xs transition-colors ${
+              mobileTab === 'editor'
+                ? 'text-blue-400 font-semibold'
+                : 'text-slate-400'
+            }`}
+          >
+            <FileText size={18} />
+            <span>Editor</span>
+          </button>
+
+          <button
+            onClick={() => setMobileTab('meta')}
+            className={`flex flex-col items-center gap-1 text-xs transition-colors ${
+              mobileTab === 'meta'
+                ? 'text-blue-400 font-semibold'
+                : 'text-slate-400'
+            }`}
+          >
+            <Settings size={18} />
+            <span>Settings</span>
+          </button>
+        </nav>
       </div>
     </>
   );

@@ -39,7 +39,7 @@
 }
 
 /* --- Future-Proofing: Easy Dark/Light Toggle Structure --- */
-[data-theme="light"] {
+[data-theme='light'] {
   --bg-main: #f8fafc;
   --bg-sidebar: #ffffff;
   --bg-card: rgba(241, 245, 249, 0.8);
@@ -59,7 +59,7 @@
   display: flex;
   gap: 2rem;
   padding: 2rem;
-  background-color: var(--bg-main);
+  /* background-color: var(--bg-main); */
   min-height: 90vh;
   box-sizing: border-box;
 }

@@ -17,6 +17,7 @@ import { handleOfflineError } from '@/src/utils/handleOfflineError';
 import { OfflineError } from '@/src/errors/appError';
 import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import SimpleEmptyState from '../shared/SimpleEmptyState';
+import { getContentPreview, stripHtml } from '@/src/utils/formatters';
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
@@ -243,15 +244,16 @@ export default function AssignmentsMain() {
                       {savedOfffline && '📂'}
                     </div>
                   </div>
-                  <h2 className="assignment-card-title">{assignment.title} </h2>
+                  <h2 className="assignment-card-title">
+                    {assignment.metadata?.title || 'No title'}{' '}
+                  </h2>
                   <p className="assignment-card-course">
-                    📚 <span>{assignment.course} </span>
-                    💠<span>{assignment.courseCode}</span>
+                    📚 <span>{assignment.metadata?.course} </span>
+                    💠<span>{assignment.metadata?.courseCode}</span>
                   </p>
                   <div className="assignment-card-preview">
                     {assignment.content ? (
-                      assignment.content.substring(0, 75) +
-                      (assignment.content.length > 75 ? '...' : '')
+                      getContentPreview(assignment.content)
                     ) : (
                       <span className="empty-preview">
                         No content written ...
