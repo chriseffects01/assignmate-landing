@@ -5,8 +5,8 @@ export const createAssignment = async (req, res) => {
   try {
     const data = req.body;
     const userId = req.user?.id || req.user?._id;
-    logger.info(userId);
     if (!userId) {
+      logger.error('One idiot dey try CreateAssignments');
       return res.status(401).json({
         message: 'Unauthorised: No user found on request',
       });
@@ -22,7 +22,7 @@ export const createAssignment = async (req, res) => {
     res.status(201).json(assignment);
   } catch (err) {
     res.status(500).json({ error: err.message });
-    logger.error('Creation Error:', err.message);
+    logger.error('Creation Error:', err);
   }
 };
 
@@ -53,6 +53,7 @@ export const getAssignments = async (req, res) => {
     mongoQuery.user = userId;
 
     if (!userId) {
+      logger.error('One idiot dey try getAssignments');
       return res.status(402).json({
         message: 'Unauthorised access: thief ole',
       });
@@ -128,11 +129,23 @@ export const getAssignmentById = async (req, res) => {
 export const updateAssignment = async (req, res) => {
   try {
     //if frontend sent an array
+    const userId = req.user?.id || req.user?._id;
+
+    if (!userId) {
+      logger.error('One idiot dey try getAssignments');
+      return res.status(402).json({
+        message: 'Unauthorised access: thief ole',
+      });
+    }
+
     const data = Array.isArray(req.body) ? req.body[0] : req.body;
+
+    logger.info('Data received and ready for update');
 
     if (data._id) delete data._id;
 
     const assignment = await Assignment.findById(req.params.id);
+    logger.info('[Update]: Data prepping for update', data);
     if (!assignment) {
       return res.status(404).json({
         message: 'No assignment found with that id',
@@ -144,6 +157,8 @@ export const updateAssignment = async (req, res) => {
     });
 
     const updated = await assignment.save();
+
+    logger.info('[Updated]: Data updated successfully', updated);
 
     if (!updated) {
       return res.status(404).json({
@@ -157,5 +172,49 @@ export const updateAssignment = async (req, res) => {
   } catch (err) {
     logger.error('My Detailed Error:', err);
     res.status(500).json({ error: err });
+  }
+};
+
+//Delete Assignment
+
+export const deleteAssignment = async (req, res) => {
+  try {
+    const userId = req.user?.id || req.user?._id;
+    const { id } = req.params;
+
+    logger.info(`[controller]: Deleting assignment ID: ${id}`);
+
+    if (!userId) {
+      logger.error('Unauthorized acess');
+      return res.status(404).json({
+        success: false,
+        message: 'This guy why you dey try thief?',
+      });
+    }
+
+    const assignment = await Assignment.findOneAndDelete({
+      _id: id,
+      user: userId,
+    });
+
+    if (!assignment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Assignment not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Assignment deleted successfully',
+    });
+  } catch (e) {
+    logger.error('Backend error from delete assignment:', e);
+
+    return res.status(500).json({
+      success: false,
+      error: e.message,
+      message: 'Failed to delete assignment',
+    });
   }
 };

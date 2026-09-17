@@ -7,6 +7,7 @@ import { createUser } from '#services/auth.service.js';
 import { jwttoken } from '#utils/jwt.js';
 import { cookies } from '#utils/cookies.js';
 import { compareHashedPassword } from '#services/bcrypt.service.js';
+import Assignment from '#model/Assignment.js';
 
 export async function registerUser(req, res, next) {
   try {
@@ -19,12 +20,9 @@ export async function registerUser(req, res, next) {
         details: formatValidation(validationResult.error),
       });
     }
-    const { firstName, lastName, username, email, password } =
-      validationResult.data;
+    const { username, email, password } = validationResult.data;
 
     const user = await createUser({
-      firstName,
-      lastName,
       username,
       email,
       password,
@@ -42,8 +40,6 @@ export async function registerUser(req, res, next) {
 
       user: {
         _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
         username: user.username,
         email: user.email,
       },
@@ -231,13 +227,35 @@ export async function loginUser(req, res) {
   }
 }
 
-// export function logoutUser(req, res) {
-//   res.clearCookie("token", {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production",
-//     sameSite: "lax",
-//   });
-//   return res.status(200).json({
-//     message: "User logged out successfullt",
-//   });
-// }
+export function logoutUser(req, res, next) {
+  try {
+    cookies.clear(res, 'token');
+
+    return res.status(200).json({
+      message: 'Logged out successfully',
+    });
+  } catch (err) {
+    logger.error('Error logging out');
+    next(err);
+  }
+}
+
+export async function deleteAccount(req, res, next) {
+  try {
+    const userId = req.user._id;
+
+    await User.findByIdAndDelete(userId);
+
+    await Assignment.deleteMany({ owner: userId });
+
+    cookies.clear(res, 'token');
+
+    return res.status(200).json({
+      message: 'Account and associated data deleted successfully',
+    });
+  } catch (err) {
+    logger.error('[Controller]: Failed to delete account', err);
+
+    next(err);
+  }
+}

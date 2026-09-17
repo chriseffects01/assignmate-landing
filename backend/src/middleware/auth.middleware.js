@@ -25,7 +25,7 @@ export const authMiddleware = async (req, res, next) => {
         .json({ message: 'Token verification failed, Authentication denied' });
     }
 
-    logger.info('[middleware] Approval token verified and sent');
+    // logger.info('[middleware] Approval token verified and sent');
 
     req.user = {
       _id: verified._id,

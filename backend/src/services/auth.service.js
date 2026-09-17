@@ -2,13 +2,7 @@ import logger from '#config/logger.js';
 import User from '../model/user.js';
 import { hashPassword } from './bcrypt.service.js';
 
-export const createUser = async ({
-  firstName,
-  lastName,
-  username,
-  email,
-  password,
-}) => {
+export const createUser = async ({ username, email, password }) => {
   try {
     const existingUser = await User.findOne({ email });
 
@@ -19,8 +13,6 @@ export const createUser = async ({
     const hashedPassword = await hashPassword(password);
 
     const newUser = await User.create({
-      firstName,
-      lastName,
       username,
       email,
       password: hashedPassword,

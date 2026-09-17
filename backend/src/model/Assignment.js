@@ -1,26 +1,33 @@
 import mongoose from 'mongoose';
 const assignmentSchema = new mongoose.Schema(
   {
-    title: String,
-    content: String,
+    content: { type: [String], default: [''] },
     status: {
       type: String,
       default: 'draft',
     },
-    courseCode: String,
-    course: String,
-    lecturer: String,
+
+    metadata: {
+      title: String,
+      courseCode: String,
+      course: String,
+      lecturer: String,
+      fullname: String,
+      dueDate: String,
+      department: String,
+      faculty: String,
+      registrationNumber: String,
+    },
     category: {
       type: String,
       default: 'report',
     },
-    dueDate: String,
-    // level: String,
     type: {
       type: String,
       enum: ['blank', 'template'],
       default: 'blank',
     },
+
     createdAt: {
       type: Date,
       default: Date.now,
