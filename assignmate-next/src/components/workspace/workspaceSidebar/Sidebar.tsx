@@ -1,9 +1,14 @@
 'use client';
 
-import React from 'react';
-import { AssignmentMetadata, Assignment } from '@/src/types/Workspace.types';
+import React, { useState } from 'react';
+import {
+  AssignmentMetadata,
+  Assignment,
+  CoverPageConfig,
+} from '@/src/types/Workspace.types';
 import WorkspaceAiAssistant from './WorkspaceAi';
 import { Pencil, Check, Wifi, WifiOff } from 'lucide-react';
+import { CoverPageSettingsPanel } from './CoverPageSettingsPanel';
 
 interface SidebarProps {
   metadata: AssignmentMetadata;
@@ -14,6 +19,10 @@ interface SidebarProps {
   isEnabled?: boolean;
   onToggleOffline?: (checked: boolean) => void;
   isOffline?: boolean;
+  coverPageConfig: CoverPageConfig;
+  setCoverPageConfig: (config: CoverPageConfig) => void;
+  isPageIndexActive: boolean;
+  setIsPageIndexActive: (checked: any) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -24,8 +33,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isEnabled = false,
   onToggleOffline,
   isOffline = false,
+  coverPageConfig,
+  setCoverPageConfig,
+  isPageIndexActive,
+  setIsPageIndexActive,
 }) => {
   // All fields directly map to keyof AssignmentMetadata
+
   const fields: {
     key: keyof AssignmentMetadata;
     label: string;
@@ -126,6 +140,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           );
         })}
+
+        <CoverPageSettingsPanel
+          config={coverPageConfig}
+          onChange={setCoverPageConfig}
+        />
+
+        <label className="flex items-center gap-2 text-slate-300 cursor-pointer hover:text-white">
+          <input
+            type="checkbox"
+            checked={isPageIndexActive}
+            onChange={() => setIsPageIndexActive((prev: boolean) => !prev)}
+            className="accent-emerald-500 rounded"
+          />
+          <span>Show Page Index</span>
+        </label>
       </div>
 
       {/* AI Assistant directly inside the Sidebar */}

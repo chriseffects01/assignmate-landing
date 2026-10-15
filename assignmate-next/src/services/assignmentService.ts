@@ -89,6 +89,20 @@ export async function updateAssignmentAPI(id: string, data: any) {
   }
 }
 
+// Update only status
+export async function updateAssignmentStatusAPI(
+  id: string,
+  status: 'draft' | 'completed'
+) {
+  try {
+    if (!id) throw new Error('No assignment ID provided for update');
+    const res = await api.patch(`${ASSIGNMENT_URL}/${id}/status`, { status });
+    return res.data;
+  } catch (err: any) {
+    throw normalizeApiError(err);
+  }
+}
+
 export async function deleteAssignment(id: string) {
   try {
     if (!id) throw 'No assignment id Provided';

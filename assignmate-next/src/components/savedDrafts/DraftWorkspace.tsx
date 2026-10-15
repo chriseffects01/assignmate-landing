@@ -18,6 +18,7 @@ import {
   createInitialMetadara,
 } from '@/src/types/Workspace.types';
 import { getUserFullname } from '@/src/lib/fullname';
+import { CoverPageConfig } from '@/src/types/Workspace.types';
 
 export default function DraftsWorkspace() {
   const { user } = useAuth();
@@ -39,6 +40,16 @@ export default function DraftsWorkspace() {
       courseCode: false,
     }
   );
+  const [isPageActiveIndex, setIsPageIndexActive] = useState(true);
+  const [coverPageConfig, setCoverPageConfig] = useState<CoverPageConfig>({
+    enabled: true,
+    style: 'classic',
+    showFaculty: true,
+    showLecturer: true,
+    showDepartment: true,
+    showDueDate: true,
+    showRegNo: true,
+  });
 
   const [editorContent, setEditorContent] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -201,6 +212,10 @@ export default function DraftsWorkspace() {
                 isEditable={isEditable}
                 onToggleEdit={handleToggleEdit}
                 isOffline={true}
+                coverPageConfig={coverPageConfig}
+                setCoverPageConfig={setCoverPageConfig}
+                isPageIndexActive={isPageActiveIndex}
+                setIsPageIndexActive={setIsPageIndexActive}
               />
             </div>
           </aside>
@@ -214,6 +229,7 @@ export default function DraftsWorkspace() {
               <WorkspaceEditor
                 content={editorContent}
                 onChange={(html: string[]) => setEditorContent(html)}
+                setEditorContent={setEditorContent}
               />
             </div>
           </main>

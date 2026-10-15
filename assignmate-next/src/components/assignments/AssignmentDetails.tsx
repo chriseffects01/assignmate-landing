@@ -8,10 +8,8 @@ import { handleOfflineError } from '@/src/utils/handleOfflineError';
 import { useAuth } from '@/src/context/AuthContext';
 import { useParams } from 'next/navigation';
 import { EmptyState } from '../shared/EmptyState';
-import {
-  deleteAssignment,
-  getAssignmentById,
-} from '@/src/services/assignmentService';
+import { getAssignmentById } from '@/src/services/assignmentService';
+import { handleDeleteAssignment } from '@/src/lib/deleteAssignment';
 import { stripHtml } from '@/src/utils/formatters';
 import { OfflineError } from '@/src/errors/appError';
 import { useRouter } from 'next/navigation';
@@ -87,34 +85,8 @@ export default function AssignmentsDetails() {
     load();
   }, [assignmentId]);
 
-  const handleDelete = async (id: string) => {
-    confirm({
-      title: 'Delete assignment?',
-      message: 'This assignment will be deleted permanently!',
-      confirmText: 'Delete',
-      cancelText: 'Cancel',
-      type: 'danger',
-      onConfirm: async () => {
-        if (!userId) return;
-        try {
-          const res = await deleteAssignment(id);
-          draftService.remove(userId, id);
+  const numberOfPages = assignment?.content.length;
 
-          toast.success(
-            res.success === true ? res.message : 'failed to delete assignment'
-          );
-          router.push('/dashboard/assignments');
-        } catch (e) {
-          console.error('Failed to delete assignment:', e);
-        } finally {
-          closeConfirm();
-        }
-      },
-      onCancel: () => {
-        closeConfirm();
-      },
-    });
-  };
   console.log(assignment);
   if (isRetrying) {
     return <ReconnectOverlay />;
@@ -160,7 +132,17 @@ export default function AssignmentsDetails() {
 
         <div className="header-actions">
           <button
-            onClick={() => handleDelete(getAssignmentId(assignment))}
+            onClick={() => {
+              if (!userId) return;
+              handleDeleteAssignment(
+                getAssignmentId(assignment),
+                confirm,
+                closeConfirm,
+                toast,
+                router,
+                userId
+              );
+            }}
             className="btn-delete"
           >
             Delete
@@ -261,7 +243,10 @@ export default function AssignmentsDetails() {
         {/* Right Side: Preview Panel */}
         <section className="details-card preview-panel">
           <div className="card-header-bar">
-            <h2 className="card-title">Content Preview</h2>
+            <h2 className="card-title">
+              Content Preview ({numberOfPages}{' '}
+              {assignment.content.length > 1 ? 'pages' : 'page'})
+            </h2>
             <span className="card-subtitle">Read-only mode</span>
           </div>
 

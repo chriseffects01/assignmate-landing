@@ -13,8 +13,16 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@tiptap/extension-highlight": "^3.31.3",
+    "@tiptap/extension-image": "^3.31.3",
     "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/extension-subscript": "^3.31.3",
+    "@tiptap/extension-superscript": "^3.31.3",
+    "@tiptap/extension-table": "^3.31.3",
+    "@tiptap/extension-task-item": "^3.31.3",
+    "@tiptap/extension-task-list": "^3.31.3",
     "@tiptap/extension-text-align": "^3.31.3",
+    "@tiptap/extension-text-style": "^3.31.3",
     "@tiptap/extension-underline": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
     "@tiptap/react": "^3.31.3",
@@ -22,6 +30,10 @@
     "axios": "^1.20.0",
     "chart.js": "^4.5.1",
     "cookies-next": "^6.1.1",
+    "file-saver": "^2.0.5",
+    "html-docx-js-typescript": "^0.1.5",
+    "html2canvas-pro": "^2.5.2",
+    "html2pdf.js": "^0.14.0",
     "lucide-react": "^1.23.0",
     "next": "^16.3.4",
     "react": "^19.2.8",
@@ -29,8 +41,13 @@
     "react-router-dom": "^7.18.3",
     "recharts": "^3.8.1"
   },
+  "overrides": {
+    "html2canvas": "npm:html2canvas-pro@latest"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/file-saver": "^2.0.7",
+    "@types/html2pdf.js": "^0.10.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 interface QuickActionItem {
   label: string;
   path: string;
@@ -11,6 +12,7 @@ const quickActions: QuickActionItem[] = [
     path: '/dashboard/workspace',
     icon: '✨',
   },
+
   {
     label: 'Use Template',
     path: '/dashboard/templates',

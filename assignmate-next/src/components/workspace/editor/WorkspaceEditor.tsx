@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import { editorExtensions } from './extensions';
 import { Toolbar } from './Toolbar';
@@ -14,19 +14,65 @@ import {
 } from 'lucide-react';
 
 interface WorkspaceEditorProps {
-  content?: string[];
-  onChange?: (html: string[]) => void;
+  content: string[];
+  onChange: (html: string[]) => void;
+  setEditorContent: (prevContent: any) => void;
 }
 
 export const WorkspaceEditor: React.FC<WorkspaceEditorProps> = ({
-  content = [''],
+  content,
   onChange,
+  setEditorContent,
 }) => {
-  const [pages, setPages] = useState<string[]>(
-    content.length > 0 ? content : ['']
-  );
+  const pages = Array.isArray(content) && content.length > 0 ? content : [''];
   const [currentPage, setCurrentPage] = useState<number>(0);
   const { confirm, toast, closeConfirm } = useNotification();
+  const isUpdatingRef = useRef<boolean>(false);
+
+  const checkAndReflowPages = () => {
+    const pageElement = document.getElementById(`editor-page-${currentPage}`);
+    if (!pageElement) return;
+
+    const MAX_PAGE_HEIGHT = 950;
+
+    if (pageElement.scrollHeight > MAX_PAGE_HEIGHT) {
+      const editorNode = pageElement.querySelector('.ProseMirror');
+      if (!editorNode) return;
+
+      const children = Array.from(editorNode.children);
+      let currentPageHtml = '';
+      let nextPageHtml = '';
+      let currentHeight = 0;
+      let splitIndex = -1;
+
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as HTMLElement;
+        currentHeight += child.offsetHeight;
+
+        if (currentHeight > MAX_PAGE_HEIGHT && splitIndex === -1) {
+          splitIndex = 1;
+        }
+
+        if (splitIndex === -1) {
+          currentPageHtml += child.outerHTML;
+        } else {
+          nextPageHtml += child.outerHTML;
+        }
+      }
+      if (splitIndex !== -1 && nextPageHtml) {
+        setEditorContent((prevContent: any) => {
+          const updated = [...prevContent];
+          updated[currentPage] = currentPageHtml;
+          if (currentPage + 1 < updated.length) {
+            updated[currentPage + 1] = nextPageHtml + updated[currentPage + 1];
+          } else {
+            updated.push(nextPageHtml);
+          }
+          return updated;
+        });
+      }
+    }
+  };
 
   const editor = useEditor({
     extensions: editorExtensions,
@@ -36,49 +82,63 @@ export const WorkspaceEditor: React.FC<WorkspaceEditorProps> = ({
       preserveWhitespace: 'full',
     },
     onUpdate: ({ editor }) => {
+      if (isUpdatingRef.current) return;
+
       const updatedHtml = editor.getHTML();
-      setPages(prev => {
-        const next = [...prev];
-        next[currentPage] = updatedHtml;
-        if (onChange) {
-          onChange(next);
-        }
-        return next;
-      });
+      const nextPages = [...pages];
+      nextPages[currentPage] = updatedHtml;
+
+      onChange(nextPages);
     },
     editorProps: {
+      handlePaste: (_, event) => {
+        const clipboardData = event.clipboardData;
+        if (!clipboardData) return false;
+
+        const html = clipboardData.getData('text/html');
+        const text = clipboardData.getData('text/plain');
+
+        if ((text && text.length > 1000) || (html && html.length > 1500)) {
+          setTimeout(() => {
+            checkAndReflowPages();
+          }, 250);
+        }
+      },
       attributes: {
-        class:
-          ' min-h-[400px] p-6 focus:outline-none text-slate-200 whitespace-pre-wrap',
+        class: 'p-6 focus:outline-none text-slate-200 whitespace-pre-wrap',
       },
     },
   });
 
   useEffect(() => {
+    if (currentPage >= pages.length) {
+      setCurrentPage(Math.max(0, pages.length - 1));
+    }
+  }, [pages.length, currentPage]);
+
+  useEffect(() => {
     if (!editor) return;
 
-    const currentPageContent = pages[currentPage];
+    const currentPageContent = pages[currentPage] ?? '';
 
     if (editor.getHTML() !== currentPageContent) {
+      isUpdatingRef.current = true;
       editor.commands.setContent(currentPageContent);
+      isUpdatingRef.current = false;
     }
   }, [currentPage, pages, editor]);
 
-  useEffect(() => {
-    if (editor && pages[currentPage] !== undefined) {
-      if (editor.getHTML() !== pages[currentPage]) {
-        editor.commands.setContent(pages[currentPage]);
-      }
-    }
-  }, [currentPage, editor]);
-
   const handleAddPage = () => {
-    setPages(prev => [...prev, '']);
-    setCurrentPage(pages.length);
+    const nextPages = [...pages, ''];
+    onChange(nextPages);
+    setCurrentPage(nextPages.length - 1);
   };
 
   const handleDeletePage = () => {
-    if (pages.length <= 1) return;
+    if (pages.length <= 1) {
+      toast.info('At least one page is required.');
+      return;
+    }
 
     confirm({
       title: 'Delete Current Page?',
@@ -87,8 +147,10 @@ export const WorkspaceEditor: React.FC<WorkspaceEditorProps> = ({
       cancelText: 'Cancel',
       type: 'warning',
       onConfirm: () => {
-        setPages(prev => prev.filter((_, idx) => idx !== currentPage));
-        setCurrentPage(prev => Math.max(0, prev - 1));
+        const nextPages = pages.filter((_, idx) => idx !== currentPage);
+        const nextActiveIndex = Math.max(0, currentPage - 1);
+        onChange(nextPages);
+        setCurrentPage(nextActiveIndex);
         toast.success('Page deleted successfully');
         closeConfirm();
       },
@@ -106,8 +168,8 @@ export const WorkspaceEditor: React.FC<WorkspaceEditorProps> = ({
       <Toolbar editor={editor} />
       {/*  */}
 
-      <div className="flex-1 overflow-y-auto flex   justify-center p-6 bg-slate-950 custom-scrollbar ">
-        <div className="w-full max-w-250 min-h-250 bg-slate-900/70 border border-slate-800 rounded-lg shadow-xl p-4">
+      <div className="flex-1 overflow-y-auto overflow-hidden flex justify-center p-6 bg-slate-950 custom-scrollbar ">
+        <div className="tiptap bg-slate-900/70 border border-slate-800 rounded-lg shadow-xl p-4">
           <EditorContent editor={editor} />
         </div>
       </div>
@@ -120,16 +182,16 @@ export const WorkspaceEditor: React.FC<WorkspaceEditorProps> = ({
             <FileText size={15} />
             Page {currentPage + 1} of {pages.length}
           </span>
-          <span className="hidden sm:inline border-l border-slate-800 pl-4">
+          <span className=" sm:inline border-l border-slate-800 pl-4">
             {pageWordCount} words on this page
           </span>
-          <span className="hidden sm:inline border-l border-slate-800 pl-4 ">
+          <span className=" sm:inline border-l border-slate-800 pl-4 ">
             {pageCharCount} Characters
           </span>
         </div>
 
         {/* Right side: Page Controls */}
-        <div className="flex items-center gap-2 ">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             disabled={currentPage === 0}

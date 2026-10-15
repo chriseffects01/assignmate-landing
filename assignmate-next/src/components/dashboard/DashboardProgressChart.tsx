@@ -10,7 +10,7 @@ type Filter = '7D' | '30D' | 'Semester';
 const filters: Filter[] = ['7D', '30D', 'Semester'];
 
 export default function DashboardProgressChart() {
-  const [activeFilter, setActiveFilter] = useState<Filter>('7D');
+  const [activeFilter, setActiveFilter] = useState<Filter>('30D');
   const [currentData, setCurrentData] = useState<ChartDataPoint[] | null>(null);
 
   useEffect(() => {

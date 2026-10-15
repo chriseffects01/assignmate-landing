@@ -51,3 +51,15 @@ export const createInitialMetadara = (
     dueDate: existingMeta?.dueDate || '',
   };
 };
+
+export type CoverPageStyle = 'classic' | 'modern' | 'minimal';
+
+export interface CoverPageConfig {
+  enabled: boolean;
+  style: CoverPageStyle;
+  showFaculty: boolean;
+  showDepartment: boolean;
+  showLecturer: boolean;
+  showRegNo: boolean;
+  showDueDate: boolean;
+}

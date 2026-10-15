@@ -339,7 +339,8 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -361,6 +362,16 @@ body {
   line-height: 1.65;
 }
 
+.tiptap {
+  width: 794px;
+  min-height: 1123px;
+}
+@media (max-width: 850px) {
+  .tiptap {
+    width: 100%;
+    min-height: auto;
+  }
+}
 .ProseMirror h1 {
   font-size: 1.75rem;
   font-weight: 700;
@@ -396,4 +407,55 @@ body {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.ProseMirror {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+.tiptap table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e2e8f0;
+}
+
+.tiptap th,
+.tiptap td {
+  border: 1px solid #475569;
+  padding: 0.5rem 0.7rem;
+  color: #e2e8f0;
+  background: #0f172a;
+}
+
+.tiptap th {
+  font-weight: 600;
+  background: #1e293b;
+}
+
+.prose table,
+.preview-paper table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.prose th,
+.prose td,
+.preview-paper th,
+.preview-paper td {
+  border: 1px solid #0e2644 !important;
+  padding: 8px 12px !important;
+  color: #0f172a !important;
+}
+
+.prose th,
+.preview-paper th {
+  background-color: #f8fafc !important;
+  font-weight: 600 !important;
 }

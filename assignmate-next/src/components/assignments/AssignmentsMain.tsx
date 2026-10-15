@@ -252,7 +252,9 @@ export default function AssignmentsMain() {
                     💠<span>{assignment.metadata?.courseCode}</span>
                   </p>
                   <div className="assignment-card-preview">
-                    {assignment.content ? (
+                    {getContentPreview(assignment.content)
+                      ?.replace(/<[^>]*>/g, '')
+                      .trim() ? (
                       getContentPreview(assignment.content)
                     ) : (
                       <span className="empty-preview">

@@ -6,7 +6,10 @@ import { useEffect, useState } from 'react';
 import { useNotification } from '@/src/context/NotificationContext';
 import { getAssignmentById } from '@/src/services/assignmentService';
 import { WorkspaceEditor } from './editor/WorkspaceEditor';
-import { updateAssignmentAPI } from '@/src/services/assignmentService';
+import {
+  updateAssignmentAPI,
+  updateAssignmentStatusAPI,
+} from '@/src/services/assignmentService';
 import LoadingScreen from '../shared/LoadingScreen';
 import { draftService as draft } from '@/src/services/drafts/draft.service';
 import { useRouter } from 'next/navigation';
@@ -15,14 +18,18 @@ import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import { useAuth } from '@/src/context/AuthContext';
 import { OfflineError } from '@/src/errors/appError';
 import { EmptyState } from '../shared/EmptyState';
-import { PanelLeftClose, PanelLeft, Settings, FileText } from 'lucide-react';
+import { Settings, FileText } from 'lucide-react';
 import {
   AssignmentMetadata,
+  CoverPageConfig,
   createInitialMetadara,
 } from '@/src/types/Workspace.types';
 import Sidebar from '@/src/components/workspace/workspaceSidebar/Sidebar';
 import { AssignmentType } from '@/src/types/assignment';
 import { getUserFullname } from '@/src/lib/fullname';
+import { WorskpaceHeader } from './header/WorkspaceHeader';
+import { AssignmentPreviewModal } from './preview/AssignmentPreviewModal';
+import { handleDeleteAssignment } from '@/src/lib/deleteAssignment';
 
 export type WorkspaceField = keyof AssignmentMetadata;
 
@@ -40,17 +47,28 @@ export default function WorkspaceMain() {
       courseCode: false,
     }
   );
+  const [isPageIndexActive, setIsPageIndexActive] = useState(true);
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>(
     'idle'
   );
   const [assignment, setAssignments] = useState<AssignmentType | null>(null);
-  const [editorContent, setEditorContent] = useState<string[]>([]);
+  const [editorContent, setEditorContent] = useState<string[]>(['']);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isOfflineSyncEnabled, setIsOfflineSyncEnabled] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isRetrying, setIsRetrying] = useState<boolean>(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [coverPageConfig, setCoverPageConfig] = useState<CoverPageConfig>({
+    enabled: true,
+    style: 'classic',
+    showFaculty: true,
+    showLecturer: true,
+    showDepartment: true,
+    showDueDate: true,
+    showRegNo: true,
+  });
 
   const { user, isOffline } = useAuth();
   const [metadata, setMetadata] = useState<AssignmentMetadata>(() =>
@@ -159,7 +177,11 @@ export default function WorkspaceMain() {
 
   useEffect(() => {
     if (assignment) {
-      setEditorContent(assignment.content);
+      if (Array.isArray(assignment.content) && assignment.content.length > 0) {
+        setEditorContent(assignment.content);
+      } else {
+        setEditorContent(['']);
+      }
 
       setMetadata({
         fullname: assignment.metadata.fullname || fullName,
@@ -179,7 +201,7 @@ export default function WorkspaceMain() {
   }, [assignment]);
 
   const handleSave = async () => {
-    if (!assignment) return;
+    if (!assignment) return toast.error('No assignment found');
     if (isSaving) return;
 
     try {
@@ -251,42 +273,26 @@ export default function WorkspaceMain() {
   return (
     <>
       <div className="relative flex h-screen w-full flex-col overflow-hidden bg-slate-900 text-slate-100">
-        {/* Top Header Bar */}
-        <header className="flex h-14 w-full items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 backdrop-blur-md shrink-0 z-10">
-          {/* Desktop Sidebar Toggle Button */}
-          <button
-            onClick={() => setIsSidebarOpen(prev => !prev)}
-            className=" md:flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-800/50 px-3 py-1.5 text-xs text-slate-50 hover:bg-slate-800 hover:text-white transition-all cursor-pointer"
-            title={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-          >
-            {isSidebarOpen ? (
-              <PanelLeftClose size={18} />
-            ) : (
-              <PanelLeft size={18} />
-            )}
-            <span className="font-medium">
-              {isSidebarOpen ? 'Hide Details' : 'Show Details'}
-            </span>
-          </button>
-
-          {/* Right Header Status & Save Button */}
-          <div className="flex items-center gap-3 ml-auto">
-            <span className="text-xs font-medium text-slate-400 capitalize">
-              {saveStatus === 'saving'
-                ? 'Saving...'
-                : saveStatus === 'saved'
-                  ? 'Saved'
-                  : 'Unsaved changes'}
-            </span>
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-500 active:scale-95 disabled:opacity-50 transition-all shadow-sm shadow-blue-500/20"
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-          </div>
-        </header>
+        <WorskpaceHeader
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
+          saveStatus={saveStatus}
+          isSaving={isSaving}
+          onSave={handleSave}
+          onFinish={() => setIsPreviewOpen(true)}
+          onDelete={() => {
+            if (!userId)
+              return toast.error('No User id found Please log in again');
+            handleDeleteAssignment(
+              id,
+              confirm,
+              closeConfirm,
+              toast,
+              router,
+              userId
+            );
+          }}
+        />
 
         {/* Main Workspace Body */}
         <div className="flex flex-1 overflow-hidden relative">
@@ -294,7 +300,7 @@ export default function WorkspaceMain() {
           <aside
             className={`border-r border-slate-800 bg-slate-900 transition-all duration-300 ease-in-out shrink-0 custom-scrollbar
              md:block overflow-y-auto
-            ${isSidebarOpen ? 'w-105 opacity-100!' : 'w-0 opacity-0 border-none overflow-hidden'}
+            ${isSidebarOpen ? 'w-95 opacity-100!' : 'w-0 opacity-0 border-none overflow-hidden'}
             ${mobileTab === 'meta' ? 'block! absolute inset-0 z-20 w-full h-full bg-slate-900 overflow-y-auto p-4' : ''}`}
           >
             <div className="p-4 space-y-6">
@@ -306,6 +312,10 @@ export default function WorkspaceMain() {
                 isEnabled={isOfflineSyncEnabled}
                 onToggleOffline={handleOfflineToggle}
                 isOffline={isOffline}
+                coverPageConfig={coverPageConfig}
+                setCoverPageConfig={setCoverPageConfig}
+                isPageIndexActive={isPageIndexActive}
+                setIsPageIndexActive={setIsPageIndexActive}
               />
             </div>
           </aside>
@@ -318,15 +328,27 @@ export default function WorkspaceMain() {
             <div className="mx-auto max-w-4xl h-full">
               <WorkspaceEditor
                 content={editorContent}
-                onChange={(html: string[]) => {
-                  queueMicrotask(() => {
-                    setEditorContent(html);
-                  });
+                onChange={(newContent: string[]) => {
+                  setEditorContent(newContent);
+                  setSaveStatus('idle');
                 }}
+                setEditorContent={setEditorContent}
               />
             </div>
           </main>
         </div>
+
+        <AssignmentPreviewModal
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          metadata={metadata}
+          content={editorContent}
+          coverPageConfig={coverPageConfig}
+          onConfirmFinish={async () =>
+            await updateAssignmentStatusAPI(id, 'completed')
+          }
+          isPageIndexActive={isPageIndexActive}
+        />
 
         {/* Mobile Bottom Navigation Bar */}
         <nav className="flex md:hidden h-14 border-t border-slate-800 bg-slate-900 items-center justify-around px-2 z-30 shrink-0">

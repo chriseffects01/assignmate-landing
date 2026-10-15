@@ -6,12 +6,18 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import '@/src/styles/settings/settings-account.css';
 import { useNotification } from '@/src/context/NotificationContext';
+import { useAuth } from '@/src/context/AuthContext';
 
 export interface FeedbackPayload {
   rating: number;
   category: CategoryType;
   message: string;
   submittedAt: string;
+  submittedBy: {
+    userId: string | undefined;
+    username: string | undefined;
+    email: string | undefined;
+  };
 }
 
 export default function FeedbackSettings() {
@@ -22,6 +28,7 @@ export default function FeedbackSettings() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const { toast } = useNotification();
+  const { user } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -35,21 +42,29 @@ export default function FeedbackSettings() {
       category,
       message: message.trim(),
       submittedAt: new Date().toISOString(),
+      submittedBy: {
+        userId: user?._id,
+        username: user?.username,
+        email: user?.email,
+      },
     };
 
     try {
-      toast.success('Feedback submitted successfully');
       console.log(
         'prepared payload feedback:',
         JSON.stringify(payload, null, 2)
       );
-      await new Promise(res => setTimeout(res, 5000));
+      await new Promise(res => setTimeout(res, 3000));
+      toast.success('Feedback submitted successfully');
 
       setSubmitted(true);
       setRating(0);
       setMessage('');
       setCategory('general');
     } catch (e: any) {
+      setIsSubmitting(false);
+      throw e;
+    } finally {
       setIsSubmitting(false);
     }
   };
