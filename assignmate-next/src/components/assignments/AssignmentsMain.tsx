@@ -17,7 +17,8 @@ import { handleOfflineError } from '@/src/utils/handleOfflineError';
 import { OfflineError } from '@/src/errors/appError';
 import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import SimpleEmptyState from '../shared/SimpleEmptyState';
-import { getContentPreview, stripHtml } from '@/src/utils/formatters';
+import { getContentPreview } from '@/src/utils/formatters';
+import { isDuplicateAssignment } from '@/src/utils/assignmentUtils';
 
 export default function AssignmentsMain() {
   const [activeFilter, setActiveFilter] = useState<
@@ -222,6 +223,13 @@ export default function AssignmentsMain() {
               const savedOfffline =
                 userId &&
                 draftService.exists(userId, getAssignmentId(assignment));
+
+              const isDuplicate = isDuplicateAssignment(
+                assignment.content,
+                getAssignmentId(assignment)
+              );
+              console.log(assignment.metadata.title, isDuplicate);
+
               return (
                 <article
                   className="assignment-card"
@@ -240,8 +248,20 @@ export default function AssignmentsMain() {
                         ? '📝 Completed'
                         : '⌛ Drafts'}
                     </span>
+
                     <div className="assignment-card-icon">
-                      {savedOfffline && '📂'}
+                      {savedOfffline && (
+                        <div
+                          title="Saved Offline"
+                          className="relative flex items-center group/tooltip"
+                        >
+                          {/* Glowing Yellow Dot */}
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <h2 className="assignment-card-title">
@@ -250,6 +270,11 @@ export default function AssignmentsMain() {
                   <p className="assignment-card-course">
                     📚 <span>{assignment.metadata?.course} </span>
                     💠<span>{assignment.metadata?.courseCode}</span>
+                  </p>
+                  <p className="assignment-card-course">
+                    {assignment.metadata.fullname
+                      ? `by ${assignment.metadata.fullname}`
+                      : ''}
                   </p>
                   <div className="assignment-card-preview">
                     {getContentPreview(assignment.content)

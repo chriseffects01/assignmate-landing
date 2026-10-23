@@ -4,6 +4,7 @@ import { useState } from 'react';
 import CreateAssignmentModal from './WorkspaceCreateAssignment';
 import '@/src/styles/workspace/workspace.css';
 import Link from 'next/link';
+import { Sparkles, Rocket, LayoutTemplate } from 'lucide-react';
 
 export default function WorkspaceHome() {
   const [showModal, setShowModal] = useState(false);
@@ -59,7 +60,8 @@ export default function WorkspaceHome() {
               </Link>
               <h3 className="workspace-action-title">Browse Drafts</h3>
               <p className="workspace-action-desc">
-                Add collaborators and sync access control settings.
+                Work on your offline drafts if you will, And sync them in the
+                moment you're online
               </p>
             </div>
 

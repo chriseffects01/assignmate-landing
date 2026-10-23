@@ -16,7 +16,8 @@ import { useRouter } from 'next/navigation';
 import { ReconnectOverlay } from '../shared/ReconnectOverlay';
 import Link from 'next/link';
 import getAssignmentId from '@/src/lib/getAssignmentId';
-import { draftService } from '@/src/services/drafts/draft.service';
+import { createAssignmentAPI } from '@/src/services/assignmentService';
+import { ArrowRight } from 'lucide-react';
 
 const formatDateValue = (
   value: string | Date | null | undefined,
@@ -43,6 +44,7 @@ const formatDateValue = (
 export default function AssignmentsDetails() {
   const [assignment, setAssignment] = useState<AssignmentType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
   const [isRetrying, setIsRetrying] = useState<boolean>(false);
   const params = useParams();
   const assignmentId = params.id as string;
@@ -87,12 +89,55 @@ export default function AssignmentsDetails() {
 
   const numberOfPages = assignment?.content.length;
 
+  const handleDuplicatedAssignment = async () => {
+    try {
+      setLoading(true);
+
+      const payload: AssignmentType = {
+        _id: crypto.randomUUID(),
+
+        content: assignment?.content || [''],
+        metadata: {
+          title: assignment?.metadata.title || '',
+          fullname: '',
+          faculty: assignment?.metadata.faculty || '',
+          department: assignment?.metadata.department || '',
+          registrationNumber: '',
+          lecturer: assignment?.metadata.lecturer || '',
+          course: assignment?.metadata.course || '',
+          courseCode: assignment?.metadata.courseCode || '',
+          dueDate: assignment?.metadata.dueDate || '',
+        },
+        createdAt: String(Date.now()),
+        category: assignment?.category || 'essay',
+        status: 'draft',
+      };
+
+      const duplicateAssignment = await createAssignmentAPI(payload);
+
+      toast.success('Assignment duplicated successfully.');
+
+      router.push(
+        `/dashboard/workspace/${getAssignmentId(duplicateAssignment)}`
+      );
+    } catch {
+      console.error('Failed to duplicate assignment');
+      toast.error('Failed to duplicate assignment, try again');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   console.log(assignment);
   if (isRetrying) {
     return <ReconnectOverlay />;
   }
 
   if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (loading) {
     return <LoadingScreen />;
   }
 
@@ -147,12 +192,21 @@ export default function AssignmentsDetails() {
           >
             Delete
           </button>
-          <Link
-            href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
-            className="btn-workspace"
-          >
-            Open in Workspace →
-          </Link>
+          {assignment.status === 'completed' ? (
+            <button
+              onClick={handleDuplicatedAssignment}
+              className="btn-workspace"
+            >
+              Duplicate for next student <ArrowRight size={14} />
+            </button>
+          ) : (
+            <Link
+              href={`/dashboard/workspace/${getAssignmentId(assignment)}`}
+              className="btn-workspace"
+            >
+              Open in Workspace <ArrowRight size={14} />
+            </Link>
+          )}
         </div>
       </header>
 
