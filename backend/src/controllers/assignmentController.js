@@ -175,6 +175,43 @@ export const updateAssignment = async (req, res) => {
   }
 };
 
+// Update Assignment Status
+export const updateAssigmentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const userId = req.user?.id || req.user?._id;
+
+    if (!['draft', 'completed'].includes(status)) {
+      logger.error(
+        '[statusUpdate]: Please only send either completed or draft'
+      );
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid assignment status value' });
+    }
+
+    const updated = await Assignment.findOneAndUpdate(
+      { _id: id, user: userId },
+      { $set: { status } },
+      { new: true }
+    );
+
+    if (!updated) {
+      logger.error('[StatusUpdate]: No assignment found to update status');
+      return res.status(404).json({
+        success: false,
+        message: 'Assignment not found',
+      });
+    }
+
+    return res.status(200).json(updated);
+  } catch (err) {
+    logger.error('Status update error: ', err);
+    return res.status(500).json({ error: err });
+  }
+};
+
 //Delete Assignment
 
 export const deleteAssignment = async (req, res) => {

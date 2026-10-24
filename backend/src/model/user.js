@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+
     lastName: {
       type: String,
       trim: true,
@@ -15,17 +16,25 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+
     username: {
       type: String,
       required: true,
       unique: true,
       trim: true,
     },
+
+    displayName: {
+      type: String,
+      trim: true,
+    },
+
     email: {
       type: String,
       unique: true,
       required: true,
     },
+
     password: {
       type: String,
       required: true,
@@ -57,6 +66,7 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+
     accountType: {
       type: String,
       enum: ['student', 'business'],

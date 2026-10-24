@@ -4,6 +4,7 @@ const router = express.Router();
 import {
   createAssignment,
   updateAssignment,
+  updateAssigmentStatus,
   getAssignmentById,
   getAssignments,
   deleteAssignment,
@@ -16,5 +17,6 @@ router.get('/', authMiddleware, getAssignments);
 router.get('/:id', authMiddleware, getAssignmentById);
 router.put('/:id', authMiddleware, updateAssignment);
 router.delete('/:id', authMiddleware, deleteAssignment);
+router.patch('/:id/status', authMiddleware, updateAssigmentStatus);
 
 export default router;

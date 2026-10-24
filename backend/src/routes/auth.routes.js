@@ -7,6 +7,7 @@ import {
   updateProfile,
   deleteAccount,
   logoutUser,
+  checkUsernameAvailability,
 } from '../controllers/auth.controllers.js';
 import { authMiddleware } from '#middleware/auth.middleware.js';
 
@@ -18,4 +19,5 @@ router.post('/logout', authMiddleware, logoutUser);
 router.delete('/account', authMiddleware, deleteAccount);
 router.patch('/profile', authMiddleware, updateProfile);
 router.get('/me', authMiddleware, getCurrentUser);
+router.get('/check-username', checkUsernameAvailability);
 export default router;

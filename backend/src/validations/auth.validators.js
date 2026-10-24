@@ -9,6 +9,5 @@ export const registerUpSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.email().toLowerCase().trim(),
-  username: z.string().min(2).max(255).trim(),
   password: z.string().min(1),
 });

@@ -1,6 +1,6 @@
 export const formatValidation = errors => {
   if (!errors || errors.issues) {
-    return 'Validation failed';
+    return 'Validation failed, Invalid User input';
   }
 
   if (Array.isArray(errors.issues)) {

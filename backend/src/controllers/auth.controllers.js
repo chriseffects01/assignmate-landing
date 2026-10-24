@@ -99,6 +99,7 @@ export async function updateProfile(req, res) {
       accountType,
       businessName,
       businessPhone,
+      displayName,
     } = req.body;
 
     if (!user.accountType) {
@@ -114,6 +115,7 @@ export async function updateProfile(req, res) {
     user.firstName = firstName ?? user.firstName;
     user.middleName = middleName ?? user.middleName;
     user.lastName = lastName ?? user.lastName;
+    user.displayName = displayName ?? user.displayName;
 
     //Student specific information
     if (user.accountType === 'student') {
@@ -140,6 +142,7 @@ export async function updateProfile(req, res) {
         Boolean(user.department?.trim()) &&
         Boolean(user.faculty?.trim()) &&
         Boolean(user.registrationNumber?.trim()) &&
+        Boolean(user.displayName?.trim()) &&
         Boolean(user.middleName?.trim());
     } else if (user.accountType === 'business') {
       profileComplete =
@@ -178,7 +181,7 @@ export async function loginUser(req, res) {
     if (!validationResult.success) {
       logger.error('Error formatting with zod');
       return res.status(400).json({
-        error: 'Validation failed',
+        error: 'Validation failed, invalid email or password',
         details: formatValidation(validationResult.error),
       });
     }
@@ -259,3 +262,66 @@ export async function deleteAccount(req, res, next) {
     next(err);
   }
 }
+
+// @desc  Check if username is available
+// @route  GET /api/auth/check-username?username=xyz
+
+export const checkUsernameAvailability = async (req, res) => {
+  try {
+    const { username } = req.query;
+    if (!username) {
+      return res.status(400).json({
+        available: false,
+        message: 'Uername is required',
+      });
+    }
+
+    const cleanUsername = username.toLowerCase().trim();
+    logger.info('Checking username');
+
+    if (cleanUsername.length < 3) {
+      return res.status(200).json({
+        available: false,
+        message: 'Username must be at least 3 charaacters',
+      });
+    }
+
+    const reservedWords = [
+      'admin',
+      'api',
+      'login',
+      'signup',
+      'dashboard',
+      'support',
+      'assignmate',
+    ];
+
+    if (reservedWords.includes(cleanUsername)) {
+      return res.status(200).json({
+        available: false,
+        message: 'This username is reserved',
+      });
+    }
+
+    const existingUser = await User.findOne({
+      username: cleanUsername,
+    });
+
+    if (existingUser) {
+      return res.status(200).json({
+        available: false,
+        message: 'Username already taken',
+      });
+    }
+
+    return res.status(200).json({
+      available: true,
+    });
+  } catch (e) {
+    console.error('Error checing username', e);
+    logger.error('Error checking username: ', e);
+    return res.status(500).json({
+      error: 'Server Error while checking username',
+    });
+  }
+};
