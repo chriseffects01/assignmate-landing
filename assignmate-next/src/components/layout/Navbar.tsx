@@ -30,7 +30,9 @@ export default function Navbar({
         <div className="dashboard-profile-picture">
           <div className="dashboard-profile-pic-inner"></div>
         </div>
-        <p className="dashboard-user-name">{user?.username || 'Student'}</p>
+        <p className="dashboard-user-name">
+          {user?.displayName || user?.username || 'Student'}
+        </p>
         <p className="dashboard-nav-logo"> | AssignMate</p>
       </div>
 

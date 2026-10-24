@@ -8,6 +8,7 @@ export interface IUser {
   lastName: string;
   username: string;
   middleName?: string;
+  displayName?: string;
   email: string;
   role?: roleType;
   subscription?: subscriptionType;

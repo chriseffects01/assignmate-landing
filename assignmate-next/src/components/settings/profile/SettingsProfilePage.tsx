@@ -11,6 +11,8 @@ interface ProfileFormState {
   firstName: string;
   middleName: string;
   lastName: string;
+
+  displayName: string;
   accountType: 'student' | 'business';
 
   // Academic fields
@@ -41,6 +43,7 @@ export default function ProfileSettingsPage() {
     registrationNumber: '',
     businessName: '',
     businessPhone: '',
+    displayName: '',
   });
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -54,12 +57,12 @@ export default function ProfileSettingsPage() {
         accountType: (user.accountType as 'student' | 'business') || 'student',
         level: user.level || '',
         department: user.department || '',
+        displayName: user.displayName || '',
         faculty: user.faculty || '',
         registrationNumber: user.registrationNumber || '',
         businessName: user.businessName || '',
         businessPhone: user.businessPhone || '',
       });
-      console.log(user);
     }
   }, []);
 
@@ -79,6 +82,7 @@ export default function ProfileSettingsPage() {
         firstName: formData.firstName,
         middleName: formData.middleName,
         lastName: formData.lastName,
+        displayName: formData.displayName,
         accountType: formData.accountType,
         ...(formData.accountType === 'student'
           ? {
@@ -100,6 +104,7 @@ export default function ProfileSettingsPage() {
           firstName: updatedUser.firstName ?? '',
           middleName: updatedUser.middleName ?? '',
           lastName: updatedUser.lastName ?? '',
+          displayName: updatedUser.displayName ?? '',
           level: updatedUser.level ?? '',
           department: updatedUser.department ?? '',
           faculty: updatedUser.faculty ?? '',
@@ -121,17 +126,16 @@ export default function ProfileSettingsPage() {
   return (
     <div className="settings-container">
       {/* Back to Settings Navigation */}
-      <Link href="/dashboard/settings" className="settings-back-link">
+      <Link href="/dashboard/settings" className="settings-back-link ">
         ← Back to Settings
       </Link>
 
-      <h1 className="settings-title">Profile Settings</h1>
+      <h1 className="settings-title my-6">Profile Settings</h1>
 
       <form onSubmit={handleSubmit} className="settings-form">
         {/* SECTION 1: Personal Information */}
         <div className="settings-section">
           <h2 className="settings-section-title">Personal Information</h2>
-
           <div className="settings-grid">
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
@@ -169,8 +173,18 @@ export default function ProfileSettingsPage() {
             </div>
           </div>
 
-          {/* Read-Only Information */}
           <div className="settings-grid">
+            <div className="form-group">
+              <label htmlFor="displayName">Display Name</label>
+              <input
+                type="text"
+                id="displayName"
+                name="displayName"
+                value={formData.displayName}
+                onChange={handleChange}
+              />
+            </div>
+
             <div className="form-group">
               <label>Username</label>
               <input

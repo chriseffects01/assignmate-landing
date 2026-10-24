@@ -17,3 +17,8 @@ export interface RegisterPayload {
   phoneNumber?: string;
   password: string;
 }
+
+export interface CheckUsernameResponse {
+  available: boolean;
+  message?: string;
+}

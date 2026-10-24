@@ -7,7 +7,7 @@ export default function DashboardWelcome() {
     <section className="dashboard-section dashboard-welcome">
       <div>
         <p className="dashboard-eyebrow">
-          Welcome back {user?.username || 'Student'}
+          Welcome back {user?.displayName || user?.username || 'Student'}
         </p>
         <h1>Your assignments, In one place.</h1>
         <p className="dashboard-muted">

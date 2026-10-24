@@ -3,6 +3,7 @@ import {
   LoginPayload,
   RegisterPayload,
   AuthResponse,
+  CheckUsernameResponse,
 } from '@/src/types/auth.types';
 
 export const authService = {
@@ -50,6 +51,17 @@ export const authService = {
     try {
       const response = await api.delete<{ message: string }>(
         'api/auth/account'
+      );
+      return response.data;
+    } catch (e: any) {
+      throw normalizeApiError(e);
+    }
+  },
+
+  async checkUsername(username: string): Promise<CheckUsernameResponse> {
+    try {
+      const response = await api.get<CheckUsernameResponse>(
+        `/api/auth/check-username?username=${encodeURIComponent(username)}`
       );
       return response.data;
     } catch (e: any) {

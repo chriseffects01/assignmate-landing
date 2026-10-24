@@ -5,7 +5,8 @@ export interface UpdateProfileData {
   middleName?: string;
   lastName: string;
 
-  //
+  displayName?: string;
+
   accountType: 'student' | 'business';
 
   //Student
