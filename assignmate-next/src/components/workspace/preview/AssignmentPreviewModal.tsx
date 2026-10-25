@@ -14,6 +14,7 @@ import { generateCoverPageHTML } from '@/src/utils/generateCoverPageHTML';
 import { CoverPageConfig } from '@/src/types/Workspace.types';
 import { htmlToText } from '@/src/utils/htmlToTextConverter';
 import { exportToDocx, exportToPdf } from '@/src/utils/exporters';
+import { useRouter } from 'next/navigation';
 
 interface AssignmentPreviewModalProps {
   isOpen: boolean;
@@ -39,6 +40,7 @@ export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
   const [exportFormat, setExportFormat] = useState<'pdf' | 'docx' | 'txt'>(
     'pdf'
   );
+  const router = useRouter();
 
   const { toast } = useNotification();
 
@@ -77,7 +79,9 @@ export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
         URL.revokeObjectURL(url);
       } else if (exportFormat === 'pdf') {
         // PDF
-        toast.info('PDF implementations are not complete');
+        // toast.info('PDF implementations are not complete');
+
+        await exportToPdf('assignment-preview-root', metadata.title, toast);
         // await exportToPdf('assignment-preview-root', metadata.title, toast);
       } else if (exportFormat === 'docx') {
         //DocX
@@ -136,7 +140,7 @@ export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
           {finalDocumentPages.map((pageHtml, index) => (
             <div
               key={index}
-              className="w-full max-w-175 min-h-225 bg-white text-slate-900 p-12 rounded shadow-2xl border border-slate-200 font-serif relative"
+              className="w-full max-w-175 min-h-235 bg-white text-slate-900 p-12 rounded shadow-2xl border border-slate-200 font-serif relative"
             >
               {/* Render Page HTML */}
               <div

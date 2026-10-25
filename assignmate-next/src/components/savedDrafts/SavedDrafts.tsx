@@ -32,7 +32,7 @@ export default function SavedDraftsPage() {
   const { toast, confirm, closeConfirm } = useNotification();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 7;
 
   useEffect(() => {
     if (!authLoading && userId) {

@@ -175,7 +175,7 @@ export const WorkspaceEditor: React.FC<WorkspaceEditorProps> = ({
       </div>
 
       <div className="flex items-center justify-between border-t border-slate-800 bg-slate-900/90 px-4 py-2 text-xs text-slate-400 font-mono select-none">
-        {/* Left side: Current psge stats */}
+        {/* Left side: Current page stats */}
 
         <div className="flex items-centergap-4">
           <span className="flex items-center gap-1.5 text-blue-400 font-medium ">

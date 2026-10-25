@@ -37,6 +37,7 @@ body {
   width: 794px;
   min-height: 1123px;
 }
+
 @media (max-width: 850px) {
   .tiptap {
     width: 100%;
@@ -84,10 +85,11 @@ body {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-.page-break {
+
+/* .page-break {
   page-break-after: always;
   break-after: page;
-}
+} */
 
 .tiptap table {
   width: 100%;
@@ -129,4 +131,25 @@ body {
 .preview-paper th {
   background-color: #f8fafc !important;
   font-weight: 600 !important;
+}
+
+.preview-paper p {
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+  line-height: 1.65;
+}
+
+.preview-paper h1 {
+  margin-top: 1.3rem;
+  margin-bottom: 0.8rem;
+}
+
+.preview-paper h2 {
+  margin-top: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.preview-paper h3 {
+  margin-top: 0.85rem;
+  margin-bottom: 0.45rem;
 }

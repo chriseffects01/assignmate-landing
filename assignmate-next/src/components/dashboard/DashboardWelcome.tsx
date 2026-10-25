@@ -1,5 +1,6 @@
 import { useAuth } from '@/src/context/AuthContext';
 import Link from 'next/link';
+
 export default function DashboardWelcome() {
   const { user } = useAuth();
 
