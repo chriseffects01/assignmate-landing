@@ -348,6 +348,7 @@ export default function WorkspaceMain() {
             await updateAssignmentStatusAPI(id, 'completed')
           }
           isPageIndexActive={isPageIndexActive}
+          setisOfflineSyncEnabled={setIsOfflineSyncEnabled}
         />
 
         {/* Mobile Bottom Navigation Bar */}

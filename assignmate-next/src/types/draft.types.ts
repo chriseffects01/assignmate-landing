@@ -7,4 +7,5 @@ export interface OfflineDraft {
   category: string;
   content: string[];
   lastSavedLocally: string;
+  isDirty: boolean;
 }

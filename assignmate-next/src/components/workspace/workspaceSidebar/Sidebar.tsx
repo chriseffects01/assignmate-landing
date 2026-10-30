@@ -141,20 +141,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
           );
         })}
 
-        <CoverPageSettingsPanel
-          config={coverPageConfig}
-          onChange={setCoverPageConfig}
-        />
-
-        <label className="flex items-center gap-2 text-slate-300 cursor-pointer hover:text-white">
-          <input
-            type="checkbox"
-            checked={isPageIndexActive}
-            onChange={() => setIsPageIndexActive((prev: boolean) => !prev)}
-            className="accent-emerald-500 rounded"
+        {!isOffline && (
+          <CoverPageSettingsPanel
+            config={coverPageConfig}
+            onChange={setCoverPageConfig}
           />
-          <span>Show Page Index</span>
-        </label>
+        )}
+
+        {!isOffline && (
+          <label className="flex items-center gap-2 text-slate-300 cursor-pointer hover:text-white">
+            <input
+              type="checkbox"
+              checked={isPageIndexActive}
+              onChange={() => setIsPageIndexActive((prev: boolean) => !prev)}
+              className="accent-emerald-500 rounded"
+            />
+            <span>Show Page Index</span>
+          </label>
+        )}
       </div>
 
       {/* AI Assistant directly inside the Sidebar */}

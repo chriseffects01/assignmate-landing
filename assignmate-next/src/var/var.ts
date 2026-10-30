@@ -6,7 +6,7 @@ export const START_END: number = 86400000;
 export const DAY7: number = 7;
 export const DAY30: number = 30;
 export const DAY_SEMESTER: number = 120;
-export const MAX_FREE_DRAFTS: number = 7;
+export const MAX_FREE_DRAFTS: number = 9;
 
 // LOCAL STORAGE KEYS
 export const KEY: string = 'assignments';

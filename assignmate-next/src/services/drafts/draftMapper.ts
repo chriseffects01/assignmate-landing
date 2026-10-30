@@ -12,4 +12,5 @@ export const createofflinedraft = (
   category: draft?.category || '',
   type: 'blank',
   lastSavedLocally: new Date().toISOString(),
+  isDirty: true,
 });

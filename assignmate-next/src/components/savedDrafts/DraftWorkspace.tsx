@@ -11,7 +11,13 @@ import { useNotification } from '@/src/context/NotificationContext';
 import LoadingScreen from '../shared/LoadingScreen';
 import { WorkspaceEditor } from '../workspace/editor/WorkspaceEditor';
 import type { WorkspaceField } from '../workspace/WorkspaceMain';
-import { PanelLeftClose, PanelLeft, Settings, FileText } from 'lucide-react';
+import {
+  PanelLeftClose,
+  PanelLeft,
+  Settings,
+  FileText,
+  Trash2,
+} from 'lucide-react';
 import Sidebar from '@/src/components/workspace/workspaceSidebar/Sidebar';
 import {
   AssignmentMetadata,
@@ -19,6 +25,7 @@ import {
 } from '@/src/types/Workspace.types';
 import { getUserFullname } from '@/src/lib/fullname';
 import { CoverPageConfig } from '@/src/types/Workspace.types';
+import { useRouter } from 'next/navigation';
 
 export default function DraftsWorkspace() {
   const { user } = useAuth();
@@ -62,8 +69,9 @@ export default function DraftsWorkspace() {
   const params = useParams();
   const assignmentId = params?.id as string;
   const userId = user?._id;
-  const { toast } = useNotification();
+  const { toast, confirm, closeConfirm } = useNotification();
   const fullName = getUserFullname();
+  const router = useRouter();
 
   useEffect(() => {
     const load = () => {
@@ -141,6 +149,33 @@ export default function DraftsWorkspace() {
     }
   };
 
+  const handleDeleteDraft = (id: string, e: React.MouseEvent) => {
+    e.preventDefault(); // Stop card click navigation
+
+    if (!userId) return;
+    confirm({
+      title: 'Delete Offline Draft?',
+      message: "Delete this offline copy? Your cloud save won't be affected.",
+      confirmText: 'Delete Draft',
+      cancelText: 'keep It',
+      type: 'danger',
+      onConfirm: async () => {
+        try {
+          draftService.remove(userId, id);
+          router.push('/dashboard/drafts');
+          toast.success('Draft removed successfully');
+        } catch {
+          toast.error('Failed to delete draft');
+        } finally {
+          closeConfirm();
+        }
+      },
+      onCancel: () => {
+        closeConfirm();
+      },
+    });
+  };
+
   if (!draft) {
     return (
       <EmptyState
@@ -193,6 +228,16 @@ export default function DraftsWorkspace() {
             >
               {isSaving ? 'Saving...' : 'Save'}
             </button>
+
+            <button
+              type="button"
+              onClick={e => handleDeleteDraft(draft._id, e)}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer"
+              title="Delete Assignment"
+              aria-label="Delete Assignment"
+            >
+              <Trash2 size={15} />
+            </button>
           </div>
         </header>
 
@@ -202,7 +247,7 @@ export default function DraftsWorkspace() {
           <aside
             className={`border-r border-slate-800 bg-slate-900 transition-all duration-300 ease-in-out shrink-0  custom-scrollbar
              md:block overflow-y-auto
-            ${isSidebarOpen ? 'w-105 opacity-100!' : 'w-0 opacity-0 border-none overflow-hidden'}
+            ${isSidebarOpen ? 'w-100 opacity-100!' : 'w-0 opacity-0 border-none overflow-hidden'}
             ${mobileTab === 'meta' ? 'block! absolute inset-0 z-20 w-full h-full bg-slate-900 overflow-y-auto p-4' : ''}`}
           >
             <div className="p-4 space-y-6">

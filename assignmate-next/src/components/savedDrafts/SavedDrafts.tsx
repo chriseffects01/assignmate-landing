@@ -22,10 +22,17 @@ import getAssignmentId from '@/src/lib/getAssignmentId';
 import LoadingScreen from '../shared/LoadingScreen';
 import SimpleEmptyState from '../shared/SimpleEmptyState';
 import { EmptyState } from '../shared/EmptyState';
+import { SyncAllButton } from './Sync-Buttons/SyncAllButtons';
+import { CardSyncButton } from './Sync-Buttons/CardSyncButton';
 
 export default function SavedDraftsPage() {
   const [drafts, setDrafts] = useState<OfflineDraft[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const isSyncing = false;
+
+  const [syncingIds, setSyncingIds] = useState<string[]>([]);
+  const [isGlobalSyncing, setisGlobalSyncing] = useState<boolean>(false);
+
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { user, loading: authLoading } = useAuth();
   const userId = user?._id;
@@ -43,6 +50,16 @@ export default function SavedDraftsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
+
+  const loadDrafts = () => {
+    if (!userId) return toast.error('No user id');
+    const localDrafts = draftService.getAll(userId);
+    setDrafts(localDrafts);
+  };
+
+  useEffect(() => {
+    loadDrafts();
+  }, [userId]);
 
   const handleDeleteDraft = (id: string, e: React.MouseEvent) => {
     e.preventDefault(); // Stop card click navigation
@@ -66,7 +83,7 @@ export default function SavedDraftsPage() {
           if (currentPage > newTotalPages) {
             setCurrentPage(newTotalPages);
           }
-          toast.success('Draft remove successfully');
+          toast.success('Draft removed successfully');
         } catch {
           toast.error('Failed to delete draft');
         } finally {
@@ -77,6 +94,66 @@ export default function SavedDraftsPage() {
         closeConfirm();
       },
     });
+  };
+
+  const handleSyncSingle = async (id: string) => {
+    if (!userId) return;
+    if (syncingIds.includes(id)) return;
+
+    setSyncingIds(prev => [...prev, id]);
+    toast.info('Syncing draft...');
+
+    try {
+      await draftService.sync(userId, id, toast);
+      toast.success('Draft synced successfully!');
+    } catch (e: any) {
+      toast.error('Sync failed. Check connection and try again.');
+      throw e;
+    } finally {
+      setSyncingIds(prev => prev.filter(item => item !== id));
+      loadDrafts();
+    }
+  };
+
+  const handleSyncAll = async () => {
+    if (!userId) return;
+    const dirtyDrafts = drafts.filter(d => d.isDirty);
+
+    if (dirtyDrafts.length === 0) {
+      toast.info('All drafts are up to date.');
+      return;
+    }
+
+    setisGlobalSyncing(true);
+
+    toast.info(`Syncing ${dirtyDrafts.length} drafts...`);
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const draft of dirtyDrafts) {
+      setSyncingIds(prev => [...prev, draft._id]);
+
+      try {
+        await draftService.sync(userId, draft._id, toast);
+        successCount++;
+      } catch (err: any) {
+        failCount++;
+        console.error('Sync all failed, ', err);
+      } finally {
+        setSyncingIds(prev => prev.filter(item => item !== draft._id));
+        loadDrafts();
+      }
+    }
+
+    setisGlobalSyncing(false);
+    if (failCount === 0) {
+      toast.success(`Successfully synced all ${successCount} drafts!`);
+    } else {
+      toast.info(
+        `Synced ${successCount}/${dirtyDrafts.length}. ${failCount} failed`
+      );
+    }
   };
 
   // Filter based on search input
@@ -114,20 +191,30 @@ export default function SavedDraftsPage() {
     );
   }
 
+  const dirtyDrafts = drafts.filter(d => d.isDirty);
+
   return (
     <div className="p-8 max-w-7xl space-y-6 text-slate-200">
       {/* 🌟 1. HERO SECTION (Matches your authentic workspace header structure) */}
-      <div className="space-y-2">
-        <span className="text-xs font-semibold tracking-wider text-emerald-500 uppercase">
-          Workspace
-        </span>
-        <h1 className="text-3xl font-black tracking-tight text-white">
-          Saved Drafts
-        </h1>
-        <p className="text-sm text-slate-400 max-w-2xl">
-          Organize your local copies, manage offline browser sandboxes, and keep
-          tracking progress safely.
-        </p>
+      <div className="flex justify-between items-center mb-6">
+        <div className="space-y-2">
+          <span className="text-xs font-semibold tracking-wider text-emerald-500 uppercase">
+            Workspace
+          </span>
+          <h1 className="text-3xl font-black tracking-tight text-white">
+            Saved Drafts
+          </h1>
+          <p className="text-sm text-slate-400 max-w-2xl">
+            Organize your local copies, manage offline browser sandboxes, and
+            keep tracking progress safely.
+          </p>
+        </div>
+
+        <SyncAllButton
+          dirtyCount={dirtyDrafts.length}
+          isSyncing={isGlobalSyncing}
+          onSyncAll={handleSyncAll}
+        />
       </div>
 
       {/* 🌟 2. SEARCH & FILTER UTILITY CONTROLS */}
@@ -268,8 +355,11 @@ export default function SavedDraftsPage() {
 
                 <div className="flex items-center justify-between text-slate-500 mt-1">
                   <div className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>Locally Syncing</span>
+                    <CardSyncButton
+                      isDirty={draft.isDirty}
+                      isSyncing={syncingIds.includes(draft._id)}
+                      onSync={() => handleSyncSingle(draft._id)}
+                    />
                   </div>
                   <div className="flex flex-col gap-2 items-start ">
                     <span className="text-[10px] bg-slate-950 px-2 py-0.5 rounded-md border border-slate-800 text-slate-400 justify-self-end ">

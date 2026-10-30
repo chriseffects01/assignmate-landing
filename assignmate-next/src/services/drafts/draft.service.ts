@@ -2,11 +2,13 @@ import {
   saveDraftToLocal,
   removeDraftFromLocal,
   getAllLocalDrafts,
+  markAsSynced as MarkSynced,
 } from './draftStorage';
 
 import { MAX_FREE_DRAFTS } from '@/src/var/var';
 
 import { getDraftStorageKey } from './draftKeys';
+import { updateAssignmentAPI } from '../assignmentService';
 
 export const draftService = {
   save(userId: string, id: string, fields: any, content: string[]) {
@@ -41,5 +43,32 @@ export const draftService = {
     if (exists) return true;
 
     return drafts.length < MAX_FREE_DRAFTS;
+  },
+
+  async sync(userId: string, id: string, toast: any) {
+    try {
+      const localDraft = this.get(userId, id);
+      if (!localDraft) {
+        toast.error('Draft not found');
+      }
+
+      const payload = {
+        _id: localDraft?._id,
+        metadata: localDraft?.metadata,
+        content: localDraft?.content,
+        type: localDraft?.type,
+        status: 'draft',
+      };
+
+      await updateAssignmentAPI(id, payload);
+
+      MarkSynced(userId, id);
+
+      return { success: true };
+    } catch (e: any) {
+      console.error('Sync Error:', e);
+      toast.error('Sync failed. Try again');
+      throw e;
+    }
   },
 };

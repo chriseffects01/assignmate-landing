@@ -15,6 +15,7 @@ import { CoverPageConfig } from '@/src/types/Workspace.types';
 import { htmlToText } from '@/src/utils/htmlToTextConverter';
 import { exportToDocx, exportToPdf } from '@/src/utils/exporters';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/src/context/AuthContext';
 
 interface AssignmentPreviewModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ interface AssignmentPreviewModalProps {
   content: string[];
   onConfirmFinish: () => Promise<void>;
   isPageIndexActive: boolean;
+  setisOfflineSyncEnabled: (checked: boolean) => void;
 }
 
 export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
@@ -34,6 +36,7 @@ export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
   content,
   onConfirmFinish,
   isPageIndexActive,
+  setisOfflineSyncEnabled,
 }) => {
   const [step, setStep] = useState<'review' | 'export'>('review');
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -41,7 +44,7 @@ export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
     'pdf'
   );
   const router = useRouter();
-
+  const { user } = useAuth();
   const { toast } = useNotification();
 
   if (!isOpen) return null;
@@ -99,6 +102,7 @@ export const AssignmentPreviewModal: React.FC<AssignmentPreviewModalProps> = ({
 
       setIsFinalizing(false);
       setStep('review');
+      setisOfflineSyncEnabled(false);
       onClose();
     } catch (e: any) {
       toast.error('Failed to complete assignment');

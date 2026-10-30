@@ -38,3 +38,17 @@ export const getAllLocalDrafts = (userId: string) => {
   }
   return drafts;
 };
+
+export const markAsSynced = (userId: string, id: string) => {
+  const key = getDraftStorageKey(userId, id);
+  const rawData = localStorage.getItem(key);
+  if (!rawData) return;
+
+  const draft = JSON.parse(rawData);
+
+  const updatedDraft = {
+    ...draft,
+    isDirty: false,
+  };
+  localStorage.setItem(key, JSON.stringify(updatedDraft));
+};
